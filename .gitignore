@@ -1,0 +1,25 @@
+# Firebase 캐시
+.firebase/
+
+# 백업 파일
+*.backup.html
+*.bak
+
+# Node modules (만약 사용 시)
+node_modules/
+
+# 운영체제 파일
+Thumbs.db
+.DS_Store
+
+# IDE
+.vscode/
+.idea/
+
+# 임시 파일
+*.tmp
+*.temp
+
+# 스크린샷
+스크린샷*.png
+Screenshot*.png

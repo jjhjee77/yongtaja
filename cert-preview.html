@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>풍풍타자 — 인증서 미리보기</title>
+<style>
+  body {
+    margin: 0;
+    min-height: 100vh;
+    font-family: 'Noto Sans KR', sans-serif;
+    background: linear-gradient(180deg, #0f1320 0%, #1a2032 100%);
+    color: #e9ecf2;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    padding: 28px 18px;
+    box-sizing: border-box;
+  }
+  h1 {
+    margin: 0 0 6px;
+    font-size: 26px;
+    letter-spacing: 4px;
+    text-align: center;
+  }
+  p.sub {
+    margin: 0 0 28px;
+    color: #8b93a7;
+    font-size: 14px;
+    letter-spacing: 1px;
+    text-align: center;
+  }
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(220px, 280px));
+    gap: 16px;
+    margin-bottom: 28px;
+  }
+  a.card {
+    display: flex; flex-direction: column;
+    gap: 8px;
+    padding: 22px 24px;
+    background: rgba(28, 36, 56, 0.92);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 14px;
+    color: var(--c, #e9ecf2);
+    text-decoration: none;
+    transition: all .18s cubic-bezier(.4,0,.2,1);
+    cursor: pointer;
+  }
+  a.card:hover {
+    transform: translateY(-3px);
+    border-color: var(--c, #fbbf24);
+    box-shadow: 0 12px 28px rgba(0,0,0,0.4);
+  }
+  a.card .stars { font-size: 18px; letter-spacing: 4px; color: var(--c); }
+  a.card .name {
+    font-size: 18px; font-weight: 800; letter-spacing: 2px; color: #fff;
+  }
+  a.card .meta {
+    font-size: 12px; color: #8b93a7; letter-spacing: 1px;
+  }
+  .info {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 12px;
+    padding: 16px 20px;
+    max-width: 580px;
+    font-size: 13px;
+    line-height: 1.85;
+    color: #b6bdcc;
+    letter-spacing: 0.5px;
+  }
+  .info code {
+    background: rgba(251,191,36,0.12);
+    color: #fbbf24;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 12px;
+  }
+  .info b { color: #e9ecf2; }
+  .back {
+    display: inline-block;
+    margin-top: 20px;
+    color: #b6bdcc;
+    text-decoration: none;
+    font-size: 13px;
+    letter-spacing: 1px;
+  }
+  .back:hover { color: #fbbf24; }
+</style>
+</head>
+<body>
+  <h1>🎫 인증서 미리보기</h1>
+  <p class="sub">난이도를 선택하여 해당 인증서 화면을 즉시 열어볼 수 있어요</p>
+
+  <div class="grid">
+    <a class="card" style="--c:#22d3ee" href="antigravity-korean.html?cert=beginner">
+      <div class="stars">★ ☆ ☆ ☆</div>
+      <div class="name">타자 초보자</div>
+      <div class="meta">한~두 글자 · 목표 6,000점</div>
+    </a>
+    <a class="card" style="--c:#a78bfa" href="antigravity-korean.html?cert=intermediate">
+      <div class="stars">★ ★ ☆ ☆</div>
+      <div class="name">타자 중급자</div>
+      <div class="meta">두~네 글자 · 목표 8,000점</div>
+    </a>
+    <a class="card" style="--c:#fbbf24" href="antigravity-korean.html?cert=advanced">
+      <div class="stars">★ ★ ★ ☆</div>
+      <div class="name">타자 고급자</div>
+      <div class="meta">세~다섯 글자 · 목표 18,000점</div>
+    </a>
+    <a class="card" style="--c:#f87171" href="antigravity-korean.html?cert=master">
+      <div class="stars">★ ★ ★ ★</div>
+      <div class="name">타자의 달인</div>
+      <div class="meta">네~여섯 글자 · 목표 35,000점</div>
+    </a>
+  </div>
+
+  <div class="info">
+    <b>다른 방법</b><br>
+    1) 게임 페이지에서 <code>Ctrl+Shift+1</code>~<code>4</code> 단축키 (1=초보 · 2=중급 · 3=고급 · 4=달인)<br>
+    2) URL에 <code>?cert=beginner</code> · <code>intermediate</code> · <code>advanced</code> · <code>master</code> 추가<br>
+    3) 게임 화면에서 F12 → 콘솔에 <code>showCertificate('master', {})</code> 입력
+  </div>
+
+  <a class="back" href="antigravity-korean.html">← 게임으로 돌아가기</a>
+</body>
+</html>

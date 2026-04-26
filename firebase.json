@@ -1,0 +1,30 @@
+{
+  "hosting": {
+    "target": "yongtaja",
+    "public": ".",
+    "ignore": [
+      "firebase.json",
+      ".firebaserc",
+      "**/.*",
+      "**/node_modules/**",
+      "**/*.py",
+      "**/*.bak",
+      "**/*.backup.html",
+      "**/*.png",
+      "antigravity-korean.backup.html"
+    ],
+    "rewrites": [
+      { "source": "**", "destination": "/antigravity-korean.html" }
+    ],
+    "headers": [
+      {
+        "source": "**/*.@(html|css|js)",
+        "headers": [
+          { "key": "Cache-Control", "value": "public, max-age=300" }
+        ]
+      }
+    ],
+    "cleanUrls": false,
+    "trailingSlash": false
+  }
+}

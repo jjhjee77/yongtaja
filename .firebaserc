@@ -1,0 +1,14 @@
+{
+  "projects": {
+    "default": "adys2026-8da59"
+  },
+  "targets": {
+    "adys2026-8da59": {
+      "hosting": {
+        "yongtaja": [
+          "yongtaja"
+        ]
+      }
+    }
+  }
+}
