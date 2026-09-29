@@ -2,127 +2,40 @@
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
-<title>풍풍타자 — 인증서 미리보기</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>용용타자 — 인증서 4종 미리보기</title>
+<link rel="icon" type="image/png" href="/favicon.png">
 <style>
-  body {
-    margin: 0;
-    min-height: 100vh;
-    font-family: 'Noto Sans KR', sans-serif;
-    background: linear-gradient(180deg, #0f1320 0%, #1a2032 100%);
-    color: #e9ecf2;
-    display: flex; flex-direction: column;
-    align-items: center; justify-content: center;
-    padding: 28px 18px;
-    box-sizing: border-box;
-  }
-  h1 {
-    margin: 0 0 6px;
-    font-size: 26px;
-    letter-spacing: 4px;
-    text-align: center;
-  }
-  p.sub {
-    margin: 0 0 28px;
-    color: #8b93a7;
-    font-size: 14px;
-    letter-spacing: 1px;
-    text-align: center;
-  }
-  .grid {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(220px, 280px));
-    gap: 16px;
-    margin-bottom: 28px;
-  }
-  a.card {
-    display: flex; flex-direction: column;
-    gap: 8px;
-    padding: 22px 24px;
-    background: rgba(28, 36, 56, 0.92);
-    border: 1px solid rgba(255,255,255,0.08);
-    border-radius: 14px;
-    color: var(--c, #e9ecf2);
-    text-decoration: none;
-    transition: all .18s cubic-bezier(.4,0,.2,1);
-    cursor: pointer;
-  }
-  a.card:hover {
-    transform: translateY(-3px);
-    border-color: var(--c, #fbbf24);
-    box-shadow: 0 12px 28px rgba(0,0,0,0.4);
-  }
-  a.card .stars { font-size: 18px; letter-spacing: 4px; color: var(--c); }
-  a.card .name {
-    font-size: 18px; font-weight: 800; letter-spacing: 2px; color: #fff;
-  }
-  a.card .meta {
-    font-size: 12px; color: #8b93a7; letter-spacing: 1px;
-  }
-  .info {
-    background: rgba(255,255,255,0.04);
-    border: 1px solid rgba(255,255,255,0.07);
-    border-radius: 12px;
-    padding: 16px 20px;
-    max-width: 580px;
-    font-size: 13px;
-    line-height: 1.85;
-    color: #b6bdcc;
-    letter-spacing: 0.5px;
-  }
-  .info code {
-    background: rgba(251,191,36,0.12);
-    color: #fbbf24;
-    padding: 2px 8px;
-    border-radius: 4px;
-    font-family: 'Share Tech Mono', monospace;
-    font-size: 12px;
-  }
-  .info b { color: #e9ecf2; }
-  .back {
-    display: inline-block;
-    margin-top: 20px;
-    color: #b6bdcc;
-    text-decoration: none;
-    font-size: 13px;
-    letter-spacing: 1px;
-  }
-  .back:hover { color: #fbbf24; }
+  @font-face { font-family: 'DNFBitBit'; src: url('/assets/fonts/DNFBitBitv2.subset.woff2') format('woff2'); }
+  @font-face { font-family: 'Galmuri11'; src: url('/assets/fonts/Galmuri11-Bold.subset.woff2') format('woff2'); font-weight: 700; }
+  * { box-sizing: border-box; }
+  body { margin: 0; min-height: 100vh; padding: 28px 20px 40px; color: #fff; word-break: keep-all;
+    font-family: 'Galmuri11', 'Noto Sans KR', sans-serif; background: linear-gradient(180deg, #6c4fa3, #272052) fixed; }
+  h1 { margin: 0 0 6px; text-align: center; font-family: 'DNFBitBit', sans-serif; font-weight: 400; font-size: 34px; text-shadow: 0 4px 0 rgba(20,12,60,.45); }
+  p.sub { margin: 0 0 24px; text-align: center; color: #d8d5ea; font-weight: 700; }
+  .grid { display: grid; grid-template-columns: repeat(2, minmax(0, 560px)); gap: 22px; justify-content: center; }
+  @media (max-width: 1180px) { .grid { grid-template-columns: minmax(0, 560px); } }
+  .card { background: #fff; border-radius: 24px; padding: 14px; box-shadow: 0 9px 0 #d8d5ea; color: #272052; }
+  .card h2 { margin: 2px 6px 10px; font-family: 'DNFBitBit', sans-serif; font-weight: 400; font-size: 22px; display: flex; justify-content: space-between; align-items: center; }
+  .card h2 small { font-family: 'Galmuri11', sans-serif; font-size: 14px; color: #8a83b0; }
+  .frame { position: relative; width: 100%; aspect-ratio: 1000 / 780; overflow: hidden; border-radius: 16px; background: #272052; }
+  .frame iframe { position: absolute; left: 0; top: 0; width: 1000px; height: 780px; border: 0; transform-origin: 0 0; pointer-events: none; }
+  .card a { display: inline-block; margin-top: 10px; padding: 8px 18px; border-radius: 100px; background: #f4f2fb; color: #272052; text-decoration: none; font-weight: 700; }
 </style>
 </head>
 <body>
-  <h1>🎫 인증서 미리보기</h1>
-  <p class="sub">난이도를 선택하여 해당 인증서 화면을 즉시 열어볼 수 있어요</p>
-
+  <h1>인증서 4종 미리보기</h1>
+  <p class="sub">점수에 따라 받는 인증서 · 초보자 4만 · 중급자 10만 · 고수 100만 · 달인 1000만</p>
   <div class="grid">
-    <a class="card" style="--c:#22d3ee" href="antigravity-korean.html?cert=beginner">
-      <div class="stars">★ ☆ ☆ ☆</div>
-      <div class="name">타자 초보자</div>
-      <div class="meta">한~두 글자 · 목표 6,000점</div>
-    </a>
-    <a class="card" style="--c:#a78bfa" href="antigravity-korean.html?cert=intermediate">
-      <div class="stars">★ ★ ☆ ☆</div>
-      <div class="name">타자 중급자</div>
-      <div class="meta">두~네 글자 · 목표 8,000점</div>
-    </a>
-    <a class="card" style="--c:#fbbf24" href="antigravity-korean.html?cert=advanced">
-      <div class="stars">★ ★ ★ ☆</div>
-      <div class="name">타자 고급자</div>
-      <div class="meta">세~다섯 글자 · 목표 18,000점</div>
-    </a>
-    <a class="card" style="--c:#f87171" href="antigravity-korean.html?cert=master">
-      <div class="stars">★ ★ ★ ★</div>
-      <div class="name">타자의 달인</div>
-      <div class="meta">네~여섯 글자 · 목표 35,000점</div>
-    </a>
+    <div class="card"><h2>초보자 <small>40,000점</small></h2><div class="frame"><iframe src="antigravity-korean.html?cert=beginner" loading="lazy"></iframe></div><a href="antigravity-korean.html?cert=beginner" target="_blank">크게 보기 →</a></div>
+    <div class="card"><h2>중급자 <small>100,000점</small></h2><div class="frame"><iframe src="antigravity-korean.html?cert=intermediate" loading="lazy"></iframe></div><a href="antigravity-korean.html?cert=intermediate" target="_blank">크게 보기 →</a></div>
+    <div class="card"><h2>고수 <small>1,000,000점</small></h2><div class="frame"><iframe src="antigravity-korean.html?cert=advanced" loading="lazy"></iframe></div><a href="antigravity-korean.html?cert=advanced" target="_blank">크게 보기 →</a></div>
+    <div class="card"><h2>달인 <small>10,000,000점</small></h2><div class="frame"><iframe src="antigravity-korean.html?cert=master" loading="lazy"></iframe></div><a href="antigravity-korean.html?cert=master" target="_blank">크게 보기 →</a></div>
   </div>
-
-  <div class="info">
-    <b>다른 방법</b><br>
-    1) 게임 페이지에서 <code>Ctrl+Shift+1</code>~<code>4</code> 단축키 (1=초보 · 2=중급 · 3=고급 · 4=달인)<br>
-    2) URL에 <code>?cert=beginner</code> · <code>intermediate</code> · <code>advanced</code> · <code>master</code> 추가<br>
-    3) 게임 화면에서 F12 → 콘솔에 <code>showCertificate('master', {})</code> 입력
-  </div>
-
-  <a class="back" href="antigravity-korean.html">← 게임으로 돌아가기</a>
+<script>
+  // 각 칸 너비에 맞춰 1000×780 게임 화면을 축소
+  function fit() { document.querySelectorAll('.frame').forEach(f => { f.querySelector('iframe').style.transform = `scale(${f.clientWidth / 1000})`; }); }
+  addEventListener('resize', fit); fit();
+</script>
 </body>
 </html>

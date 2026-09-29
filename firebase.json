@@ -3,24 +3,38 @@
     "target": "yongtaja",
     "public": ".",
     "ignore": [
-      "firebase.json",
-      ".firebaserc",
+      "**/*.backup.html",
+      "**/*.bak",
+      "**/*.md",
+      "**/*.py",
       "**/.*",
       "**/node_modules/**",
-      "**/*.py",
-      "**/*.bak",
-      "**/*.backup.html",
-      "**/*.png",
-      "antigravity-korean.backup.html"
+      ".firebaserc",
+      "antigravity-korean.backup.html",
+      "art/**",
+      "assets/fonts/*.txt",
+      "cert-preview.html",
+      "docs/**",
+      "firebase.json",
+      "scripts/**",
+      "word_pool.js",
+      "sfx-preview.html",
+      "variants/**"
     ],
     "rewrites": [
-      { "source": "**", "destination": "/antigravity-korean.html" }
+      {
+        "source": "**",
+        "destination": "/antigravity-korean.html"
+      }
     ],
     "headers": [
       {
         "source": "**/*.@(html|css|js)",
         "headers": [
-          { "key": "Cache-Control", "value": "public, max-age=300" }
+          {
+            "key": "Cache-Control",
+            "value": "public, max-age=300"
+          }
         ]
       }
     ],

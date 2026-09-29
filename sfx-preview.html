@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>용용타자 — 효과음 미리듣기</title>
+<link rel="icon" type="image/png" href="/favicon.png">
+<style>
+  @font-face { font-family: 'DNFBitBit'; src: url('/assets/fonts/DNFBitBitv2.subset.woff2') format('woff2'); }
+  @font-face { font-family: 'Galmuri11'; src: url('/assets/fonts/Galmuri11-Bold.subset.woff2') format('woff2'); font-weight: 700; }
+  body { margin: 0; min-height: 100vh; padding: 30px 20px; color: #fff; font-family: 'Galmuri11', sans-serif; font-weight: 700;
+    background: linear-gradient(180deg, #6c4fa3, #272052) fixed; word-break: keep-all; }
+  h1 { text-align: center; font-family: 'DNFBitBit', sans-serif; font-weight: 400; margin: 0 0 6px; }
+  p { text-align: center; color: #d8d5ea; margin: 0 0 24px; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); gap: 16px; max-width: 980px; margin: 0 auto; }
+  button { display: flex; flex-direction: column; align-items: flex-start; gap: 4px; padding: 14px 18px; border: 0; border-radius: 20px;
+    background: #fff; color: #272052; box-shadow: 0 7px 0 #d8d5ea; cursor: pointer; font: inherit; text-align: left; }
+  button:active { transform: translateY(5px); box-shadow: 0 2px 0 #d8d5ea; }
+  button b { font-family: 'DNFBitBit', sans-serif; font-weight: 400; font-size: 18px; }
+  button small { color: #8a83b0; font-size: 12px; }
+  .src { font-size: 11px; color: #6c4fa3; }
+</style>
+</head>
+<body>
+  <h1>효과음 미리듣기</h1>
+  <p>누르면 소리가 나요 · 바꾸고 싶은 소리를 알려 주세요</p>
+  <div class="grid" id="g"></div>
+<script>
+  const L = [
+    ['key','타자 칠 때','Juhani 512'],['fire','미사일 발사','뱀서류(no-survivor)'],['hit','맞았지만 살아남음','뱀서류(no-survivor)'],
+    ['kill','몬스터 처치','뱀서류(no-survivor)'],['combo','콤보 10·20·30…','뱀서류(no-survivor)'],['levelup','레벨 업','뱀서류(no-survivor)'],
+    ['pick','능력 카드 고르기','Juhani 512'],['boss','보스 등장','뱀서류(no-survivor)'],['bossdown','보스 격파','뱀서류(no-survivor)'],
+    ['zap','번개 사슬','Juhani 512'],['beam','관통 빛줄기','뱀서류(no-survivor)'],['orbit','궤도 별 부딪힘','Juhani 512'],
+    ['petal','유도 꽃잎 맞음','Juhani 512'],['damage','실드 깎임','Juhani 512'],['gameover','게임 오버','뱀서류(no-survivor)'],
+    ['cert','인증서 받기','Kenney 징글'],['wave','새 웨이브','Kenney 징글'],['click','버튼 누르기','Juhani 512'],['miss','(예비) 틀림','Juhani 512'],
+  ];
+  const g = document.getElementById('g');
+  L.forEach(([n, label, src]) => {
+    const b = document.createElement('button');
+    b.innerHTML = `<b>${label}</b><small>${n}.m4a</small><span class="src">${src}</span>`;
+    b.onclick = () => new Audio(`/assets/sfx/${n}.m4a`).play();
+    g.appendChild(b);
+  });
+</script>
+</body>
+</html>
