@@ -2498,7 +2498,7 @@ const UPGRADES = [
     maxed: s => false,
   },
   {
-    icon:'/assets/icons/star.webp', name:'더블 찬스', rarity:'RARE',
+    icon:'/assets/icons/double.webp', name:'더블 찬스', rarity:'RARE',
     desc:'미사일 명중마다 20% 확률로 공격력 2배',
     apply: s => { s.critChance = Math.min((s.critChance || 0) + 0.20, 1.00); },
     maxed: s => (s.critChance || 0) >= 1.00,
@@ -2891,7 +2891,7 @@ window.addEventListener('resize', resizeCanvas);
 //  무기 Lv1~5, Lv5 = 진화(이름·효과 강화). 무기 총 레벨만큼 적이 조금씩 더 많이·빨리 나옴(난이도 보정).
 // ══════════════════════════════════════════════════════════════
 const WEAPONS = {
-  orbit: { name: '궤도 별', evo: '은하 고리', icon: '/assets/icons/star.webp',
+  orbit: { name: '궤도 별', evo: '은하 고리', icon: '/assets/icons/orbit.webp',
     desc: lv => lv >= 5 ? '별 6개가 두 겹으로 돌며 적을 밀어내요' : `별 ${lv}개가 몸 주위를 돌며 적을 밀어내요` },
   chain: { name: '번개 사슬', evo: '천둥 폭풍', icon: '/assets/icons/fx_lightning.webp',
     desc: lv => lv >= 5 ? '처치할 때마다 번개가 4마리에게 튀어요' : `콤보 ${6 - lv}번마다 번개가 ${1 + lv}마리에게 튀어요` },
