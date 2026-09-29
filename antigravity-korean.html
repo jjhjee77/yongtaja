@@ -2896,13 +2896,14 @@ const WEAPONS = {
   chain: { name: '번개 사슬', evo: '천둥 폭풍', icon: '/assets/icons/fx_lightning.webp',
     desc: lv => lv >= 5 ? '처치할 때마다 번개가 4마리에게 튀어요' : `콤보 ${6 - lv}번마다 번개가 ${1 + lv}마리에게 튀어요` },
   laser: { name: '관통 빛줄기', evo: '무지개 광선', icon: '/assets/icons/fx_energyball.webp',
-    desc: lv => lv >= 5 ? '긴 단어마다 굵은 빛이 한 줄을 모두 꿰뚫어요' : `${lv >= 3 ? 3 : 4}글자 이상 단어를 맞히면 빛이 한 줄을 꿰뚫어요` },
+    desc: lv => lv >= 5 ? '단어마다 무지개 빛 두 줄이 모두 꿰뚫어요(피해 4)' : `${lv >= 3 ? 2 : 3}글자 이상 단어마다 빛${lv >= 4 ? ' 2줄' : '이'} 한 줄을 꿰뚫어요(피해 ${laserDmg(lv)})` },
   frost: { name: '얼음 오라', evo: '눈보라', icon: '/assets/icons/fx_iceball.webp',
     desc: lv => lv >= 5 ? '넓은 눈보라가 적을 아주 느리게 해요' : `주변 적이 ${Math.round((1 - frostSlow(lv)) * 100)}% 느려져요` },
   petal: { name: '유도 꽃잎', evo: '꽃보라', icon: '/assets/icons/fx_petal.webp',
-    desc: lv => lv >= 5 ? '단어마다 꽃잎 5장이 날아가 적을 오래 느리게 해요' : `단어마다 꽃잎 ${lv}장이 다른 적을 쫓아가 느리게 해요` },
+    desc: lv => lv >= 5 ? '단어마다 꽃잎 10장! 맞은 적 75% 느려짐·피해 3' : `단어마다 꽃잎 ${lv * 2}장이 쫓아가 60% 느리게(피해 ${lv >= 3 ? 2 : 1})` },
 };
 const WMAX = 5;
+const laserDmg = lv => [0, 1, 2, 2, 3, 4][Math.min(lv, 5)];
 const frostSlow = lv => lv >= 5 ? 0.35 : 0.78 - lv * 0.08;   // Lv1 30% 느림 → Lv4 54% → 눈보라 65%
 const frostR = lv => lv >= 5 ? 260 : 130 + lv * 25;
 const _starImg = (() => { const i = new Image(); i.src = '/assets/icons/star.webp'; return i; })();
@@ -2929,22 +2930,27 @@ function weaponHit(en, dmg, canKill, color) {
 // 단어를 맞혀 미사일을 쏠 때 (onType)
 function weaponsOnWord(target, word) {
   const L = wlv('laser');
-  if (L > 0 && word.length >= (L >= 3 ? 3 : 4) && performance.now() > (S._laserReady || 0)) {
-    S._laserReady = performance.now() + (L >= 5 ? 600 : 1400 - L * 150);
+  if (L > 0 && word.length >= (L >= 3 ? 2 : 3) && performance.now() > (S._laserReady || 0)) {
+    S._laserReady = performance.now() + (L >= 5 ? 350 : 900 - L * 100);
     const dx = target.x - S.cx, dy = target.y - S.cy, d = Math.hypot(dx, dy) || 1;
-    const ux = dx / d, uy = dy / d, width = L >= 5 ? 46 : 22 + L * 4, dmg = L >= 5 ? 2 : 1;
-    S.beams.push({ ux, uy, width, life: 1, rainbow: L >= 5 });
+    const base = Math.atan2(dy, dx), width = L >= 5 ? 52 : 30 + L * 5, dmg = laserDmg(L);
+    const angs = L >= 4 ? [base - 0.18, base + 0.18] : [base];   // 4레벨부터 부채꼴 2줄
     SFX.beam();
-    S.enemies.forEach(en => {
-      if (en === target || en.dying) return;
-      const px = en.x - S.cx, py = en.y - S.cy, along = px * ux + py * uy;
-      if (along > 0 && Math.abs(px * uy - py * ux) < width + en.type.size) weaponHit(en, dmg, true, '#fff27a');
+    const hitSet = new Set();
+    angs.forEach(a => {
+      const ux = Math.cos(a), uy = Math.sin(a);
+      S.beams.push({ ux, uy, width, life: 1, rainbow: L >= 5 });
+      S.enemies.forEach(en => {
+        if (en === target || en.dying || hitSet.has(en)) return;
+        const px = en.x - S.cx, py = en.y - S.cy, along = px * ux + py * uy;
+        if (along > 0 && Math.abs(px * uy - py * ux) < width + en.type.size) { hitSet.add(en); weaponHit(en, dmg, true, '#fff27a'); }
+      });
     });
   }
   const P = wlv('petal');
   if (P > 0) {
     const others = S.enemies.filter(e => !e.dying && e !== target);
-    const n = P >= 5 ? 5 : P;
+    const n = P >= 5 ? 10 : P * 2;
     for (let i = 0; i < n && others.length; i++) {
       const en = others.splice(Math.floor(Math.random() * others.length), 1)[0];
       S.petals.push({ x: S.cx, y: S.cy, vx: (Math.random() - .5) * 8, vy: -4 - Math.random() * 3, target: en, life: 2200, rot: Math.random() * 6, trail: [] });
@@ -3010,8 +3016,10 @@ function updateWeapons(dt) {
     p.x += p.vx * (dt / 16); p.y += p.vy * (dt / 16);
     if (d < t.type.size + 8) {
       // 맞은 적: 1.5초 동안 절반 속도(꽃가루에 느려짐) + 체력 2 이상이면 1 깎음(끝내진 않음)
-      t.slowUntil = now + (wlv('petal') >= 5 ? 2500 : 1500);
-      weaponHit(t, 1, false, '#ff8fc8'); SFX.petal();
+      const PL = wlv('petal');
+      t.slowUntil = now + (PL >= 5 ? 3000 : 2000);
+      t.slowFactor = PL >= 5 ? 0.25 : 0.4;
+      weaponHit(t, PL >= 5 ? 3 : PL >= 3 ? 2 : 1, false, '#ff8fc8'); SFX.petal();
       if (t.hp <= 1) addFloat(t.x, t.y - 20, '느려짐', '#ff8fc8');
       S.petals.splice(i, 1);
     }
@@ -4029,7 +4037,7 @@ function update(dt) {
     const dx=cx-en.x, dy=cy-en.y;
     const dist=Math.hypot(dx,dy);
     if (dist>1) {
-      const effSpd = en.speed * (S.enemySlow || 1) * frostFactor(en) * (en.slowUntil > performance.now() ? 0.5 : 1);
+      const effSpd = en.speed * (S.enemySlow || 1) * frostFactor(en) * (en.slowUntil > performance.now() ? (en.slowFactor || 0.5) : 1);
       en.x += dx/dist*effSpd*(dt/16);
       en.y += dy/dist*effSpd*(dt/16);
     }
