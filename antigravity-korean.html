@@ -4,6 +4,29 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="color-scheme" content="light dark">
+<script>
+// 그림 안전장치 (2026-09-29): WebP를 못 여는 옛 브라우저(맥 사파리 13↓·iOS 13↓ 등)에서 엑스박스 대신
+// ① 같은 이름 .png 예비본 → ② 그래도 안 되면 이모지로 바꿈
+(function () {
+  var EMO = { star:'⭐', heart:'❤️', shield:'🛡️', fire:'🔥', boom:'💥', wave:'🌊', medal:'🏅', trophy:'🏆', gamepad:'🎮',
+    challenge:'⛰️', certificate:'📜', retry:'🔄', pause:'⏸️', sound_on:'🔊', sound_off:'🔇', fullscreen:'⛶',
+    orbit:'🌟', double:'🎲', fx_iceball:'❄️', fx_icicle:'🧊', fx_flareball:'🚀', fx_electroball:'⚡', fx_shadowball:'🌀',
+    fx_lightning:'⚡', fx_energyball:'💫', fx_petal:'🌸', fx_leaf1:'🍃' };
+  document.addEventListener('error', function (e) {
+    var img = e.target;
+    if (!img || img.tagName !== 'IMG') return;
+    var src = img.getAttribute('src') || '';
+    if (/\.webp$/.test(src)) { img.setAttribute('src', src.replace(/\.webp$/, '.png')); return; }
+    var key = (src.match(/([a-z0-9_]+)\.png$/) || [])[1];
+    var sp = document.createElement('span');
+    sp.className = (img.className || '') + ' img-fallback';
+    sp.textContent = (key && EMO[key]) || img.getAttribute('alt') || '';
+    sp.style.fontSize = Math.max(14, (img.height || 24) * 0.8) + 'px';
+    sp.style.lineHeight = '1';
+    img.replaceWith(sp);
+  }, true);
+})();
+</script>
 <title>용용타자 오름길 — 한글 타이핑 서바이벌</title>
 <link rel="icon" type="image/png" href="/favicon.png">
 <link rel="icon" href="/favicon.ico" sizes="32x32">
@@ -2841,7 +2864,7 @@ const SPRITE_FRAMES = [{x:0, y:0, w:152, h:160}, {x:152, y:0, w:152, h:160}, {x:
 // ── 적 캐릭터 이미지 (오프스크린 캔버스) ────────────────────────────
 // ── 포켓몬 적·보스·이펙트 아틀라스 (assets/*.webp ← scripts/build_pokemon_atlas.py) ──
 // 적 = 하트골드 걷기 시트(32px, 줄=아래·왼·오·위, 4프레임), 보스 = 5세대 배틀 애니, 이펙트 = 쇼다운 fx
-const _img = src => { const i = new Image(); i.src = src; return i; };
+const _img = src => { const i = new Image(); i.onerror = () => { if (/\.webp$/.test(i.src)) { i.onerror = null; i.src = i.src.replace(/\.webp$/, '.png'); } }; i.src = src; return i; };
 const MON_ATLAS  = _img('/assets/enemies.webp');
 const BOSS_ATLAS = _img('/assets/bosses.webp');
 const FX_ATLAS   = _img('/assets/fx.webp');
@@ -2906,7 +2929,7 @@ const WMAX = 5;
 const laserDmg = lv => [0, 1, 2, 2, 3, 4][Math.min(lv, 5)];
 const frostSlow = lv => lv >= 5 ? 0.35 : 0.78 - lv * 0.08;   // Lv1 30% 느림 → Lv4 54% → 눈보라 65%
 const frostR = lv => lv >= 5 ? 260 : 130 + lv * 25;
-const _starImg = (() => { const i = new Image(); i.src = '/assets/icons/star.webp'; return i; })();
+const _starImg = _img('/assets/icons/star.webp');
 function wlv(k) { return (S && S.weapons && S.weapons[k]) || 0; }
 function weaponPower() { return S && S.weapons ? Object.values(S.weapons).reduce((a, b) => a + b, 0) : 0; }
 
