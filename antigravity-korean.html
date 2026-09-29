@@ -2896,11 +2896,11 @@ const WEAPONS = {
   chain: { name: '번개 사슬', evo: '천둥 폭풍', icon: '/assets/icons/fx_lightning.webp',
     desc: lv => lv >= 5 ? '처치할 때마다 번개가 4마리에게 튀어요' : `콤보 ${6 - lv}번마다 번개가 ${1 + lv}마리에게 튀어요` },
   laser: { name: '관통 빛줄기', evo: '무지개 광선', icon: '/assets/icons/fx_energyball.webp',
-    desc: lv => lv >= 5 ? '단어마다 무지개 빛 두 줄이 모두 꿰뚫어요(피해 4)' : `${lv >= 3 ? 2 : 3}글자 이상 단어마다 빛${lv >= 4 ? ' 2줄' : '이'} 한 줄을 꿰뚫어요(피해 ${laserDmg(lv)})` },
+    desc: lv => lv >= 5 ? '단어마다 굵은 무지개 빛 두 줄! 닿은 적은 바로 펑' : `${lv >= 3 ? 2 : 3}글자 이상 단어마다 넓은 빛${lv >= 4 ? ' 2줄' : ''}! 닿은 적은 바로 펑` },
   frost: { name: '얼음 오라', evo: '눈보라', icon: '/assets/icons/fx_iceball.webp',
     desc: lv => lv >= 5 ? '넓은 눈보라가 적을 아주 느리게 해요' : `주변 적이 ${Math.round((1 - frostSlow(lv)) * 100)}% 느려져요` },
   petal: { name: '유도 꽃잎', evo: '꽃보라', icon: '/assets/icons/fx_petal.webp',
-    desc: lv => lv >= 5 ? '단어마다 꽃잎 10장! 맞은 적 75% 느려짐·피해 3' : `단어마다 꽃잎 ${lv * 2}장이 쫓아가 60% 느리게(피해 ${lv >= 3 ? 2 : 1})` },
+    desc: lv => lv >= 5 ? '단어마다 꽃잎 10장! 75% 느려짐·미사일 공격력 ×3 피해' : `단어마다 꽃잎 ${lv * 2}장이 쫓아가 60% 느리게(미사일 공격력 ×${lv >= 3 ? 2 : 1} 피해)` },
 };
 const WMAX = 5;
 const laserDmg = lv => [0, 1, 2, 2, 3, 4][Math.min(lv, 5)];
@@ -2933,7 +2933,8 @@ function weaponsOnWord(target, word) {
   if (L > 0 && word.length >= (L >= 3 ? 2 : 3) && performance.now() > (S._laserReady || 0)) {
     S._laserReady = performance.now() + (L >= 5 ? 350 : 900 - L * 100);
     const dx = target.x - S.cx, dy = target.y - S.cy, d = Math.hypot(dx, dy) || 1;
-    const base = Math.atan2(dy, dx), width = L >= 5 ? 52 : 30 + L * 5, dmg = laserDmg(L);
+    // 빛줄기에 닿은 일반 몬스터는 바로 터짐, 보스는 (미사일 공격력 × 빛줄기 피해) 만큼
+    const base = Math.atan2(dy, dx), width = L >= 5 ? 90 : 48 + L * 9, dmg = laserDmg(L) * (S.attackPow || 1);
     const angs = L >= 4 ? [base - 0.18, base + 0.18] : [base];   // 4레벨부터 부채꼴 2줄
     SFX.beam();
     const hitSet = new Set();
@@ -2943,7 +2944,7 @@ function weaponsOnWord(target, word) {
       S.enemies.forEach(en => {
         if (en === target || en.dying || hitSet.has(en)) return;
         const px = en.x - S.cx, py = en.y - S.cy, along = px * ux + py * uy;
-        if (along > 0 && Math.abs(px * uy - py * ux) < width + en.type.size) { hitSet.add(en); weaponHit(en, dmg, true, '#fff27a'); }
+        if (along > 0 && Math.abs(px * uy - py * ux) < width + en.type.size) { hitSet.add(en); weaponHit(en, en.isBoss ? dmg : en.hp, true, '#fff27a'); }
       });
     });
   }
@@ -3019,7 +3020,7 @@ function updateWeapons(dt) {
       const PL = wlv('petal');
       t.slowUntil = now + (PL >= 5 ? 3000 : 2000);
       t.slowFactor = PL >= 5 ? 0.25 : 0.4;
-      weaponHit(t, PL >= 5 ? 3 : PL >= 3 ? 2 : 1, false, '#ff8fc8'); SFX.petal();
+      weaponHit(t, (PL >= 5 ? 3 : PL >= 3 ? 2 : 1) * (S.attackPow || 1), false, '#ff8fc8'); SFX.petal();   // 미사일 공격력에 비례
       if (t.hp <= 1) addFloat(t.x, t.y - 20, '느려짐', '#ff8fc8');
       S.petals.splice(i, 1);
     }
