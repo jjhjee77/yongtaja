@@ -1930,6 +1930,12 @@ html.cert-print body > *:not(#certificateScreen) { display: none !important; }
 html.cert-print #certificateScreen { background: #ff00ff !important; justify-content: flex-start !important; align-items: flex-start !important; padding: 0 !important; }
 html.cert-print #certificateScreen > *:not(#certPaper) { display: none !important; }
 html.cert-print #certPaper { transform: none !important; margin: 0 !important; box-shadow: none !important; }
+.cv5-stats { display: flex; justify-content: center; gap: 10px; margin: 0 0 12px; }
+.cv5-stats > div { display: flex; flex-direction: column; align-items: center; min-width: 118px; padding: 6px 12px; border-radius: 16px; border: 2px solid var(--q-soft); }
+.cv5-stats span { font-size: 13px; font-weight: 700; color: #8a83b0; white-space: nowrap; }
+.cv5-stats b { font-family: var(--f-title); font-weight: 400; font-size: 22px; color: var(--q-ink); white-space: nowrap; }
+.cv5-main { font-size: 19px !important; line-height: 1.6 !important; }
+.cv5-stat { font-size: 15px !important; padding: 8px 18px !important; }
 </style>
 </head>
 <body>
@@ -2100,7 +2106,7 @@ html.cert-print #certPaper { transform: none !important; margin: 0 !important; b
   <div class="clear-banner">
     <div class="clear-stars" id="certClearStars"></div>
     <div class="clear-pill">
-      <span class="clear-text">CLEARED</span>
+      <span class="clear-text" id="certClearText">CLEARED</span>
       <span class="clear-divider"></span>
       <span class="clear-sub" id="certClearSub">인증 도전 통과!</span>
     </div>
@@ -2120,6 +2126,13 @@ html.cert-print #certPaper { transform: none !important; margin: 0 !important; b
       <h1 class="cv5-title" id="certTitle">한글 타자 <b id="certModeName">초보자</b> 인증서</h1>
 
       <div class="cv5-score">획득 점수 <b id="certScore">0</b><span>점</span></div>
+      <div class="cv5-stats" id="certStats">
+        <div><span>도달 레벨</span><b id="csLv">-</b></div>
+        <div><span>처치</span><b id="csKills">-</b></div>
+        <div><span>최대 콤보</span><b id="csCombo">-</b></div>
+        <div><span>정확도</span><b id="csAcc">-</b></div>
+        <div><span>타수(분당)</span><b id="csWpm">-</b></div>
+      </div>
       <div class="cv5-student">
         <label class="cv5-field"><input id="certGrade" type="number" min="1" max="6" inputmode="numeric" placeholder="0"><span>학년</span></label>
         <label class="cv5-field"><input id="certClass" type="number" min="1" max="20" inputmode="numeric" placeholder="0"><span>반</span></label>
@@ -2128,7 +2141,7 @@ html.cert-print #certPaper { transform: none !important; margin: 0 !important; b
       </div>
 
       <div class="cv5-body">
-        <p class="cv5-main">위 학생은 용용이와 함께 오름길을 올라<br>한글 타자 <b class="cv5-grade">초보자</b> 단계를 훌륭하게 통과하였기에<br>이 인증서를 드립니다.</p>
+        <p class="cv5-main" id="certMain">위 학생은 용용이와 함께 오름길을 올라<br>한글 타자 <b class="cv5-grade">초보자</b> 단계를 훌륭하게 통과하였기에<br>이 인증서를 드립니다.</p>
         <p class="cv5-stat" id="certBodyStat"></p>
       </div>
 
@@ -2144,7 +2157,6 @@ html.cert-print #certPaper { transform: none !important; margin: 0 !important; b
   <div class="cert-actions">
     <button class="btn-cert primary" onclick="saveCertificateImage()"><img src="/assets/icons/certificate.webp" alt=""> 이미지로 저장</button>
     <button class="btn-cert" onclick="showRankScreen()"><img src="/assets/icons/trophy.webp" alt=""> 순위표</button>
-    <button class="btn-cert" onclick="showResultScreen()"><img src="/assets/icons/medal.webp" alt=""> 결과 보기</button>
     <button class="btn-cert" onclick="startGame(LAST_MODE)"><img src="/assets/icons/retry.webp" alt=""> 다시 도전</button>
     <button class="btn-cert" onclick="goTitle()"><img src="/assets/icons/challenge.webp" alt=""> 홈으로</button>
   </div>
@@ -2480,6 +2492,7 @@ const MODE_STAGES = {
 
 // 모드 → 인증서 표시명 매핑
 const MODE_CERT_TITLE = {
+  try: '도전',
   beginner: '초보자',
   intermediate: '중급자',
   advanced: '고수',
@@ -3625,6 +3638,7 @@ function onType() {
     if (nearest) {
       // 정확도: 발사한 단어 글자 = 맞힘, 입력칸에 그 앞에 더 쳐 둔 글자 = 오타
       S.typedOk += exactWord.length;
+      S.strokes = (S.strokes || 0) + keyStrokes(exactWord);
       S.typedErr += Math.max(0, typeInp.value.length - exactWord.length);
       updateAccuracy();
       launchMissile(nearest);
@@ -3647,6 +3661,18 @@ function onType() {
   }
 }
 
+// 한글 자판 누름 수 (두벌식): 초성 1, 중성 1~2(겹모음), 종성 0~2(겹받침). 된소리는 Shift라 1로 셈
+function keyStrokes(word) {
+  const JUNG2 = [9, 10, 11, 14, 15, 16, 19], JONG2 = [3, 5, 6, 9, 10, 11, 12, 13, 14, 15, 18];
+  let n = 0;
+  for (const ch of word) {
+    const c = ch.charCodeAt(0) - 0xAC00;
+    if (c < 0 || c > 11171) { n += 1; continue; }
+    const jung = Math.floor((c % 588) / 28), jong = c % 28;
+    n += 1 + (JUNG2.includes(jung) ? 2 : 1) + (jong === 0 ? 0 : JONG2.includes(jong) ? 2 : 1);
+  }
+  return n;
+}
 function updateAccuracy() {
   // 정확도는 결과 화면용으로만 유지
   const total = S.typedOk + S.typedErr;
@@ -4552,14 +4578,16 @@ function endGame(win) {
 
   // 최종 점수로 인증 등급 판정 → '인증서 받기' 버튼 표시 (초보자 미만이면 숨김)
   EARNED_CERT_TIER  = tierFromScore(S.score);
-  EARNED_CERT_STATS = { score: S.score, kills: S.kills, maxCombo: S.maxCombo, acc: S.lastAcc };
+  const _min = Math.max(_RL.sec(), 30) / 60;   // 아주 짧은 판에서 타수가 튀지 않게 최소 30초
+  EARNED_CERT_STATS = { score: S.score, kills: S.kills, maxCombo: S.maxCombo, acc: S.lastAcc,
+    level: S.upgLevel + 1, wpm: Math.round((S.strokes || 0) / _min) };
+  EARNED_CERT_TIER = EARNED_CERT_TIER || 'try';   // 초보자 미만 = '도전 기록'
   const resCertBtn = document.getElementById('resCertBtn');
   if (resCertBtn) resCertBtn.style.display = EARNED_CERT_TIER ? '' : 'none';
 
   document.getElementById('gameWrap').classList.add('hidden');
   hideAllScreens();
-  if (EARNED_CERT_TIER) showEarnedCertificate();   // 목표 점수 도달 → 인증서가 먼저 (아래 버튼으로 순위·결과)
-  else document.getElementById('resultScreen').classList.remove('hidden');
+  showEarnedCertificate();   // 결과 화면 대신 항상 인증서 (기록 포함)
 
   // 순위 체크
   const rankData = { score: S.score, level: S.upgLevel + 1, acc: S.lastAcc, kills: _RL.kills(), sec: _RL.sec() };
@@ -4612,6 +4640,7 @@ function clearGame() {
 
 // 모드별 별 개수 (인증서 상단 노란 별)
 const MODE_STAR_COUNT = {
+  try: 0,
   beginner: 1,
   intermediate: 2,
   advanced: 3,
@@ -4621,6 +4650,7 @@ const MAX_CERT_STARS = 4;
 
 // 모드별 컬러 액센트 (리본/CLEAR 라벨/태그/도장 글로우)
 const MODE_COLORS = {
+  try:          { c: '#b9a4f5', d: '#6c4fa3' },  // 도전 기록 (초보자 미만)
   beginner:     { c: '#5bd46a', d: '#2f9c3e' },  // 새싹 초록
   intermediate: { c: '#5aa9ff', d: '#2a6fd6' },  // 하늘 파랑
   advanced:     { c: '#ffc53d', d: '#d38b00' },  // 금색
@@ -4629,6 +4659,7 @@ const MODE_COLORS = {
 
 // 모드별 축하 문구 (중앙 인용 박스)
 const MODE_BODY_STAT = {
+  try: '',
   beginner:
     '한 글자 한 글자, 차근차근 정성껏 익혀 온 노력과 끈기에 큰 박수를 보냅니다. 한글 타자의 첫걸음을 멋지게 떼었습니다!',
   intermediate:
@@ -4712,7 +4743,19 @@ function showCertificate(mode, stats) {
   document.querySelectorAll('#certPaper .cv5-grade').forEach(el => el.textContent = modeName);
   document.getElementById('certPaper').dataset.mode = mode;
   requestAnimationFrame(fitCertPaper);
-  document.getElementById('certClearSub').textContent = `${modeName} 등급 달성!`;
+  const isTry = mode === 'try';
+  const title = document.getElementById('certTitle');
+  title.innerHTML = isTry ? `한글 타자 <b id="certModeName">도전</b> 기록` : `한글 타자 <b id="certModeName">${modeName}</b> 인증서`;
+  const toNext = Math.max(0, MODE_STAGES.beginner.targetScore - sc);
+  document.getElementById('certMain').innerHTML = isTry
+    ? `위 학생은 용용이와 함께 오름길에 도전하여<br><b>${sc.toLocaleString()}점</b>을 기록하였습니다.<br>조금만 더 힘내면 <b>초보자 인증서</b>를 받을 수 있어요!`
+    : `위 학생은 용용이와 함께 오름길을 올라<br>한글 타자 <b class="cv5-grade">${modeName}</b> 단계를 훌륭하게 통과하였기에<br>이 인증서를 드립니다.`;
+  document.getElementById('certClearText').textContent = isTry ? '도전 기록' : 'CLEARED';
+  document.getElementById('certClearSub').textContent = isTry ? '조금만 더 힘내봐요!' : `${modeName} 등급 달성!`;
+  // 게임 기록 (미리보기엔 없음 → '-')
+  const st = stats || {}, put = (id, v) => { document.getElementById(id).textContent = (v === undefined || v === null || Number.isNaN(v)) ? '-' : v; };
+  put('csLv', st.level); put('csKills', st.kills != null ? st.kills.toLocaleString() : undefined);
+  put('csCombo', st.maxCombo); put('csAcc', st.acc != null ? st.acc + '%' : undefined); put('csWpm', st.wpm != null ? st.wpm + '타' : undefined);
 
   // 모드별 컬러 액센트 적용 (CSS 변수)
   const cert = document.getElementById('certificateScreen');
@@ -4722,10 +4765,13 @@ function showCertificate(mode, stats) {
 
   // 모드별 축하 문구
   const statEl = document.getElementById('certBodyStat');
-  if (statEl) statEl.textContent = MODE_BODY_STAT[mode] || MODE_BODY_STAT.beginner;
+  if (statEl) statEl.textContent = isTry
+    ? `초보자 인증까지 ${toNext.toLocaleString()}점 남았어요. 한 글자씩 정확하게 치다 보면 금방 올라갈 수 있어요. 조금만 더 힘내봐요!`
+    : (MODE_BODY_STAT[mode] || MODE_BODY_STAT.beginner);
 
   // 별 개수 렌더링
-  _renderCertStars(MODE_STAR_COUNT[mode] || 1);
+  _renderCertStars(MODE_STAR_COUNT[mode] ?? 1);
+  document.getElementById('certClearStars').style.display = isTry ? 'none' : '';
 
   // 날짜 자동
   const d = new Date();
