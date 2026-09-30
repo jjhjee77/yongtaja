@@ -1937,6 +1937,8 @@ html.cert-print #certPaper { transform: none !important; margin: 0 !important; b
 .cv5-stats b { font-family: var(--f-title); font-weight: 400; font-size: 22px; color: var(--q-ink); white-space: nowrap; }
 .cv5-main { font-size: 19px !important; line-height: 1.6 !important; }
 .cv5-stat { font-size: 15px !important; padding: 8px 18px !important; }
+.cert-post-tip { padding: 10px 22px; border-radius: 100px; background: #fff3c4; color: var(--q-ink); font-family: var(--f-body); font-weight: 700; font-size: 16px; box-shadow: 0 5px 0 #e6c86a; word-break: keep-all; text-align: center; max-width: 92vw; }
+.cert-post-tip b { color: #b86a00; }
 </style>
 </head>
 <body>
@@ -2155,6 +2157,7 @@ html.cert-print #certPaper { transform: none !important; margin: 0 !important; b
   </div>
 
   <!-- ── 액션 버튼 (Dashboard UI) ── -->
+  <div class="cert-post-tip" id="certPostTip" hidden>중급자부터는 <b>이미지로 저장</b>해서 <b>인증제 사이트</b>에 게시글을 올려 보세요!</div>
   <div class="cert-actions">
     <button class="btn-cert primary" onclick="saveCertificateImage()"><img src="/assets/icons/certificate.webp" alt=""> 이미지로 저장</button>
     <button class="btn-cert" onclick="showRankScreen()"><img src="/assets/icons/trophy.webp" alt=""> 순위표</button>
@@ -4773,6 +4776,8 @@ function showCertificate(mode, stats) {
   // 별 개수 렌더링
   _renderCertStars(MODE_STAR_COUNT[mode] ?? 1);
   document.getElementById('certClearStars').style.display = isTry ? 'none' : '';
+  // 중급자·고수·달인: 인증제 사이트에 올리도록 안내 (종이 밖이라 저장 이미지에는 안 찍힘)
+  document.getElementById('certPostTip').hidden = !['intermediate', 'advanced', 'master'].includes(mode);
 
   // 날짜 자동
   const d = new Date();
