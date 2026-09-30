@@ -1929,6 +1929,7 @@ html.cert-print, html.cert-print body { background: #ff00ff !important; }
 html.cert-print body > *:not(#certificateScreen) { display: none !important; }
 html.cert-print #certificateScreen { background: #ff00ff !important; justify-content: flex-start !important; align-items: flex-start !important; padding: 0 !important; }
 html.cert-print #certificateScreen > *:not(#certPaper) { display: none !important; }
+html.cert-print *, html.cert-print *::before, html.cert-print *::after { transition: none !important; animation: none !important; }
 html.cert-print #certPaper { transform: none !important; margin: 0 !important; box-shadow: none !important; }
 .cv5-stats { display: flex; justify-content: center; gap: 10px; margin: 0 0 12px; }
 .cv5-stats > div { display: flex; flex-direction: column; align-items: center; min-width: 118px; padding: 6px 12px; border-radius: 16px; border: 2px solid var(--q-soft); }
@@ -4802,7 +4803,7 @@ window.previewCertificate = function(mode) {
   try {
     const params = new URLSearchParams(window.location.search);
     const certMode = params.get('cert');
-    if (certMode && MODE_STAR_COUNT[certMode]) {
+    if (certMode && certMode in MODE_STAR_COUNT) {   // 'try'(도전 기록)는 별 0개라 in 으로 확인
       window.addEventListener('load', () => {
         setTimeout(() => showCertificate(certMode, {}), 200);
       });
