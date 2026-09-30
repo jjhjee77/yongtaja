@@ -1923,6 +1923,8 @@ table.pt-rank td:last-child { min-width: 8.5em; }
   background: var(--q-purple); color: #fff !important; font-size: 20px !important; }
 .upg-cards::after { content: '카드를 누르거나 숫자 1 · 2 · 3 키로 골라요'; display: block; width: 100%; text-align: center; margin-top: 14px; color: var(--q-lav); font-family: var(--f-body); font-weight: 700; font-size: 15px; }
 .upg-cards { flex-wrap: wrap; }
+.cv5-score { align-self: center; margin: -4px 0 12px; padding: 6px 22px; border-radius: 100px; background: var(--q-soft); font-weight: 700; font-size: 17px; color: #5a5480; white-space: nowrap; }
+.cv5-score b { font-family: var(--f-title); font-weight: 400; font-size: 28px; color: var(--mode-c-dark, var(--q-purple)); margin: 0 4px 0 8px; vertical-align: -2px; }
 </style>
 </head>
 <body>
@@ -2112,6 +2114,7 @@ table.pt-rank td:last-child { min-width: 8.5em; }
       </div>
       <h1 class="cv5-title" id="certTitle">한글 타자 <b id="certModeName">초보자</b> 인증서</h1>
 
+      <div class="cv5-score">획득 점수 <b id="certScore">0</b><span>점</span></div>
       <div class="cv5-student">
         <label class="cv5-field"><input id="certGrade" type="number" min="1" max="6" inputmode="numeric" placeholder="0"><span>학년</span></label>
         <label class="cv5-field"><input id="certClass" type="number" min="1" max="20" inputmode="numeric" placeholder="0"><span>반</span></label>
@@ -4695,6 +4698,9 @@ window.addEventListener('resize', () => { const c = document.getElementById('cer
 
 function showCertificate(mode, stats) {
   SFX.cert();
+  // 획득 점수 (미리보기처럼 점수가 없으면 그 등급 기준 점수)
+  const sc = (stats && Number.isFinite(stats.score)) ? stats.score : (MODE_STAGES[mode] ? MODE_STAGES[mode].targetScore : 0);
+  document.getElementById('certScore').textContent = sc.toLocaleString();
   const modeName = MODE_CERT_TITLE[mode] || mode;
   document.getElementById('certModeTag').textContent = modeName;
   document.getElementById('certModeName').textContent = modeName;
