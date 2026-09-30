@@ -3871,6 +3871,10 @@ function gainXp(amount) {
   if (S.xp >= S.xpMax) {
     S.xp = S.xpMax;
     updateHud();
+    // 레벨업이 이미 예약됐거나 떠 있으면 다시 부르지 않음
+    // (0.4초 사이에 날아가던 미사일이 한 마리 더 잡으면 카드가 다시 뽑히고 효과음이 겹치던 문제)
+    if (S._upgPending) return;
+    S._upgPending = true;
     clearInterval(S.spawnTimer);
     setTimeout(() => { if (S.running) showUpgradeScreen(); }, 400);
   } else {
@@ -3880,6 +3884,7 @@ function gainXp(amount) {
 
 // ── 업그레이드 화면 ───────────────────────────────
 function showUpgradeScreen() {
+  S._upgPending = true;
   S.paused = true;
   SFX.levelUp();
 
@@ -3928,6 +3933,8 @@ function showUpgradeScreen() {
       <div class="ukey">${idx + 1}</div>
     `;
     card.onclick = () => {
+      if (!S._upgPending) return;   // 두 번 눌림 방지
+      S._upgPending = false;
       SFX.pick();
       upg.apply(S);
       S.upgrades.push(upg.name);
