@@ -1925,6 +1925,11 @@ table.pt-rank td:last-child { min-width: 8.5em; }
 .upg-cards { flex-wrap: wrap; }
 .cv5-score { align-self: center; margin: -4px 0 12px; padding: 6px 22px; border-radius: 100px; background: var(--q-soft); font-weight: 700; font-size: 17px; color: #5a5480; white-space: nowrap; }
 .cv5-score b { font-family: var(--f-title); font-weight: 400; font-size: 28px; color: var(--mode-c-dark, var(--q-purple)); margin: 0 4px 0 8px; vertical-align: -2px; }
+html.cert-print, html.cert-print body { background: #ff00ff !important; }
+html.cert-print body > *:not(#certificateScreen) { display: none !important; }
+html.cert-print #certificateScreen { background: #ff00ff !important; justify-content: flex-start !important; align-items: flex-start !important; padding: 0 !important; }
+html.cert-print #certificateScreen > *:not(#certPaper) { display: none !important; }
+html.cert-print #certPaper { transform: none !important; margin: 0 !important; box-shadow: none !important; }
 </style>
 </head>
 <body>
@@ -4755,6 +4760,8 @@ window.previewCertificate = function(mode) {
       window.addEventListener('load', () => {
         setTimeout(() => showCertificate(certMode, {}), 200);
       });
+      // ?cert=…&print=1 : 인증서 종이만 왼쪽 위에 (이미지로 저장용)
+      if (params.get('print')) document.documentElement.classList.add('cert-print');
     }
   } catch (e) {}
 })();
