@@ -1952,7 +1952,7 @@ table.pt-rank td:last-child { min-width: 8.5em; }
         <button class="q-btn q-big" id="challengeBtn" onclick="startGame('infinite')"><img src="/assets/icons/challenge.webp" alt="">도전하기</button>
         <button class="q-btn" onclick="showRankScreen()"><img src="/assets/icons/trophy.webp" alt="">순위표</button>
       </div>
-      <div class="pt-hint">끝까지 살아남아 최고 점수에 도전해요!<br>인증서 · 초보자 4만 · 중급자 10만 · 고수 100만 · 달인 1000만</div>
+      <div class="pt-hint">끝까지 살아남아 최고 점수에 도전해요!<br>인증서 · 초보자 1만 · 중급자 5만 · 고수 50만 · 달인 500만</div>
     </div>
 
     <aside class="q-card pt-board">
@@ -2464,10 +2464,10 @@ const SHARED_STAGES = [
 
 // 모든 모드는 SHARED_STAGES를 공유, 목표 점수만 다름
 const MODE_STAGES = {
-  beginner:     { name: '초보자', targetScore:    40000, color: '#22d3ee', stages: SHARED_STAGES },
-  intermediate: { name: '중급자', targetScore:   100000, color: '#a78bfa', stages: SHARED_STAGES },
-  advanced:     { name: '고수',   targetScore:  1000000, color: '#fbbf24', stages: SHARED_STAGES },
-  master:       { name: '달인',   targetScore: 10000000, color: '#f87171', stages: SHARED_STAGES },
+  beginner:     { name: '초보자', targetScore:    10000, color: '#22d3ee', stages: SHARED_STAGES },
+  intermediate: { name: '중급자', targetScore:    50000, color: '#a78bfa', stages: SHARED_STAGES },
+  advanced:     { name: '고수',   targetScore:   500000, color: '#fbbf24', stages: SHARED_STAGES },
+  master:       { name: '달인',   targetScore:  5000000, color: '#f87171', stages: SHARED_STAGES },
 };
 
 // 모드 → 인증서 표시명 매핑
@@ -2915,7 +2915,7 @@ window.addEventListener('resize', resizeCanvas);
 // ══════════════════════════════════════════════════════════════
 const WEAPONS = {
   orbit: { name: '궤도 별', evo: '은하 고리', icon: '/assets/icons/orbit.webp',
-    desc: lv => lv >= 5 ? '별 6개가 두 겹으로 돌며 적을 밀어내요' : `별 ${lv}개가 몸 주위를 돌며 적을 밀어내요` },
+    desc: lv => lv >= 5 ? '별 5개가 두 겹으로 돌며 적을 밀어내요' : `별 ${lv}개가 몸 주위를 돌며 적을 밀어내요` },
   chain: { name: '번개 사슬', evo: '천둥 폭풍', icon: '/assets/icons/fx_lightning.webp',
     desc: lv => lv >= 5 ? '처치할 때마다 번개가 4마리에게 튀어요' : `콤보 ${6 - lv}번마다 번개가 ${1 + lv}마리에게 튀어요` },
   laser: { name: '관통 빛줄기', evo: '무지개 광선', icon: '/assets/icons/fx_energyball.webp',
@@ -3006,7 +3006,7 @@ function updateWeapons(dt) {
   const O = wlv('orbit');
   S._orbitA = (S._orbitA || 0) + dt * 0.0026;
   if (O > 0) {
-    const rings = O >= 5 ? [[3, 78], [3, 128]] : [[O, 88]];
+    const rings = O >= 5 ? [[3, 78], [2, 128]] : [[O, 88]];   // 진화 최대 5개 (6개는 너무 셌음)
     S._orbitPts = [];
     rings.forEach(([cnt, r], ri) => {
       for (let i = 0; i < cnt; i++) {
