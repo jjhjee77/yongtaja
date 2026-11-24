@@ -1951,6 +1951,36 @@ html body .btn::after, html body .q-btn::after, html body .btn-cert::after, html
 #hud .hud-ibtn:hover { transform: none !important; }
 #hud .hud-ibtn:active { transform: translateY(3px) !important; box-shadow: 0 2px 0 var(--q-lav) !important; }
 #hud .hud-ibtn img { pointer-events: none; }
+
+/* Uiverse Form(살구 카드) 모양 복구 — UI v4 때 빠져 이름창이 글자만 떠 있었음 (b647554 의 값 그대로) */
+#nameModal .uf-card, #contestModal .uf-card { background-color: #fcd0a1; border-radius: 10px; padding: 20px; color: #5b3a1e; }
+#nameModal .uf-label, #contestModal .uf-label { display: block; margin-bottom: 10px; font-size: 18px; color: #de5959; }
+#nameModal .uf-btn, #contestModal .uf-btn { background: #de5959; color: #fff; font-size: 18px; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; margin: 0 10px 0 0; }
+#nameModal .uf-btn:hover, #contestModal .uf-btn:hover { background: #b54141; }
+#nameModal .uf-btn.orange, #contestModal .uf-btn.orange { background: #fcb13e; }
+#nameModal .uf-btn.orange:hover, #contestModal .uf-btn.orange:hover { background: #c78d35; }
+#nameModal #nameInput { width: 100%; padding: 10px; font-size: 18px; border-radius: 5px; border: none; margin-bottom: 20px; background: #fff; color: #333; clip-path: none; letter-spacing: 1px; }
+
+/* 용타자 전용 (2026-11-24): 이름 고르기 · 타자대회 — 기존 카드·버튼 모양을 그대로 씀 */
+[hidden] { display: none !important; }
+.pick-row { display: flex; gap: 8px; margin-bottom: 16px; }
+.pick-row select { flex: 1; min-width: 0; height: 48px; padding: 0 8px; border: none; border-radius: 5px; background: #fff; color: #333; font-family: var(--f-body); font-weight: 700; font-size: 16px; }
+#contestModal, #contestReady, #boardScreen { background: linear-gradient(180deg, rgba(108,79,163,.94), rgba(39,32,82,.98)) !important; color: #fff; font-family: var(--f-body); word-break: keep-all; }
+#contestModal { position: fixed; inset: 0; z-index: 200; display: flex; align-items: center; justify-content: center; }
+#contestModal.hidden { display: none; }
+#contestModal .uf-card { width: 400px; max-width: 94vw; font-family: var(--f-body); }
+#contestModal .uf-label, #contestModal .uf-btn { font-family: var(--f-title) !important; font-weight: 400; }
+#contestModal .pick-err { color: #de5959; font-size: 14px; min-height: 20px; }
+.contest-rule { color: #6b4a33; font-size: 15px; line-height: 1.6; margin: 4px 0 14px; }
+#contestReady .pause-title { font-size: 120px !important; }
+#hTime.last { color: #ff5a6e !important; }
+#boardScreen { justify-content: flex-start !important; padding: 24px 20px !important; gap: 18px !important; overflow-y: auto; }
+.board-cols { width: 100%; max-width: 1240px; display: grid; grid-template-columns: 1.25fr 1fr; gap: 22px; align-items: start; }
+@media (max-width: 900px) { .board-cols { grid-template-columns: 1fr; } }
+.board-cols table.pt-rank td.rk-name { min-width: 0; white-space: normal; }
+.board-cols td.rk-name small { display: block; font-size: 13px; font-weight: 400; color: #8a83b0; }
+.board-bar { display: flex; gap: 14px; align-items: center; flex-wrap: wrap; justify-content: center; }
+.board-bar select { height: 48px; border: 0; border-radius: 100px; padding: 0 18px; font-family: var(--f-body); font-weight: 700; font-size: 16px; color: var(--q-ink); background: #fff; }
 </style>
 </head>
 <body>
@@ -1979,8 +2009,10 @@ html body .btn::after, html body .q-btn::after, html body .btn-cert::after, html
       <div class="pt-tiles">
         <button class="q-btn q-big" id="challengeBtn" onclick="startGame('infinite')"><img src="/assets/icons/challenge.webp" alt="">도전하기</button>
         <button class="q-btn" onclick="showRankScreen()"><img src="/assets/icons/trophy.webp" alt="">순위표</button>
+        <button class="q-btn" id="contestBtn" onclick="openContest()" hidden><img src="/assets/icons/medal.webp" alt="">타자대회</button>
+        <button class="q-btn" id="boardBtn" onclick="showBoard()" hidden><img src="/assets/icons/star.webp" alt="">대회 순위</button>
       </div>
-      <div class="pt-hint">끝까지 살아남아 최고 점수에 도전해요!<br>인증서 · 초보자 1만 · 중급자 5만 · 고수 50만 · 달인 500만</div>
+      <div class="pt-hint">끝까지 살아남아 최고 점수에 도전해요!<br>인증서 · 초보자 1만 · 중급자 15만 · 고수 50만 · 달인 500만</div>
     </div>
 
     <aside class="q-card pt-board">
@@ -2012,6 +2044,11 @@ html body .btn::after, html body .q-btn::after, html body .btn-cert::after, html
       </div>
     </div>
 
+    <div class="hud-block" id="hTimeBlock" hidden>
+      <div class="hud-label">남은 시간</div>
+      <div class="hud-val" id="hTime">5:00</div>
+    </div>
+
     <!-- 레벨 (가로 배치) -->
     <div style="display:flex;flex-direction:row;align-items:center;gap:10px;">
       <div class="lv-badge" id="hLvBadge">LV.1</div>
@@ -2035,7 +2072,7 @@ html body .btn::after, html body .q-btn::after, html body .btn-cert::after, html
       <div class="powers-row" id="hPowers"></div>
       <button id="muteBtn" class="btn hud-ibtn" onclick="toggleMute()" title="소리"><img src="/assets/icons/sound_on.webp" alt="소리"></button>
       <button id="fsBtn" class="btn hud-ibtn" onclick="toggleFullscreen()" title="전체화면 (F11)"><img src="/assets/icons/fullscreen.webp" alt="전체화면"></button>
-      <button class="btn hud-ibtn" onclick="togglePause()" title="일시정지"><img src="/assets/icons/pause.webp" alt="일시정지"></button>
+      <button class="btn hud-ibtn" id="pauseBtn" onclick="togglePause()" title="일시정지"><img src="/assets/icons/pause.webp" alt="일시정지"></button>
     </div>
   </div>
 
@@ -2070,16 +2107,44 @@ html body .btn::after, html body .q-btn::after, html body .btn-cert::after, html
   <div class="uf-card">
     <label class="uf-label"><img src="/assets/icons/trophy.webp" alt="" style="width:22px;height:22px;vertical-align:-4px;margin-right:4px">TOP 20 등록!</label>
     <div id="nameModalScore" class="name-modal-score">0</div>
-    <label class="uf-label" for="nameInput">이름: <small style="color:#9a6a4a;font-weight:400">(최대 11자)</small></label>
+    <label class="uf-label" id="nameInputLabel" for="nameInput">이름: <small style="color:#9a6a4a;font-weight:400">(최대 11자)</small></label>
     <div class="pp-input-wrap">
       <div class="pp-mascot" aria-hidden="true"></div>
       <input id="nameInput" type="text" placeholder="" autocomplete="off" spellcheck="false" />
     </div>
+    <div class="pick-row" id="namePick" hidden></div>
     <div id="nameError" style="display:none;font-size:14px;margin:-10px 0 14px;"></div>
     <div>
       <button class="uf-btn" onclick="submitName()">등록</button>
       <button class="uf-btn orange" onclick="skipName()">건너뛰기</button>
     </div>
+  </div>
+</div>
+
+<!-- ══ 타자대회 참가 (용타자 전용) ══ -->
+<div id="contestModal" class="hidden">
+  <div class="uf-card">
+    <label class="uf-label"><img src="/assets/icons/medal.webp" alt="" style="width:22px;height:22px;vertical-align:-4px;margin-right:4px"><span id="contestTitle">타자대회</span></label>
+    <div class="contest-rule" id="contestRule"></div>
+    <div class="pick-row" id="contestPick"></div>
+    <div class="pick-err" id="contestErr"></div>
+    <div>
+      <button class="uf-btn" onclick="startContest()">시작하기</button>
+      <button class="uf-btn orange" onclick="closeContest()">그만두기</button>
+    </div>
+  </div>
+</div>
+<div class="screen hidden" id="contestReady"><div class="pause-title" id="contestCount">3</div></div>
+<div class="screen hidden" id="boardScreen">
+  <div class="rank-title"><img src="/assets/icons/trophy.webp" alt="" style="width:44px;height:44px;vertical-align:-6px;margin-right:8px"><span id="boardTitle">타자대회 순위</span></div>
+  <div class="board-cols">
+    <div class="q-card"><div class="q-card-title">반별 합산 (한 반 3명)</div><table class="pt-rank" id="boardClass"></table></div>
+    <div class="q-card"><div class="q-card-title">선생님 스페셜 매치</div><table class="pt-rank" id="boardTeacher"></table></div>
+  </div>
+  <div class="board-bar">
+    <select id="boardGrade" onchange="renderBoard()"><option value="">전체 학년</option><option value="1">1학년</option><option value="2">2학년</option><option value="3">3학년</option><option value="4">4학년</option><option value="5">5학년</option><option value="6">6학년</option></select>
+    <button class="btn" onclick="toggleFullscreen()">전체화면</button>
+    <button class="btn" onclick="goTitle()">← 처음 화면</button>
   </div>
 </div>
 
@@ -2109,8 +2174,10 @@ html body .btn::after, html body .q-btn::after, html body .btn-cert::after, html
   <div id="rankNotice" style="font-size:11px;color:var(--accent4);letter-spacing:2px;min-height:18px;"></div>
   <div class="res-btns">
     <button id="resCertBtn" class="btn gold" style="display:none" onclick="showEarnedCertificate()">🏆 인증서 받기</button>
-    <button class="btn" onclick="startGame(LAST_MODE)">다시하기</button>
-    <button class="btn gold" onclick="showRankScreen()">순위표</button>
+    <button class="btn" id="resAgainBtn" onclick="startGame(LAST_MODE)">다시하기</button>
+    <button class="btn gold" id="resRankBtn" onclick="showRankScreen()">순위표</button>
+    <button class="btn gold" id="resSendBtn" onclick="sendContest()" hidden>기록 다시 보내기</button>
+    <button class="btn gold" id="resBoardBtn" onclick="showBoard()" hidden>대회 순위</button>
     <button class="btn red" onclick="goTitle()">처음 화면</button>
   </div>
 </div>
@@ -2169,8 +2236,10 @@ html body .btn::after, html body .q-btn::after, html body .btn-cert::after, html
   </div>
 
   <!-- ── 액션 버튼 (Dashboard UI) ── -->
+  <div class="cert-post-tip" id="certSendTip" hidden></div>
   <div class="cert-post-tip" id="certPostTip" hidden>중급자부터는 <b>이미지로 저장</b>해서 <b>인증제 사이트</b>에 게시글을 올려 보세요!</div>
   <div class="cert-actions">
+    <button class="btn-cert primary" id="certSendBtn" onclick="sendCertToYongoreum()" hidden><img src="/assets/icons/medal.webp" alt=""> <span>용오름에 올리기</span></button>
     <button class="btn-cert primary" onclick="saveCertificateImage()"><img src="/assets/icons/certificate.webp" alt=""> 이미지로 저장</button>
     <button class="btn-cert" onclick="showRankScreen()"><img src="/assets/icons/trophy.webp" alt=""> 순위표</button>
     <button class="btn-cert" onclick="startGame(LAST_MODE)"><img src="/assets/icons/retry.webp" alt=""> 다시 도전</button>
@@ -2501,7 +2570,7 @@ const SHARED_STAGES = [
 // 모든 모드는 SHARED_STAGES를 공유, 목표 점수만 다름
 const MODE_STAGES = {
   beginner:     { name: '초보자', targetScore:    10000, color: '#22d3ee', stages: SHARED_STAGES },
-  intermediate: { name: '중급자', targetScore:    50000, color: '#a78bfa', stages: SHARED_STAGES },
+  intermediate: { name: '중급자', targetScore:   150000, color: '#a78bfa', stages: SHARED_STAGES },
   advanced:     { name: '고수',   targetScore:   500000, color: '#fbbf24', stages: SHARED_STAGES },
   master:       { name: '달인',   targetScore:  5000000, color: '#f87171', stages: SHARED_STAGES },
 };
@@ -2671,6 +2740,52 @@ async function isTopRank(score) {
 
 let pendingRankData = null;
 
+// ══════════════════════════════════════════════════
+//  용타자 전용 기능 스위치 — make_yongtaja.py 가 true 로 바꾼다 (풍타자는 항상 false)
+// ══════════════════════════════════════════════════
+const IS_YONG = true;
+
+// 이름 = 학년·반·번호 고르기 (글자를 못 치므로 장난 이름이 생기지 않음).
+// 인원은 용오름 로그인 화면(StudentLogin.jsx)과 같은 값 — 학생이 늘면 두 곳을 함께 고친다.
+const PICK_CLASS_COUNTS = { 1: 5 };                  // 1학년만 5반
+const PICK_GRADE_COUNTS = { 4: 28 };                 // 4학년만 28명
+const PICK_CLASS_STUDENTS = { '3-2': 27 };           // 3학년 2반만 27명
+const PICK_STAFF = ['영어','과학','음악','미술','체육','도덕','실과','보건','영양','상담','사서','특수','유치원','교감','교장'];
+function pickHtml() {
+  return '<select data-k="g" aria-label="학년"></select><select data-k="c" aria-label="반"></select><select data-k="n" aria-label="번호"></select>';
+}
+function setupPick(id) {
+  const box = document.getElementById(id);
+  box.innerHTML = pickHtml();
+  const [g, c, n] = box.querySelectorAll('select');
+  const opts = (list, head) => `<option value="">${head}</option>` + list.map(([v, t]) => `<option value="${v}">${t}</option>`).join('');
+  const range = m => Array.from({ length: m }, (_, i) => i + 1);
+  g.innerHTML = opts([...range(6).map(v => [v, v + '학년']), ['T', '전담 선생님']], '학년');
+  const fillN = () => {
+    const staff = g.value === 'T';
+    n.disabled = staff;
+    if (staff) { n.innerHTML = opts([], '-'); return; }
+    const keep = n.value;
+    const m = PICK_CLASS_STUDENTS[`${g.value}-${c.value}`] ?? PICK_GRADE_COUNTS[g.value] ?? 25;
+    n.innerHTML = opts([...range(m).map(v => [v, v + '번']), ['T', '선생님']], '번호');
+    n.value = keep; if (n.selectedIndex < 0) n.value = '';
+  };
+  g.onchange = () => {
+    c.innerHTML = g.value === 'T' ? opts(PICK_STAFF.map(v => [v, v]), '맡은 일') : opts(g.value ? range(PICK_CLASS_COUNTS[g.value] ?? 4).map(v => [v, v + '반']) : [], '반');
+    n.value = ''; fillN();
+  };
+  c.onchange = fillN;
+  g.onchange();
+}
+// 고른 값 → {name, g, c, t} (덜 골랐으면 null). 선생님이면 t = true
+function readPick(id) {
+  const [g, c, n] = [...document.getElementById(id).querySelectorAll('select')].map(e => e.value);
+  if (!g || !c) return null;
+  if (g === 'T') return { name: `${c} 선생님`, g: 0, c: 0, t: true };
+  if (!n) return null;
+  return n === 'T' ? { name: `${g}-${c} 선생님`, g: +g, c: +c, t: true } : { name: `${g}-${c} ${n}번`, g: +g, c: +c, t: false };
+}
+
 // ── 점수 장부 (2026-09-29): 점수가 오르는 곳에서만 따로 더해 둔 합계와 최종 점수가 같아야 순위 등록 ──
 // 개발자 도구로 S.score 만 바꾼 점수는 등록되지 않음. 기록에 처치 수·플레이 시간·검증값도 함께 남김(선생님 확인용).
 const _RL = (() => {
@@ -2736,6 +2851,13 @@ function promptRankName(data) {
   document.getElementById('nameInput').value = '';
   document.getElementById('nameError').style.display = 'none';
   document.getElementById('nameModal').classList.remove('hidden');
+  if (IS_YONG) {
+    document.querySelector('#nameModal .pp-input-wrap').hidden = true;
+    document.getElementById('namePick').hidden = false;
+    document.getElementById('nameInputLabel').textContent = '누구인가요?';
+    setupPick('namePick');
+    return;
+  }
   setTimeout(() => document.getElementById('nameInput').focus(), 100);
 }
 
@@ -2747,7 +2869,9 @@ function _escName(n) {
 }
 
 async function submitName() {
-  const raw  = document.getElementById('nameInput').value.trim().slice(0, NAME_MAX);
+  const picked = IS_YONG ? readPick('namePick') : null;
+  if (IS_YONG && !picked) { _showNameError('학년·반·번호를 모두 골라 주세요!'); return; }
+  const raw  = IS_YONG ? picked.name : document.getElementById('nameInput').value.trim().slice(0, NAME_MAX);
 
   // 부적절한 이름 차단
   if (raw && _hasBadWord(raw)) {
@@ -3226,6 +3350,9 @@ function startGame(mode) {
   S = newState();
   _RL.reset();
   S.running = true;
+  S.contest = null;
+  document.getElementById('hTimeBlock').hidden = true;
+  document.getElementById('pauseBtn').hidden = false;
   S.mode = mode;
   S.targetScore = (mode !== 'infinite' && MODE_STAGES[mode]) ? MODE_STAGES[mode].targetScore : 0;
   S.cx = canvas.width/2 || 400;
@@ -3320,7 +3447,7 @@ function startSpawning() {
   updateHud();
   const diff = getDifficulty();
   S.spawnTimer = setInterval(() => {
-    if (!S.running || S.paused) return;
+    if (!S.running || S.paused || S.down) return;
     if (S.enemies.length >= diff.maxOnScreen) return;
     spawnEnemy();
   }, diff.spawnDelay);
@@ -3590,7 +3717,7 @@ typeInp.addEventListener('keydown', e => {
 });
 
 function onType() {
-  if (!S || !S.running || S.paused) return;
+  if (!S || !S.running || S.paused || S.down) return;
   // _clearPending 중에는 조합 완료 대기 — 어떤 값이 있어도 처리하지 않음
   if (_clearPending) return;
 
@@ -3977,14 +4104,17 @@ function showUpgradeScreen() {
 
 // ── 피격 ─────────────────────────────────────────
 function takeDamage(amt=1) {
-  if (S.invincible) return;
+  if (S.invincible || S.down) return;
   S.hp = Math.max(0, S.hp - amt);
   if (!S.infiniteCombo) { S.combo = 0; }
   updateHud();
   SFX.miss();
   document.getElementById('dmgFlash').classList.add('on');
   setTimeout(()=>document.getElementById('dmgFlash').classList.remove('on'), 130);
-  if (S.hp <= 0) endGame(false);
+  if (S.hp <= 0) {
+    if (S.contest) S._revive = true;   // 대회: 끝나지 않고 잠깐 쉬었다가 다시 (적 배열을 도는 중이라 update 끝에서 처리)
+    else endGame(false);
+  }
 }
 
 // ── HUD 갱신 ──────────────────────────────────────
@@ -4062,11 +4192,14 @@ function gameLoop(ts) {
   S.frameTime = ts;
 
   if (!S.paused) update(dt);
+  if (!S.running) return;
   draw();
+  drawContestDown();
   RAF = requestAnimationFrame(gameLoop);
 }
 
 function update(dt) {
+  if (S.down) return;   // 대회에서 쉬는 3초
   const cx=S.cx, cy=S.cy;
 
   // 적 갱신
@@ -4134,6 +4267,7 @@ function update(dt) {
     }
   }
 
+  if (S._revive) { contestRevive(); return; }
   updateWeapons(dt);
   if (S._bossMusic && !S.enemies.some(e => e.isBoss)) bossMusic(false);   // 보스 다 사라지면 원래 음악
 
@@ -4348,6 +4482,14 @@ function draw() {
   }
 }
 
+function drawContestDown() {
+  if (!S.down) return;
+  ctx.save();
+  ctx.fillStyle = 'rgba(39,32,82,.55)'; ctx.fillRect(0, 0, canvas.width, canvas.height);
+  ctx.fillStyle = '#fff'; ctx.textAlign = 'center'; ctx.font = '400 40px "DNFBitBit", "Jua", sans-serif';
+  ctx.fillText(`${Math.max(1, Math.ceil((S.down - performance.now()) / 1000))}초 뒤 다시 시작!`, canvas.width / 2, canvas.height / 2 - 90);
+  ctx.restore();
+}
 function drawPlayer(cx, cy) {
   const t = Date.now() / 1000;
   const r = 26; // 캐릭터 원 반지름
@@ -4538,7 +4680,7 @@ function drawEnemyLabel(en) {
 
 // ── 일시정지 ──────────────────────────────────────
 function togglePause() {
-  if (!S||!S.running) return;
+  if (!S||!S.running||S.contest) return;   // 대회는 멈출 수 없음
   if (S.paused) resumeGame();
   else {
     S.paused=true;
@@ -4581,6 +4723,7 @@ function endGame(win) {
   if (!S) return;
   cleanupState();
   BGM.stop(); MUSIC.stop();
+  if (S.contest) { endContest(); return; }
   if (!win) SFX.gameOver();
 
   SAVE.runs++;
@@ -4603,7 +4746,8 @@ function endGame(win) {
   EARNED_CERT_TIER  = tierFromScore(S.score);
   const _min = Math.max(_RL.sec(), 30) / 60;   // 아주 짧은 판에서 타수가 튀지 않게 최소 30초
   EARNED_CERT_STATS = { score: S.score, kills: S.kills, maxCombo: S.maxCombo, acc: S.lastAcc,
-    level: S.upgLevel + 1, wpm: Math.round((S.strokes || 0) / _min) };
+    level: S.upgLevel + 1, wpm: Math.round((S.strokes || 0) / _min),
+    at: Date.now(), id: Date.now().toString(36) + Math.random().toString(36).slice(2, 8), real: _RL.ok(S.score) };
   EARNED_CERT_TIER = EARNED_CERT_TIER || 'try';   // 초보자 미만 = '도전 기록'
   const resCertBtn = document.getElementById('resCertBtn');
   if (resCertBtn) resCertBtn.style.display = EARNED_CERT_TIER ? '' : 'none';
@@ -4637,6 +4781,7 @@ function goTitle() {
   hideAllScreens();
   document.getElementById('titleScreen').classList.remove('hidden');
   buildTitleDots();
+  pollContest();
 }
 
 function hideAllScreens() {
@@ -4796,7 +4941,8 @@ function showCertificate(mode, stats) {
   _renderCertStars(MODE_STAR_COUNT[mode] ?? 1);
   document.getElementById('certClearStars').style.display = isTry ? 'none' : '';
   // 중급자·고수·달인: 인증제 사이트에 올리도록 안내 (종이 밖이라 저장 이미지에는 안 찍힘)
-  document.getElementById('certPostTip').hidden = !['intermediate', 'advanced', 'master'].includes(mode);
+  document.getElementById('certPostTip').hidden = IS_YONG || !['intermediate', 'advanced', 'master'].includes(mode);
+  setupCertSend(mode, st);
 
   // 날짜 자동
   const d = new Date();
@@ -4847,7 +4993,7 @@ document.addEventListener('keydown', e => {
   }
 });
 
-async function saveCertificateImage() {
+async function _captureCertPng(pixelRatio) {
   // html-to-image (최신/안정적, color-mix·SVG 필터·backdrop-filter 등 지원)
   if (!window.htmlToImage) {
     await new Promise((resolve, reject) => {
@@ -4861,7 +5007,7 @@ async function saveCertificateImage() {
       alert('이미지 저장 라이브러리를 불러오지 못했습니다.\n인터넷 연결을 확인해 주세요.');
     });
   }
-  if (!window.htmlToImage) return;
+  if (!window.htmlToImage) return null;
 
   // 입력값을 텍스트 노드로 임시 치환 (캡쳐 시 빈 칸 방지)
   const paper = document.getElementById('certPaper');
@@ -4891,9 +5037,9 @@ async function saveCertificateImage() {
   void paper.offsetHeight;
 
   try {
-    const dataUrl = await window.htmlToImage.toPng(paper, {
+    return await window.htmlToImage.toPng(paper, {
       backgroundColor: '#ffffff',
-      pixelRatio: 2,
+      pixelRatio: pixelRatio || 2,
       cacheBust: true,
       style: {
         transform: 'none',
@@ -4904,24 +5050,10 @@ async function saveCertificateImage() {
         background: '#ffffff',
       },
     });
-
-    // 다운로드
-    const grade = document.getElementById('certGrade').value || '0';
-    const className = document.getElementById('certClass').value || '0';
-    const num = document.getElementById('certNum').value || '0';
-    const name = document.getElementById('certName').value || '학생';
-    const modeName = MODE_CERT_TITLE[S?.mode || LAST_MODE] || '타자';
-    const fileName = `${modeName}_인증서_${grade}학년${className}반${num}번_${name}.png`;
-
-    const a = document.createElement('a');
-    a.href = dataUrl;
-    a.download = fileName;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
   } catch (err) {
     console.error('이미지 저장 오류:', err);
     alert('이미지 저장 중 오류가 발생했습니다.\n' + (err.message || ''));
+    return null;
   } finally {
     // 입력 복원
     restoreList.forEach(({ inp, span }) => {
@@ -4934,6 +5066,246 @@ async function saveCertificateImage() {
     paper.style.backgroundColor = prevBgColor;
     paper.style.backgroundImage = prevBgImage;
   }
+}
+
+async function saveCertificateImage() {
+  const dataUrl = await _captureCertPng(2);
+  if (!dataUrl) return;
+  // 다운로드
+  const grade = document.getElementById('certGrade').value || '0';
+  const className = document.getElementById('certClass').value || '0';
+  const num = document.getElementById('certNum').value || '0';
+  const name = document.getElementById('certName').value || '학생';
+  const modeName = MODE_CERT_TITLE[S?.mode || LAST_MODE] || '타자';
+  const fileName = `${modeName}_인증서_${grade}학년${className}반${num}번_${name}.png`;
+
+  const a = document.createElement('a');
+  a.href = dataUrl;
+  a.download = fileName;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+}
+
+// ══════════════════════════════════════════════════
+//  용오름에 인증서 올리기 (용타자 전용, 2026-11-24)
+//  용오름을 새 탭으로 열고(#ytcert=기록) 인증서 그림을 건네준다. 올리는 사람·시각은 용오름 로그인이 정한다.
+//  받는 기간과 형식은 용오름 src/v2/lib/yongtaja.js 와 같아야 한다.
+// ══════════════════════════════════════════════════
+const CERT_FROM = Date.parse('2026-11-25T00:00:00+09:00');
+const CERT_TO   = Date.parse('2026-12-04T23:59:59+09:00');
+const YONGOREUM_URL = /^(localhost|127\.0\.0\.1)$/.test(location.hostname) ? 'http://localhost:4977/' : 'https://xn--jx2bx4unla.site/';
+const YONGOREUM_ORIGINS = ['https://xn--jx2bx4unla.site', 'https://www.xn--jx2bx4unla.site', 'https://adys2026-8da59.web.app', 'https://adys2026-8da59.firebaseapp.com',
+  ...(/^(localhost|127\.0\.0\.1)$/.test(location.hostname) ? ['http://localhost:4977'] : [])];
+let CERT_SEND = null;      // { id, blob, url }
+let CERT_NOW = null;       // 지금 보이는 인증서의 기록
+function _fnv(str) {
+  let h = 0x811c9dc5;
+  for (let i = 0; i < str.length; i++) { h ^= str.charCodeAt(i); h = Math.imul(h, 0x01000193) >>> 0; }
+  return h.toString(36);
+}
+function setupCertSend(mode, st) {
+  const btn = document.getElementById('certSendBtn'), tip = document.getElementById('certSendTip');
+  const good = IS_YONG && ['intermediate', 'advanced', 'master'].includes(mode) && st && st.real && st.id;
+  CERT_NOW = good ? { mode, st } : null;
+  if (!CERT_SEND || !good || CERT_SEND.id !== st.id) { CERT_SEND = null; btn.querySelector('span').textContent = '용오름에 올리기'; }
+  const now = Date.now();
+  btn.hidden = !good || now < CERT_FROM || now > CERT_TO;
+  tip.hidden = !good;
+  if (good) tip.innerHTML = now < CERT_FROM ? '중급자 이상 인증서는 <b>11월 25일</b>부터 용오름에 올릴 수 있어요!'
+    : now > CERT_TO ? '인증서를 받는 기간(12월 4일까지)이 끝났어요.'
+    : '학년·반·번호·이름을 쓰고 <b>용오름에 올리기</b>를 눌러요! (12월 4일까지)';
+}
+async function sendCertToYongoreum() {
+  if (!CERT_NOW) return;
+  const btn = document.getElementById('certSendBtn'), tip = document.getElementById('certSendTip'), label = btn.querySelector('span');
+  // 그림이 이미 준비됐으면 바로 열기
+  if (CERT_SEND && CERT_SEND.id === CERT_NOW.st.id && CERT_SEND.key === _certKey()) { window.open(CERT_SEND.url, '_blank'); return; }
+  const g = +document.getElementById('certGrade').value, c = +document.getElementById('certClass').value, n = +document.getElementById('certNum').value;
+  const name = document.getElementById('certName').value.trim();
+  if (!g || !c || !n || !name) { tip.hidden = false; tip.innerHTML = '인증서에 <b>학년·반·번호·이름</b>을 먼저 써 주세요!'; return; }
+  if (!/^[가-힣A-Za-z ]{2,10}$/.test(name) || _hasBadWord(name)) { tip.hidden = false; tip.innerHTML = '이름 칸에는 <b>진짜 이름</b>을 써 주세요!'; return; }
+  btn.disabled = true; label.textContent = '준비 중…';
+  const { st, mode } = CERT_NOW, key = _certKey();
+  const dataUrl = await _captureCertPng(1.5);   // 새 탭을 먼저 열면 이 탭이 멈춰 그림을 못 만들므로 그림부터
+  btn.disabled = false; label.textContent = '용오름에 올리기';
+  if (!dataUrl || !CERT_NOW || CERT_NOW.st.id !== st.id) return;
+  const blob = await (await fetch(dataUrl)).blob();
+  const p = { id: st.id, s: st.score, m: mode, l: st.level, k: st.kills, x: st.maxCombo, a: st.acc, w: st.wpm, at: st.at, g, c, n };
+  p.v = _fnv([p.id, p.s, p.l, p.k, p.a, p.w, p.at, g, c, n, 'yongoreum2026'].join('|'));
+  CERT_SEND = { id: st.id, key, blob, url: YONGOREUM_URL + '#ytcert=' + btoa(JSON.stringify(p)).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '') };
+  if (!window.open(CERT_SEND.url, '_blank')) {   // 팝업이 막히면 한 번 더 누르게
+    label.textContent = '용오름 열기';
+    tip.innerHTML = '준비됐어요! <b>용오름 열기</b>를 눌러 주세요.';
+  }
+}
+function _certKey() { return ['certGrade', 'certClass', 'certNum', 'certName'].map(i => document.getElementById(i).value.trim()).join('|'); }
+window.addEventListener('message', e => {
+  if (!IS_YONG || !YONGOREUM_ORIGINS.includes(e.origin) || !e.data || !CERT_SEND) return;
+  if (e.data.type === 'yt-cert-want' && e.data.id === CERT_SEND.id) e.source.postMessage({ type: 'yt-cert-image', id: CERT_SEND.id, blob: CERT_SEND.blob }, e.origin);
+  if (e.data.type === 'yt-cert-done' && e.data.id === CERT_SEND.id) {
+    document.getElementById('certSendBtn').querySelector('span').textContent = '올렸어요!';
+    document.getElementById('certSendTip').innerHTML = '용오름에 <b>인증서를 올렸어요!</b>';
+  }
+});
+
+// ══════════════════════════════════════════════════
+//  타자대회 (용타자 전용, 2026-11-24)
+//  선생님이 용오름 관리 탭에서 열고 닫는다(yong-contest/config). 시간이 다 될 때까지 하고 점수로 겨룬다.
+//  반 = 세 명의 점수 합, 선생님 = 한 사람 최고 점수. 실드가 다 떨어지면 3초 쉬고 다시(점수 유지, 콤보 끊김).
+// ══════════════════════════════════════════════════
+const _CFB = _FB.replace('/yong-ranks', '/yong-contest');
+let CONTEST = null;        // 지금 설정 {open, round, title, sec}
+let CONTEST_RESULT = null; // 방금 끝난 판의 기록
+let _contestTick = null, _boardTick = null;
+async function pollContest() {
+  if (!IS_YONG) return;
+  try {
+    const res = await fetch(_CFB + '/config.json', { cache: 'no-store' });
+    CONTEST = res.ok ? await res.json() : null;
+  } catch { /* 인터넷이 끊기면 직전 값 유지 */ }
+  document.getElementById('contestBtn').hidden = !(CONTEST && CONTEST.open && CONTEST.round);
+  document.getElementById('boardBtn').hidden = !(CONTEST && CONTEST.round);
+}
+const _contestSec = () => Math.min(1800, Math.max(60, Number(CONTEST && CONTEST.sec) || 300));
+const _mmss = s => `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`;
+const _minText = s => s % 60 ? `${Math.floor(s / 60)}분 ${s % 60}초` : `${s / 60}분`;
+async function openContest() {
+  await pollContest();
+  if (!CONTEST || !CONTEST.open) return;
+  document.getElementById('contestTitle').textContent = CONTEST.title || '타자대회';
+  document.getElementById('contestRule').innerHTML = `${_minText(_contestSec())} 동안 점수를 겨뤄요. 실드가 다 떨어져도 3초 뒤 다시 시작해요. 중간에 멈출 수 없고, 능력 카드를 고르는 동안에도 시간이 가요!`;
+  document.getElementById('contestErr').textContent = '';
+  setupPick('contestPick');
+  document.getElementById('contestModal').classList.remove('hidden');
+}
+function closeContest() { document.getElementById('contestModal').classList.add('hidden'); }
+let _contestStarting = false;
+async function startContest() {
+  if (_contestStarting) return;
+  const who = readPick('contestPick');
+  if (!who) { document.getElementById('contestErr').textContent = '빈칸 없이 모두 골라 주세요!'; return; }
+  _contestStarting = true;
+  await pollContest();
+  if (!CONTEST || !CONTEST.open) { document.getElementById('contestErr').textContent = '지금은 대회가 닫혀 있어요.'; _contestStarting = false; return; }
+  const round = CONTEST.round, sec = _contestSec();
+  closeContest();
+  hideAllScreens();
+  document.getElementById('contestReady').classList.remove('hidden');
+  for (const n of [3, 2, 1]) { document.getElementById('contestCount').textContent = n; SFX.click && SFX.click(); await new Promise(r => setTimeout(r, 1000)); }
+  _contestStarting = false;
+  startGame('infinite');
+  S.contest = { who, round, sec, endAt: performance.now() + sec * 1000, downs: 0 };
+  document.getElementById('hTimeBlock').hidden = false;
+  document.getElementById('pauseBtn').hidden = true;
+  clearInterval(_contestTick);
+  contestClock();
+  _contestTick = setInterval(contestClock, 200);   // 실제 시계로 재서 카드 고르는 동안·다른 탭에서도 시간이 흐름
+}
+function contestClock() {
+  if (!S || !S.running || !S.contest) { clearInterval(_contestTick); return; }
+  const left = Math.max(0, Math.ceil((S.contest.endAt - performance.now()) / 1000));
+  const el = document.getElementById('hTime');
+  el.textContent = _mmss(left); el.classList.toggle('last', left <= 10);
+  if (S.down && performance.now() >= S.down) { S.down = 0; S.hp = S.maxHp; updateHud(); typeInp.focus(); }
+  if (S.contest.endAt <= performance.now()) { clearInterval(_contestTick); endGame(true); }
+}
+function contestRevive() {
+  S._revive = false;
+  S.contest.downs++;
+  S.enemies = S.enemies.filter(e => e.isBoss);
+  S.enemies.forEach(e => { e.dying = false; });
+  S.missiles = []; S.target = null; S.combo = 0;
+  S.down = performance.now() + 3000;
+  clearTypeInput();
+  updateHud();
+}
+function endContest() {
+  clearInterval(_contestTick);
+  SFX.cert();
+  updateAccuracy();
+  document.getElementById('gameWrap').classList.add('hidden');
+  hideAllScreens();
+  const k = S.contest;
+  CONTEST_RESULT = { round: k.round, ok: _RL.ok(S.score), sent: false,
+    body: { name: k.who.name, g: k.who.g, c: k.who.c, t: k.who.t, score: S.score, level: S.upgLevel + 1, kills: S.kills, acc: S.lastAcc, downs: k.downs, sec: k.sec } };
+  CONTEST_RESULT.body.v = _rankSig({ name: k.who.name, score: S.score, kills: S.kills, sec: k.sec });
+  const put = (id, v) => { document.getElementById(id).textContent = v; };
+  put('resTitle', '대회 끝!'); document.getElementById('resTitle').className = 'res-title win';
+  put('rScore', S.score.toLocaleString()); put('rLv', S.upgLevel + 1); put('rKills', S.kills); put('rCombo', S.maxCombo); put('rAcc', S.lastAcc + '%'); put('rPower', S.powers.length);
+  for (const id of ['resCertBtn', 'resAgainBtn', 'resRankBtn']) document.getElementById(id).style.display = 'none';
+  document.getElementById('resBoardBtn').hidden = false;
+  document.getElementById('resultScreen').classList.remove('hidden');
+  sendContest();
+}
+async function sendContest() {
+  const r = CONTEST_RESULT, notice = document.getElementById('rankNotice'), again = document.getElementById('resSendBtn');
+  if (!r || r.sent || r.busy) return;
+  again.hidden = true;
+  if (!r.ok) { notice.textContent = '점수 기록을 확인할 수 없어 대회 순위에 올리지 않았어요'; return; }
+  r.busy = true;
+  notice.textContent = `${r.body.name} 기록을 보내는 중…`;
+  try {
+    const res = await fetch(`${_CFB}/results/${r.round}.json`, { method: 'POST', body: JSON.stringify({ ...r.body, at: { '.sv': 'timestamp' } }) });
+    if (!res.ok) throw new Error(res.status);
+    r.sent = true;
+    notice.textContent = `${r.body.name} 기록이 대회 순위에 올라갔어요!`;
+  } catch (e) {
+    notice.textContent = '기록을 보내지 못했어요. 이 화면을 선생님께 보여 주고 다시 보내기를 눌러 주세요.';
+    again.hidden = false;
+  }
+  r.busy = false;
+}
+
+// ── 대회 순위판 (주소 ?board 로 바로 열림, 5초마다 새로고침) ──
+let BOARD = [];
+function contestTeams(list) {   // 같은 사람이 여러 번 하면 가장 높은 점수, 반마다 위에서 세 명
+  const best = {};
+  list.forEach(r => { if (r && r.name && (!best[r.name] || r.score > best[r.name].score)) best[r.name] = r; });
+  const teams = {};
+  Object.values(best).filter(r => !r.t).forEach(r => (teams[`${r.g}-${r.c}`] ??= []).push(r));
+  return {
+    classes: Object.entries(teams).map(([id, ms]) => { const m = ms.sort((a, b) => b.score - a.score).slice(0, 3); return { id, m, sum: m.reduce((a, r) => a + r.score, 0) }; }).sort((a, b) => b.sum - a.sum),
+    teachers: Object.values(best).filter(r => r.t).sort((a, b) => b.score - a.score),
+  };
+}
+async function showBoard() {
+  hideAllScreens();
+  document.getElementById('gameWrap').classList.add('hidden');
+  document.getElementById('boardScreen').classList.remove('hidden');
+  clearInterval(_boardTick);
+  await loadBoard();
+  _boardTick = setInterval(() => {
+    if (document.getElementById('boardScreen').classList.contains('hidden')) { clearInterval(_boardTick); return; }
+    loadBoard();
+  }, 5000);
+}
+async function loadBoard() {
+  await pollContest();
+  try {
+    if (CONTEST && CONTEST.round) {
+      const res = await fetch(`${_CFB}/results/${CONTEST.round}.json`, { cache: 'no-store' });
+      if (res.ok) BOARD = Object.values((await res.json()) || {});
+    } else BOARD = [];
+  } catch { /* 다음 새로고침에 다시 */ }
+  renderBoard();
+}
+function renderBoard() {
+  document.getElementById('boardTitle').textContent = (CONTEST && CONTEST.title) || '타자대회 순위';
+  const { classes, teachers } = contestTeams(BOARD);
+  const gr = document.getElementById('boardGrade').value;
+  const empty = '<tr><td colspan="3" class="rk-empty">아직 기록이 없습니다</td></tr>';
+  document.getElementById('boardClass').innerHTML = classes.filter(t => !gr || t.id.startsWith(gr + '-')).map((t, i) => `<tr>
+    <td class="rk-num">${i + 1}</td>
+    <td class="rk-name">${_escName(t.id.replace('-', '학년 ') + '반')}${t.m.length < 3 ? ` (${t.m.length}/3명)` : ''}<small>${t.m.map(r => `${_escName(r.name)} ${Number(r.score).toLocaleString()}`).join(' · ')}</small></td>
+    <td class="rk-score">${t.sum.toLocaleString()}</td></tr>`).join('') || empty;
+  document.getElementById('boardTeacher').innerHTML = teachers.map((r, i) => `<tr>
+    <td class="rk-num">${i + 1}</td><td class="rk-name">${_escName(r.name)}</td><td class="rk-score">${Number(r.score).toLocaleString()}</td></tr>`).join('') || empty;
+}
+if (IS_YONG) {
+  pollContest();
+  setInterval(() => { if (!document.hidden && !document.getElementById('titleScreen').classList.contains('hidden')) pollContest(); }, 30000);
+  if (new URLSearchParams(location.search).has('board')) window.addEventListener('load', () => setTimeout(showBoard, 200));
 }
 
 // ── 클릭 포커스 ───────────────────────────────────
