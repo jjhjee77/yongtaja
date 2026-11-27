@@ -5576,8 +5576,8 @@ async function showHall(focusId) {
     if (document.getElementById('hallScreen').classList.contains('hidden')) return;
     const dt = Math.min(100, t - t0); t0 = t;
     const viewOpen = !document.getElementById('hallView').classList.contains('hidden');
-    if (Date.now() > hallQuietUntil && HALL.length > 1 && !viewOpen) {
-      hallPos = (hallPos + dt / HALL_FLOW_MS) % HALL.length;   // 카드 한 장을 HALL_FLOW_MS 동안 옆으로 살살
+    if (Date.now() > hallQuietUntil && HSL.length > 1 && !viewOpen) {
+      hallPos = (hallPos + dt / HALL_FLOW_MS) % HSL.length;   // 카드 한 장을 HALL_FLOW_MS 동안 옆으로 살살
       _hallFlowRender();
     }
     hallTick = requestAnimationFrame(tick);
@@ -5586,22 +5586,10 @@ async function showHall(focusId) {
 }
 const HALL_FLOW_MS = 4500;
 let hallPos = 0;
-// 흐르는 중 그리기: 소수 위치로 부채꼴을 계속 옮긴다 (가운데에 가까울수록 크게)
+// 흐르는 중: 소수 위치로 계속 옮긴다
 function _hallFlowRender() {
-  const n = HALL.length, fan = document.getElementById('hallFan'), cw = fan._cw || 300;
-  fan.classList.add('flowing');
-  const cur = Math.round(hallPos) % n;
-  HALL.forEach((r, i) => {
-    let d = ((i - hallPos) % n + n) % n; if (d > n / 2) d -= n;
-    const a = Math.abs(d), c = r._el;
-    c.className = 'hall-slot' + (i === cur ? ' c0' : '');
-    c.style.transform = `translateX(${d * cw * 0.755}px) translateY(${a * cw * 0.089}px) rotate(${d * 8}deg) scale(${1.06 - Math.min(a, 1) * 0.22})`;
-    c.style.zIndex = 10 - Math.round(a);
-    c.style.opacity = Math.max(0, Math.min(1, 2.6 - a, (n / 2 - a) * 2 + (n > 5 ? 9 : 0)));   // 끝에서 반대쪽으로 넘어갈 땐 살짝 사라졌다 나타남
-    c.style.pointerEvents = a > 2 ? 'none' : '';
-    if (a <= 3) _hallLoadImg(r);
-  });
-  hallCur = cur;
+  _hallPlace(hallPos, true);
+  hallCur = Math.round(hallPos) % HSL.length;
 }
 function _pcBars(seed) {   // cardface.cjs bars() 그대로
   let s = seed * 9301 + 49297, out = '';
@@ -5623,17 +5611,19 @@ function _pcFace(r, no) {   // cardface.cjs face() 그대로: 위 띠=등급 색
 }
 const _PC_BACK = `<div class="pc-card pc-back"><div class="pc-t1">안동용상초등학교</div><div class="pc-ring"></div>
   <img class="pc-face" src="/assets/yy/yy_6.webp" alt="" draggable="false"><div class="pc-t2">명예의 전당</div><div class="pc-t3">2026 TYPING CARD</div></div>`;
+let HSL = [];
 function _hallBuild() {
   const fan = document.getElementById('hallFan');
-  fan.innerHTML = '';
+  fan.innerHTML = ''; HSL = [];
   const order = [...HALL].sort((a, b) => (a.at || 0) - (b.at || 0));   // 카드 번호 = 등록한 순서
-  HALL.forEach((r, i) => {
-    const s = document.createElement('div');
+  const n = HALL.length, m = n <= 1 ? n : Math.ceil(7 / n) * n;
+  for (let i = 0; i < m; i++) {
+    const r = HALL[i % n], s = document.createElement('div');
     s.className = 'hall-slot';
     s.innerHTML = `<div class="hc back"><div class="hf">${_pcFace(r, order.indexOf(r) + 1)}</div><div class="hb">${_PC_BACK}</div></div><div class="hall-play">▶ 크게 보기</div>`;
-    s.onclick = () => { if (_hallDragged) return; hallQuietUntil = Date.now() + 15000; if (i === hallCur) openHallView(); else { hallCur = i; _hallLayout(true); } };
-    r._el = s; fan.appendChild(s);
-  });
+    s.onclick = () => { if (_hallDragged) return; hallQuietUntil = Date.now() + 15000; if (i === hallCur) { _hallLayout(false); openHallView(); } else { hallCur = i; _hallLayout(true); } };
+    HSL.push({ r, el: s }); fan.appendChild(s);
+  }
   _hallSize();
   _hallLayout(false);
   _hallDeal();
@@ -5648,32 +5638,37 @@ function _hallSize() {
 }
 window.addEventListener('resize', () => { if (!document.getElementById('hallScreen').classList.contains('hidden')) { _hallSize(); _hallLayout(false); } });
 const _hallImgs = {};
-function _hallLoadImg(r) {
-  const img = r._el.querySelector('.pc-img');
+function _hallLoadImg(s) {
+  const img = s.el.querySelector('.pc-img'), id = s.r.id;
   if (img.src) return;
-  if (_hallImgs[r.id]) { if (typeof _hallImgs[r.id] === 'string') img.src = _hallImgs[r.id]; return; }
-  _hallImgs[r.id] = fetch(`${_HIFB}/${r.id}.json`).then(x => x.json()).then(u => { if (typeof u === 'string' && u.startsWith('data:image/')) { _hallImgs[r.id] = u; HALL.forEach(x => { if (x.id === r.id) x._el.querySelector('.pc-img').src = u; }); } }).catch(() => { delete _hallImgs[r.id]; });
+  if (typeof _hallImgs[id] === 'string') { img.src = _hallImgs[id]; return; }
+  if (_hallImgs[id]) return;
+  _hallImgs[id] = fetch(`${_HIFB}/${id}.json`).then(x => x.json()).then(u => { if (typeof u === 'string' && u.startsWith('data:image/')) { _hallImgs[id] = u; HSL.forEach(x => { if (x.r.id === id) x.el.querySelector('.pc-img').src = u; }); } }).catch(() => { delete _hallImgs[id]; });
 }
-function _hallLayout(flipCenter) {
-  const n = HALL.length, cw = document.getElementById('hallFan')._cw || 300;
-  document.getElementById('hallFan').classList.remove('flowing'); hallPos = hallCur;
-  HALL.forEach((r, i) => {
-    let d = i - hallCur; if (d > n / 2) d -= n; if (d < -n / 2) d += n;
-    const a = Math.abs(d), c = r._el;
-    c.className = 'hall-slot' + (d === 0 ? ' c0' : '');
-    // 전시관 layout(): translateX(d*17cqw) translateY(a*2cqw) rotate(d*8deg) scale(가운데 1.06, 옆 .84) — 카드 폭 기준으로 환산
-    c.style.transform = `translateX(${d * cw * 0.755}px) translateY(${a * cw * 0.089}px) rotate(${d * 8}deg) scale(${d === 0 ? 1.06 : 0.84})`;
-    c.style.zIndex = 10 - a;
-    c.style.opacity = a > 2 ? 0 : 1;
-    c.style.pointerEvents = a > 2 ? 'none' : '';
-    if (a <= 3) _hallLoadImg(r);
-    if (a > 3) { clearTimeout(c._ft); c.querySelector('.hc').classList.remove('back', 'flip'); }
+// 카드 놓기 — 위치 pos(소수 가능)를 가운데로. 전시관 layout() 수치(17cqw·2cqw·8deg·1.06/.84)를 카드 폭 기준으로 환산.
+// 넘길 때는 뒤집지 않고 옆으로 미끄러지기만 한다(11-27 "뒤적뒤적" 지적).
+function _hallPlace(pos, flowing) {
+  const m = HSL.length, fan = document.getElementById('hallFan'), cw = fan._cw || 300;
+  fan.classList.toggle('flowing', !!flowing);
+  HSL.forEach((s, i) => {
+    let d = ((i - pos) % m + m) % m; if (d > m / 2) d -= m;
+    const a = Math.abs(d), c = s.el;
+    c.className = 'hall-slot' + (a < 0.3 ? ' c0' : '');
+    c.style.transform = `translateX(${d * cw * 0.755}px) translateY(${a * cw * 0.089}px) rotate(${d * 8}deg) scale(${1.06 - Math.min(a, 1) * 0.22})`;
+    c.style.zIndex = 20 - Math.round(a * 2);
+    c.style.opacity = Math.max(0, Math.min(1, 2.7 - a));
+    c.style.pointerEvents = a > 2.2 ? 'none' : '';
+    if (a <= 3.2) _hallLoadImg(s);
   });
-  if (flipCenter && HALL[hallCur]) { _hallFlip(HALL[hallCur]._el, 0); if (flipCenter !== 'quiet') hallSfx('card'); }   // 저절로 넘길 땐 소리 없이
+}
+function _hallLayout(sound) {
+  hallPos = hallCur;
+  _hallPlace(hallCur, false);
+  if (sound === true && HSL.length) hallSfx('card');
 }
 // 크게 보기
 function openHallView() {
-  const r = HALL[hallCur]; if (!r) return;
+  const r = HALL.length ? HALL[hallCur % HALL.length] : null; if (!r) return;
   const col = MODE_COLORS[r.tier] || MODE_COLORS.intermediate, v = document.getElementById('hallView'), img = document.getElementById('hvImg');
   img.src = typeof _hallImgs[r.id] === 'string' ? _hallImgs[r.id] : '';
   img.style.animation = 'none'; void img.offsetWidth; img.style.animation = '';
@@ -5726,23 +5721,23 @@ function _hallFlip(el, delay, sound) {
   clearTimeout(el._ft);
   const img = hc.querySelector('.pc-img');
   const go = (tries) => {
-    if ((!img.src || !img.complete) && tries < 25) { el._ft = setTimeout(() => go(tries + 1), 120); return; }   // 앞면 그림을 받을 때까지 뒷면으로 기다림
+    if ((!img.src || !img.complete) && tries < 12) { el._ft = setTimeout(() => go(tries + 1), 120); return; }   // 앞면 그림을 받을 때까지 뒷면으로 기다림
     hc.classList.remove('back'); void hc.offsetWidth; hc.classList.add('flip'); if (sound) hallSfx(sound);
   };
   el._ft = setTimeout(() => go(0), delay);
 }
 // 처음 열 때 가운데부터 한 장씩 뒷면에서 뒤집히며 등장 (전시관 deal())
 function _hallDeal() {
-  const n = HALL.length;
-  HALL.map((r, i) => { let d = i - hallCur; if (d > n / 2) d -= n; if (d < -n / 2) d += n; return [Math.abs(d), d, r]; })
-    .filter(([a]) => a <= 3).sort((x, y) => x[0] - y[0] || x[1] - y[1])
-    .forEach(([, , r], k) => _hallFlip(r._el, 250 + k * 160, 'flip'));
+  const m = HSL.length;
+  HSL.map((s, i) => { let d = ((i - hallCur) % m + m) % m; if (d > m / 2) d -= m; return [Math.abs(d), d, s]; })
+    .sort((x, y) => x[0] - y[0] || x[1] - y[1])
+    .forEach(([a, , s], k) => { if (a <= 3) _hallFlip(s.el, 250 + k * 160, 'flip'); else s.el.querySelector('.hc').classList.remove('back'); });
 }
 function hallStep(k, byHand) {
-  if (!HALL.length) return;
-  hallCur = (hallCur + k + HALL.length) % HALL.length;
+  if (!HSL.length) return;
+  hallCur = (hallCur + k + HSL.length) % HSL.length;
   if (byHand) hallQuietUntil = Date.now() + 15000;   // 손으로 넘기면 15초 동안 저절로 안 넘어감
-  _hallLayout(byHand ? true : 'quiet');
+  _hallLayout(!!byHand);
 }
 function findHall() {
   const g = document.getElementById('hallG').value, c = document.getElementById('hallC').value, n = document.getElementById('hallN').value;
