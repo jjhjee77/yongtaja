@@ -1995,18 +1995,51 @@ html body .btn::after, html body .q-btn::after, html body .btn-cert::after, html
 .hall-msg { min-height: 22px; font-weight: 700; color: #ffe27a; text-align: center; }
 .hall-stage { position: relative; width: 100%; flex: 1; min-height: 42vh; touch-action: pan-y; }
 .hall-fan { position: absolute; left: 50%; top: 50%; width: 0; height: 0; }
-.hall-slot { position: absolute; width: min(56vh, 46vw); left: calc(min(56vh, 46vw) / -2); top: calc(min(56vh, 46vw) * -0.36); transition: transform .6s cubic-bezier(.2,.8,.2,1), opacity .6s; cursor: pointer; }
-.hall-slot .hc { position: relative; width: 100%; aspect-ratio: 1.38; border-radius: 14px; background: #fff; overflow: hidden; box-shadow: 0 1.2vh 1.6vh rgba(20,12,60,.35); }
-.hall-slot .hc img { -webkit-user-drag: none; user-select: none; pointer-events: none; position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; display: block; }
-.hall-slot .hc .hb { object-fit: fill; opacity: 0; }
-.hall-slot .hc.back { background: transparent; box-shadow: none; }
+.hall-slot { position: absolute; width: var(--cw); height: calc(var(--cw) * 1020 / 660); left: calc(var(--cw) / -2); top: calc(var(--cw) * -0.7727); transition: transform .6s cubic-bezier(.2,.8,.2,1), opacity .6s; cursor: pointer; }
+.hall-slot .hc { position: absolute; left: 0; top: 0; width: 660px; height: 1020px; transform-origin: 0 0; transform: scale(var(--k)); filter: drop-shadow(0 18px 22px rgba(20,12,60,.4)); }
+.hall-slot .hc > div { position: absolute; inset: 0; }
+.hall-slot .hc .hb { opacity: 0; }
 .hall-slot .hc.back .hb { opacity: 1; }
 .hall-slot .hc.flip { animation: hflip .5s ease-in-out; }
 .hall-slot .hc.flip .hb { animation: hback .5s step-end; }
-@keyframes hflip { 0% { transform: scaleX(1); } 50% { transform: scaleX(0); } 100% { transform: scaleX(1); } }
+@keyframes hflip { 0% { transform: scale(var(--k)) scaleX(1); } 50% { transform: scale(var(--k)) scaleX(0); } 100% { transform: scale(var(--k)) scaleX(1); } }
 @keyframes hback { 0% { opacity: 1; } 50% { opacity: 0; } 100% { opacity: 0; } }
-.hall-slot.c0 .hc::after { content: ""; position: absolute; inset: 0; border-radius: inherit; background: linear-gradient(115deg, transparent 35%, rgba(255,255,255,.6) 48%, rgba(190,240,255,.4) 52%, transparent 64%) -150% 0 / 250% 100% no-repeat; animation: hsheen 4s ease-in-out infinite; }
+.hall-slot.c0 .hc .hf::after { content: ""; position: absolute; inset: 0; border-radius: 44px; background: linear-gradient(115deg, transparent 35%, rgba(255,255,255,.6) 48%, rgba(190,240,255,.4) 52%, transparent 64%) -150% 0 / 250% 100% no-repeat; animation: hsheen 4s ease-in-out infinite; }
 @keyframes hsheen { 0%, 60% { background-position: -150% 0; } 100% { background-position: 250% 0; } }
+.hall-slot .hall-play { position: absolute; left: 50%; bottom: calc(var(--cw) * -0.11); transform: translateX(-50%); font-family: var(--f-title); font-size: clamp(16px, 2.6vh, 24px); color: #fff; background: #12b886; border: .45vh solid #6b4a3a; border-radius: 999px; padding: 1vh 3.6vh; white-space: nowrap; box-shadow: 0 .6vh 0 #6b4a3a; opacity: 0; transition: opacity .4s; z-index: 300; }
+.hall-slot.c0 .hall-play { opacity: 1; animation: hbreathe 1.8s ease-in-out infinite; }
+@keyframes hbreathe { 50% { transform: translateX(-50%) scale(1.06); } }
+.pc-card { position: absolute; inset: 0; border-radius: 44px; background: #fffaf0; border: 7px solid #6b4a3a; overflow: hidden; font-family: 'Galmuri11', sans-serif; color: #5a3d30; word-break: keep-all; }
+.pc-top { position: absolute; left: 0; right: 0; top: 0; height: 300px; background: var(--c); background-image: radial-gradient(rgba(255,255,255,.35) 3px, transparent 3.5px); background-size: 26px 26px; }
+.pc-top::after { content: ""; position: absolute; left: -10px; right: -10px; bottom: -34px; height: 70px; background: #fffaf0; border-radius: 50%; }
+.pc-no { position: absolute; left: 30px; top: 24px; font-family: 'DNFBitBit', sans-serif; font-size: 34px; color: #fff; text-shadow: 0 3px 0 rgba(0,0,0,.18); }
+.pc-brand { position: absolute; right: 30px; top: 30px; font-family: 'DNFBitBit', sans-serif; font-size: 19px; color: #fff; letter-spacing: .06em; opacity: .95; }
+.pc-shot { position: absolute; left: 38px; right: 38px; top: 84px; height: 440px; border-radius: 26px; border: 6px solid #6b4a3a; background: #fff center / contain no-repeat; box-shadow: 0 8px 0 rgba(107,74,58,.25); overflow: hidden; }
+.pc-shot img { width: 100%; height: 100%; object-fit: contain; display: block; }
+.pc-yy { position: absolute; right: 4px; top: 430px; width: 165px; transform: rotate(8deg); }
+.pc-chips { position: absolute; left: 40px; top: 560px; display: flex; gap: 10px; }
+.pc-chip { font-family: 'DNFBitBit', sans-serif; font-size: 24px; padding: 8px 18px; border-radius: 999px; border: 4px solid #6b4a3a; background: var(--c); color: #fff; }
+.pc-chip.t { background: #fff; color: #6b4a3a; }
+.pc-txt { position: absolute; left: 40px; right: 34px; top: 632px; }
+.pc-name { font-family: 'DNFBitBit', sans-serif; font-size: var(--fs); line-height: 1.18; color: #7a5cf0; }
+.pc-how { margin-top: 26px; font-size: 35px; line-height: 1.45; font-weight: 700; color: #6b4a3a; }
+.pc-how b { font-family: 'DNFBitBit', sans-serif; font-weight: 400; font-size: 46px; color: var(--d); }
+.pc-foot { position: absolute; left: 30px; right: 30px; bottom: 24px; display: flex; align-items: flex-end; justify-content: space-between; }
+.pc-foot b { font-family: 'DNFBitBit', sans-serif; font-size: 20px; color: #6b4a3a; letter-spacing: .04em; }
+.pc-bar { display: flex; gap: 3px; height: 40px; align-items: stretch; } .pc-bar i { background: #6b4a3a; display: block; }
+.pc-back { background: #bfeedd; background-image: radial-gradient(#fff 3px, transparent 3.5px), radial-gradient(#fff 3px, transparent 3.5px); background-size: 46px 46px; background-position: 0 0, 23px 23px; }
+.pc-back .pc-ring { position: absolute; left: 50%; top: 44%; width: 420px; height: 420px; transform: translate(-50%,-50%); border-radius: 50%; background: #fffaf0; border: 7px solid #6b4a3a; }
+.pc-back .pc-face { position: absolute; left: 50%; top: 44%; width: 330px; transform: translate(-50%,-52%); }
+.pc-back .pc-t1 { position: absolute; left: 0; right: 0; top: 72px; text-align: center; font-family: 'DNFBitBit', sans-serif; font-size: 40px; color: #7a5cf0; text-shadow: 3px 3px 0 #fff,-3px -3px 0 #fff,3px -3px 0 #fff,-3px 3px 0 #fff,0 6px 0 #6b4a3a; }
+.pc-back .pc-t2 { position: absolute; left: 0; right: 0; bottom: 120px; text-align: center; font-family: 'DNFBitBit', sans-serif; font-size: 56px; color: #4fb8f0; text-shadow: 4px 4px 0 #fff,-4px -4px 0 #fff,4px -4px 0 #fff,-4px 4px 0 #fff,0 8px 0 #6b4a3a; }
+.pc-back .pc-t3 { position: absolute; left: 0; right: 0; bottom: 70px; text-align: center; font-family: 'DNFBitBit', sans-serif; font-size: 24px; color: #6b4a3a; letter-spacing: .08em; }
+/* 가운데 카드를 누르면 인증서 크게 (전시관에서 가운데 카드 = 열기) */
+.hall-view { position: fixed; inset: 0; z-index: 400; background: rgba(20,12,50,.86); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2vh; padding: 3vh 3vw; }
+.hall-view.hidden { display: none; }
+.hall-view img { max-width: 92vw; max-height: 68vh; border-radius: 16px; background: #fff; box-shadow: 0 2vh 4vh rgba(0,0,0,.45); animation: hzoom .45s cubic-bezier(.2,.8,.2,1); }
+@keyframes hzoom { from { transform: scale(.55); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+.hall-view .hv-info { text-align: center; display: grid; gap: .6vh; justify-items: center; color: #fff; }
+.hall-view .hall-who { color: #fff; }
 .hall-arrow { position: absolute; top: 50%; transform: translateY(-50%); z-index: 20; width: 64px; min-height: 64px; padding: 0 !important; font-size: 34px !important; }
 .hall-arrow.l { left: 2vw; } .hall-arrow.r { right: 2vw; }
 .hall-info { min-width: min(660px, 94vw); max-width: 94vw; text-align: center; padding: clamp(10px, 1.6vh, 16px) clamp(16px, 2.4vw, 30px) !important; display: grid; gap: clamp(2px, .6vh, 6px); justify-items: center; }
@@ -2019,7 +2052,6 @@ html body .btn::after, html body .q-btn::after, html body .btn-cert::after, html
 .hall-legend i { display: inline-block; width: .9em; height: .9em; border-radius: 50%; margin-right: 5px; vertical-align: -1px; background: var(--tc); }
 /* 화면 크기: 태블릿·좁은 창은 카드를 화면 폭 기준으로, 낮은 창은 높이 기준으로 */
 @media (max-width: 900px) {
-  .hall-slot { width: min(50vh, 70vw); left: calc(min(50vh, 70vw) / -2); top: calc(min(50vh, 70vw) * -0.36); }
   .hall-top { justify-content: center; }
   .hall-arrow { width: 52px; min-height: 52px; font-size: 28px !important; }
 }
@@ -2030,6 +2062,16 @@ html body .btn::after, html body .q-btn::after, html body .btn-cert::after, html
 .cert-paper .cv5-sir { display: none; }
 .cert-paper.is-teacher .cv5-sir { display: inline; }
 .btn-cert.on { background: #ffd84a !important; box-shadow: 0 7px 0 #c99a00 !important; }
+.hall-btn-wrap { position: relative; display: inline-block; }
+.hall-btn-wrap .q-btn { box-shadow: 0 7px 0 #e0b23a, 0 0 22px 4px rgba(255,216,74,.55) !important; animation: hallGlow 2.4s ease-in-out infinite; }
+@keyframes hallGlow { 50% { box-shadow: 0 7px 0 #e0b23a, 0 0 34px 10px rgba(255,216,74,.85) !important; } }
+.hall-event { position: absolute; right: -14px; top: -18px; z-index: 3; font-family: var(--f-title); font-weight: 400; font-size: 17px; color: #fff; background: #ff5a6e; border: 3px solid #fff; border-radius: 100px; padding: 2px 12px; transform: rotate(8deg); box-shadow: 0 4px 0 #c93a4e; animation: hallEvent 1.2s ease-in-out infinite; pointer-events: none; }
+@keyframes hallEvent { 50% { transform: rotate(8deg) scale(1.12); } }
+/* 반짝이 = Uiverse.io by VashonG (afraid-lion-76) */
+.hall-sps { position: absolute; inset: -6px; pointer-events: none; }
+.hall-sp { position: absolute; z-index: 2; display: block; opacity: 0; animation: hallSparkle 2s infinite; filter: drop-shadow(rgb(255, 216, 74) 0 0 3px); transform: translate(-50%, -50%); }
+.hall-sp svg { width: 100%; height: 100%; display: block; }
+@keyframes hallSparkle { 0% { opacity: 0; } 50% { opacity: 1; } 100% { opacity: 0; } }
 .hall-head { display: flex; align-items: center; gap: 12px; }
 .hall-logo { height: min(12vh, 92px); width: auto; filter: drop-shadow(0 8px 14px rgba(10,5,40,.5)); }
 .hall-count { font-family: var(--f-title); font-size: 20px; color: #fff; text-shadow: 0 3px 0 rgba(20,12,60,.45); }
@@ -2062,7 +2104,7 @@ html body .btn::after, html body .q-btn::after, html body .btn-cert::after, html
       <div class="pt-tiles">
         <button class="q-btn q-big" id="challengeBtn" onclick="startGame('infinite')"><img src="/assets/icons/challenge.webp" alt="">도전하기</button>
         <button class="q-btn" onclick="showRankScreen()"><img src="/assets/icons/trophy.webp" alt="">순위표</button>
-        <button class="q-btn" id="hallBtn" onclick="showHall()" hidden><img src="/assets/icons/certificate.webp" alt="">명예의 전당</button>
+        <span class="hall-btn-wrap" id="hallBtnWrap" hidden><button class="q-btn" id="hallBtn" onclick="showHall()"><img src="/assets/icons/certificate.webp" alt="">명예의 전당</button><b class="hall-event">EVENT!</b><span class="hall-sps"><i class="hall-sp" style="top:1%;left:99%;width:18px;height:18px;animation-delay:0.5s"><svg viewBox="0 0 68 68" fill="none"><path fill="white" d="M26.5 25.5C19.0043 33.3697 0 34 0 34C0 34 19.1013 35.3684 26.5 43.5C33.234 50.901 34 68 34 68C34 68 36.9884 50.7065 44.5 43.5C51.6431 36.647 68 34 68 34C68 34 51.6947 32.0939 44.5 25.5C36.5605 18.2235 34 0 34 0C34 0 33.6591 17.9837 26.5 25.5Z"/></svg></i><i class="hall-sp" style="top:7%;left:1%;width:27px;height:27px;animation-delay:0.33s"><svg viewBox="0 0 68 68" fill="none"><path fill="white" d="M26.5 25.5C19.0043 33.3697 0 34 0 34C0 34 19.1013 35.3684 26.5 43.5C33.234 50.901 34 68 34 68C34 68 36.9884 50.7065 44.5 43.5C51.6431 36.647 68 34 68 34C68 34 51.6947 32.0939 44.5 25.5C36.5605 18.2235 34 0 34 0C34 0 33.6591 17.9837 26.5 25.5Z"/></svg></i><i class="hall-sp" style="top:93%;left:23%;width:21px;height:21px;animation-delay:0.6s"><svg viewBox="0 0 68 68" fill="none"><path fill="white" d="M26.5 25.5C19.0043 33.3697 0 34 0 34C0 34 19.1013 35.3684 26.5 43.5C33.234 50.901 34 68 34 68C34 68 36.9884 50.7065 44.5 43.5C51.6431 36.647 68 34 68 34C68 34 51.6947 32.0939 44.5 25.5C36.5605 18.2235 34 0 34 0C34 0 33.6591 17.9837 26.5 25.5Z"/></svg></i><i class="hall-sp" style="top:43%;left:15%;width:18px;height:18px;animation-delay:0.9s"><svg viewBox="0 0 68 68" fill="none"><path fill="white" d="M26.5 25.5C19.0043 33.3697 0 34 0 34C0 34 19.1013 35.3684 26.5 43.5C33.234 50.901 34 68 34 68C34 68 36.9884 50.7065 44.5 43.5C51.6431 36.647 68 34 68 34C68 34 51.6947 32.0939 44.5 25.5C36.5605 18.2235 34 0 34 0C34 0 33.6591 17.9837 26.5 25.5Z"/></svg></i><i class="hall-sp" style="top:93%;left:9%;width:27px;height:27px;animation-delay:1.2s"><svg viewBox="0 0 68 68" fill="none"><path fill="white" d="M26.5 25.5C19.0043 33.3697 0 34 0 34C0 34 19.1013 35.3684 26.5 43.5C33.234 50.901 34 68 34 68C34 68 36.9884 50.7065 44.5 43.5C51.6431 36.647 68 34 68 34C68 34 51.6947 32.0939 44.5 25.5C36.5605 18.2235 34 0 34 0C34 0 33.6591 17.9837 26.5 25.5Z"/></svg></i><i class="hall-sp" style="top:21%;left:88%;width:15px;height:15px;animation-delay:1.5s"><svg viewBox="0 0 68 68" fill="none"><path fill="white" d="M26.5 25.5C19.0043 33.3697 0 34 0 34C0 34 19.1013 35.3684 26.5 43.5C33.234 50.901 34 68 34 68C34 68 36.9884 50.7065 44.5 43.5C51.6431 36.647 68 34 68 34C68 34 51.6947 32.0939 44.5 25.5C36.5605 18.2235 34 0 34 0C34 0 33.6591 17.9837 26.5 25.5Z"/></svg></i><i class="hall-sp" style="top:99%;left:95%;width:18px;height:18px;animation-delay:1.8s"><svg viewBox="0 0 68 68" fill="none"><path fill="white" d="M26.5 25.5C19.0043 33.3697 0 34 0 34C0 34 19.1013 35.3684 26.5 43.5C33.234 50.901 34 68 34 68C34 68 36.9884 50.7065 44.5 43.5C51.6431 36.647 68 34 68 34C68 34 51.6947 32.0939 44.5 25.5C36.5605 18.2235 34 0 34 0C34 0 33.6591 17.9837 26.5 25.5Z"/></svg></i><i class="hall-sp" style="top:64%;left:99%;width:27px;height:27px;animation-delay:1.9s"><svg viewBox="0 0 68 68" fill="none"><path fill="white" d="M26.5 25.5C19.0043 33.3697 0 34 0 34C0 34 19.1013 35.3684 26.5 43.5C33.234 50.901 34 68 34 68C34 68 36.9884 50.7065 44.5 43.5C51.6431 36.647 68 34 68 34C68 34 51.6947 32.0939 44.5 25.5C36.5605 18.2235 34 0 34 0C34 0 33.6591 17.9837 26.5 25.5Z"/></svg></i><i class="hall-sp" style="top:14%;left:45%;width:18px;height:18px;animation-delay:1.4s"><svg viewBox="0 0 68 68" fill="none"><path fill="white" d="M26.5 25.5C19.0043 33.3697 0 34 0 34C0 34 19.1013 35.3684 26.5 43.5C33.234 50.901 34 68 34 68C34 68 36.9884 50.7065 44.5 43.5C51.6431 36.647 68 34 68 34C68 34 51.6947 32.0939 44.5 25.5C36.5605 18.2235 34 0 34 0C34 0 33.6591 17.9837 26.5 25.5Z"/></svg></i><i class="hall-sp" style="top:2%;left:48%;width:27px;height:27px;animation-delay:1.7s"><svg viewBox="0 0 68 68" fill="none"><path fill="white" d="M26.5 25.5C19.0043 33.3697 0 34 0 34C0 34 19.1013 35.3684 26.5 43.5C33.234 50.901 34 68 34 68C34 68 36.9884 50.7065 44.5 43.5C51.6431 36.647 68 34 68 34C68 34 51.6947 32.0939 44.5 25.5C36.5605 18.2235 34 0 34 0C34 0 33.6591 17.9837 26.5 25.5Z"/></svg></i></span></span>
         <button class="q-btn" id="contestBtn" onclick="openContest()" hidden><img src="/assets/icons/medal.webp" alt="">타자대회</button>
         <button class="q-btn" id="boardBtn" onclick="showBoard()" hidden><img src="/assets/icons/star.webp" alt="">대회 순위</button>
       </div>
@@ -2221,9 +2263,14 @@ html body .btn::after, html body .q-btn::after, html body .btn-cert::after, html
     <button class="btn hall-arrow l" onclick="hallStep(-1, true)" aria-label="이전">‹</button>
     <button class="btn hall-arrow r" onclick="hallStep(1, true)" aria-label="다음">›</button>
   </div>
-  <div class="q-card hall-info" id="hallInfo"></div>
   <div class="hall-legend"><span style="--tc:#5aa9ff"><i></i>중급자 15만 점</span><span style="--tc:#ffc53d"><i></i>고수 50만 점</span><span style="--tc:#ff6fa3"><i></i>달인 500만 점</span></div>
   <div class="board-bar"><button class="btn" onclick="toggleFullscreen()">전체화면</button><button class="btn" onclick="goTitle()">← 처음 화면</button></div>
+</div>
+
+<div class="hall-view hidden" id="hallView" onclick="if (event.target === this) closeHallView()">
+  <img id="hvImg" alt="인증서">
+  <div class="hv-info" id="hvInfo"></div>
+  <div class="board-bar"><button class="btn" onclick="hallViewStep(-1)">‹ 이전</button><button class="btn gold" onclick="closeHallView()">닫기</button><button class="btn" onclick="hallViewStep(1)">다음 ›</button></div>
 </div>
 
 <!-- ══ 순위 화면 ══ -->
@@ -4875,6 +4922,7 @@ function goTitle() {
   document.getElementById('titleScreen').classList.remove('hidden');
   buildTitleDots();
   pollContest();
+  document.getElementById('hallView').classList.add('hidden');
 }
 
 function hideAllScreens() {
@@ -5516,56 +5564,93 @@ async function showHall(focusId) {
     if (Date.now() > hallQuietUntil && HALL.length > 1) hallStep(1);
   }, 3200);
 }
+function _pcBars(seed) {   // cardface.cjs bars() 그대로
+  let s = seed * 9301 + 49297, out = '';
+  for (let i = 0; i < 26; i++) { s = (s * 9301 + 49297) % 233280; out += `<i style="width:${1 + (s % 4)}px"></i>`; }
+  return out;
+}
+function _pcFace(r, no) {   // cardface.cjs face() 그대로: 위 띠=등급 색, 그림 창=인증서, 칩=등급·반, 이름, 점수
+  const col = MODE_COLORS[r.tier] || MODE_COLORS.intermediate;
+  const name = _escName(r.name), n = String(r.name).length, fs = n <= 4 ? 84 : n <= 6 ? 72 : 60;
+  const who = r.t ? '선생님' : `${r.g}학년 ${r.c}반 ${r.n}번`;
+  const stats = [r.level ? `레벨 ${r.level}` : '', Number.isFinite(r.acc) ? `정확도 ${r.acc}%` : ''].filter(Boolean).join(' · ');
+  return `<div class="pc-card" style="--c:${col.c};--d:${col.d};--fs:${fs}px">
+    <div class="pc-top"></div><div class="pc-no">No.${String(no).padStart(2, '0')}</div><div class="pc-brand">YONGYONG TYPING</div>
+    <div class="pc-shot"><img class="pc-img" alt="" draggable="false"></div>
+    <img class="pc-yy" src="/assets/yy/yy_${(no - 1) % 8 + 1}.webp" alt="" draggable="false">
+    <div class="pc-chips"><span class="pc-chip">${TIER_NAME[r.tier]}</span><span class="pc-chip t">${who}</span></div>
+    <div class="pc-txt"><div class="pc-name">${name}${r.t ? ' 선생님' : ''}</div><div class="pc-how"><b>${Number(r.score).toLocaleString()}점</b><br>${stats}</div></div>
+    <div class="pc-foot"><b>2026 · 용용타자 오름길</b><div class="pc-bar">${_pcBars(no)}</div></div></div>`;
+}
+const _PC_BACK = `<div class="pc-card pc-back"><div class="pc-t1">안동용상초등학교</div><div class="pc-ring"></div>
+  <img class="pc-face" src="/assets/yy/yy_6.webp" alt="" draggable="false"><div class="pc-t2">명예의 전당</div><div class="pc-t3">2026 TYPING CARD</div></div>`;
 function _hallBuild() {
   const fan = document.getElementById('hallFan');
   fan.innerHTML = '';
+  const order = [...HALL].sort((a, b) => (a.at || 0) - (b.at || 0));   // 카드 번호 = 등록한 순서
   HALL.forEach((r, i) => {
     const s = document.createElement('div');
     s.className = 'hall-slot';
-    s.innerHTML = '<div class="hc back"><img class="hf" alt="" decoding="async" draggable="false"><img class="hb" src="/assets/hall_back.webp" alt="" draggable="false"></div>';   // 그림 끌기가 밀어 넘기기를 가로채지 않게
-    s.onclick = () => { if (_hallDragged) return; if (i !== hallCur) { hallCur = i; _hallLayout(true); } hallQuietUntil = Date.now() + 15000; };
+    s.innerHTML = `<div class="hc back"><div class="hf">${_pcFace(r, order.indexOf(r) + 1)}</div><div class="hb">${_PC_BACK}</div></div><div class="hall-play">▶ 크게 보기</div>`;
+    s.onclick = () => { if (_hallDragged) return; hallQuietUntil = Date.now() + 15000; if (i === hallCur) openHallView(); else { hallCur = i; _hallLayout(true); } };
     r._el = s; fan.appendChild(s);
   });
+  _hallSize();
   _hallLayout(false);
   _hallDeal();
 }
+// 카드 크기: 무대 높이에 맞춰(전시관 40vh 카드를 화면에 맞게), 좁은 화면은 폭에 맞춰
+function _hallSize() {
+  const st = document.getElementById('hallStage'), fan = document.getElementById('hallFan');
+  const ch = Math.min(st.clientHeight * 0.84, innerHeight * 0.66);
+  const cw = Math.max(150, Math.min(ch * 660 / 1020, innerWidth * 0.42));
+  fan.style.setProperty('--cw', cw + 'px'); fan.style.setProperty('--k', cw / 660);
+  fan._cw = cw;
+}
+window.addEventListener('resize', () => { if (!document.getElementById('hallScreen').classList.contains('hidden')) { _hallSize(); _hallLayout(false); } });
 const _hallImgs = {};
 function _hallLoadImg(r) {
-  const img = r._el.querySelector('.hf');
+  const img = r._el.querySelector('.pc-img');
   if (img.src) return;
-  if (_hallImgs[r.id]) { img.src = _hallImgs[r.id]; return; }
-  _hallImgs[r.id] = fetch(`${_HIFB}/${r.id}.json`).then(x => x.json()).then(u => { if (typeof u === 'string' && u.startsWith('data:image/')) { _hallImgs[r.id] = u; img.src = u; } }).catch(() => { delete _hallImgs[r.id]; });
+  if (_hallImgs[r.id]) { if (typeof _hallImgs[r.id] === 'string') img.src = _hallImgs[r.id]; return; }
+  _hallImgs[r.id] = fetch(`${_HIFB}/${r.id}.json`).then(x => x.json()).then(u => { if (typeof u === 'string' && u.startsWith('data:image/')) { _hallImgs[r.id] = u; HALL.forEach(x => { if (x.id === r.id) x._el.querySelector('.pc-img').src = u; }); } }).catch(() => { delete _hallImgs[r.id]; });
 }
 function _hallLayout(flipCenter) {
-  const n = HALL.length;
+  const n = HALL.length, cw = document.getElementById('hallFan')._cw || 300;
   HALL.forEach((r, i) => {
     let d = i - hallCur; if (d > n / 2) d -= n; if (d < -n / 2) d += n;
     const a = Math.abs(d), c = r._el;
     c.className = 'hall-slot' + (d === 0 ? ' c0' : '');
-    c.style.transform = `translateX(${d * 23}vw) translateY(${a * 2}vh) rotate(${d * 6}deg) scale(${d === 0 ? 1 : 0.74})`;
+    // 전시관 layout(): translateX(d*17cqw) translateY(a*2cqw) rotate(d*8deg) scale(가운데 1.06, 옆 .84) — 카드 폭 기준으로 환산
+    c.style.transform = `translateX(${d * cw * 0.755}px) translateY(${a * cw * 0.089}px) rotate(${d * 8}deg) scale(${d === 0 ? 1.06 : 0.84})`;
     c.style.zIndex = 10 - a;
     c.style.opacity = a > 2 ? 0 : 1;
     c.style.pointerEvents = a > 2 ? 'none' : '';
     if (a <= 3) _hallLoadImg(r);
     if (a > 3) { clearTimeout(c._ft); c.querySelector('.hc').classList.remove('back', 'flip'); }
   });
-  const r = HALL[hallCur], info = document.getElementById('hallInfo');
-  info.hidden = !r;   // 카드가 없으면 빈 흰 칸을 숨긴다
-  if (r) {
-    const col = MODE_COLORS[r.tier] || MODE_COLORS.intermediate;
-    info.style.setProperty('--tc', col.c); info.style.setProperty('--td', col.d);
-    const stats = [r.level ? `도달 레벨 ${r.level}` : '', Number.isFinite(r.acc) ? `정확도 ${r.acc}%` : '', r.wpm ? `분당 ${r.wpm}타` : '', r.date ? `${_escName(r.date)} 인증` : ''].filter(Boolean).join(' · ');
-    info.innerHTML = `<div class="hall-who"><span class="hall-tier">${TIER_NAME[r.tier]}</span>${r.t ? `${_escName(r.name)} 선생님` : `${r.g}학년 ${r.c}반 ${r.n}번 ${_escName(r.name)}`}</div>
-      <div class="hall-score">${Number(r.score).toLocaleString()}<small>점</small></div><div class="hall-stats">${stats}</div>`;
-  }
-  if (flipCenter && r) _hallFlip(r._el, 0);
+  if (flipCenter && HALL[hallCur]) _hallFlip(HALL[hallCur]._el, 0);
 }
+// 크게 보기
+function openHallView() {
+  const r = HALL[hallCur]; if (!r) return;
+  const col = MODE_COLORS[r.tier] || MODE_COLORS.intermediate, v = document.getElementById('hallView'), img = document.getElementById('hvImg');
+  img.src = typeof _hallImgs[r.id] === 'string' ? _hallImgs[r.id] : '';
+  img.style.animation = 'none'; void img.offsetWidth; img.style.animation = '';
+  const info = document.getElementById('hvInfo');
+  info.style.setProperty('--tc', col.c); info.style.setProperty('--td', col.d);
+  info.innerHTML = `<div class="hall-who"><span class="hall-tier">${TIER_NAME[r.tier]}</span>${r.t ? `${_escName(r.name)} 선생님` : `${r.g}학년 ${r.c}반 ${r.n}번 ${_escName(r.name)}`}</div><div class="hall-score" style="color:${col.c}">${Number(r.score).toLocaleString()}<small>점</small></div>`;
+  v.classList.remove('hidden'); playSfx('pick', 0.6);
+  hallQuietUntil = Infinity;   // 크게 보는 동안은 저절로 안 넘어감
+}
+function closeHallView() { document.getElementById('hallView').classList.add('hidden'); hallQuietUntil = Date.now() + 8000; }
+function hallViewStep(k) { hallStep(k, true); openHallView(); }
 // 뒤집기 = 전시관 flip(): 뒷면을 보였다가 가로로 접었다 펴며 앞면
 function _hallFlip(el, delay) {
   const hc = el.querySelector('.hc');
   hc.classList.remove('flip'); hc.classList.add('back');
   clearTimeout(el._ft);
-  const img = hc.querySelector('.hf');
+  const img = hc.querySelector('.pc-img');
   const go = (tries) => {
     if ((!img.src || !img.complete) && tries < 25) { el._ft = setTimeout(() => go(tries + 1), 120); return; }   // 앞면 그림을 받을 때까지 뒷면으로 기다림
     hc.classList.remove('back'); void hc.offsetWidth; hc.classList.add('flip'); playSfx('pick', 0.5);
@@ -5618,12 +5703,16 @@ let _hallSx = null, _hallDragged = false;
   }, { passive: false });
   document.addEventListener('keydown', e => {
     if (document.getElementById('hallScreen').classList.contains('hidden') || e.target.tagName === 'INPUT') return;
+    const hv = !document.getElementById('hallView').classList.contains('hidden');
+    if (e.key === 'Escape' && hv) { closeHallView(); return; }
+    if (e.key === 'Enter' && !hv) { openHallView(); return; }
+    if (hv && (e.key === 'ArrowLeft' || e.key === 'ArrowRight')) { hallViewStep(e.key === 'ArrowLeft' ? -1 : 1); return; }
     if (e.key === 'ArrowLeft') hallStep(-1, true); if (e.key === 'ArrowRight') hallStep(1, true);
   });
 })();
 
 if (IS_YONG) {
-  document.getElementById('hallBtn').hidden = false;
+  document.getElementById('hallBtnWrap').hidden = false;
   { const q = new URLSearchParams(location.search); if (q.has('hall')) { const go = () => setTimeout(() => showHall(q.get('hall') || undefined), 300); document.readyState === 'complete' ? go() : window.addEventListener('load', go); } }
   pollContest();
   setInterval(() => { if (!document.hidden && !document.getElementById('titleScreen').classList.contains('hidden')) pollContest(); }, 30000);
