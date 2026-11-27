@@ -1953,24 +1953,24 @@ html body .btn::after, html body .q-btn::after, html body .btn-cert::after, html
 #hud .hud-ibtn img { pointer-events: none; }
 
 /* Uiverse Form(살구 카드) 모양 복구 — UI v4 때 빠져 이름창이 글자만 떠 있었음 (b647554 의 값 그대로) */
-#nameModal .uf-card, :is(#contestModal, #hallAsk) .uf-card { background-color: #fcd0a1; border-radius: 10px; padding: 20px; color: #5b3a1e; }
-#nameModal .uf-label, :is(#contestModal, #hallAsk) .uf-label { display: block; margin-bottom: 10px; font-size: 18px; color: #de5959; }
-#nameModal .uf-btn, :is(#contestModal, #hallAsk) .uf-btn { background: #de5959; color: #fff; font-size: 18px; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; margin: 0 10px 0 0; }
-#nameModal .uf-btn:hover, :is(#contestModal, #hallAsk) .uf-btn:hover { background: #b54141; }
-#nameModal .uf-btn.orange, :is(#contestModal, #hallAsk) .uf-btn.orange { background: #fcb13e; }
-#nameModal .uf-btn.orange:hover, :is(#contestModal, #hallAsk) .uf-btn.orange:hover { background: #c78d35; }
+#nameModal .uf-card, :is(#contestModal, #hallAsk, #roomModal) .uf-card { background-color: #fcd0a1; border-radius: 10px; padding: 20px; color: #5b3a1e; }
+#nameModal .uf-label, :is(#contestModal, #hallAsk, #roomModal) .uf-label { display: block; margin-bottom: 10px; font-size: 18px; color: #de5959; }
+#nameModal .uf-btn, :is(#contestModal, #hallAsk, #roomModal) .uf-btn { background: #de5959; color: #fff; font-size: 18px; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; margin: 0 10px 0 0; }
+#nameModal .uf-btn:hover, :is(#contestModal, #hallAsk, #roomModal) .uf-btn:hover { background: #b54141; }
+#nameModal .uf-btn.orange, :is(#contestModal, #hallAsk, #roomModal) .uf-btn.orange { background: #fcb13e; }
+#nameModal .uf-btn.orange:hover, :is(#contestModal, #hallAsk, #roomModal) .uf-btn.orange:hover { background: #c78d35; }
 #nameModal #nameInput { width: 100%; padding: 10px; font-size: 18px; border-radius: 5px; border: none; margin-bottom: 20px; background: #fff; color: #333; clip-path: none; letter-spacing: 1px; }
 
 /* 용타자 전용 (2026-11-24): 이름 고르기 · 타자대회 — 기존 카드·버튼 모양을 그대로 씀 */
 [hidden] { display: none !important; }
 .pick-row { display: flex; gap: 8px; margin-bottom: 16px; }
 .pick-row select { flex: 1; min-width: 0; height: 48px; padding: 0 8px; border: none; border-radius: 5px; background: #fff; color: #333; font-family: var(--f-body); font-weight: 700; font-size: 16px; }
-:is(#contestModal, #hallAsk), #contestReady, #boardScreen { background: linear-gradient(180deg, rgba(108,79,163,.94), rgba(39,32,82,.98)) !important; color: #fff; font-family: var(--f-body); word-break: keep-all; }
-:is(#contestModal, #hallAsk) { position: fixed; inset: 0; z-index: 200; display: flex; align-items: center; justify-content: center; }
-:is(#contestModal, #hallAsk).hidden { display: none; }
-:is(#contestModal, #hallAsk) .uf-card { width: 400px; max-width: 94vw; font-family: var(--f-body); }
-:is(#contestModal, #hallAsk) .uf-label, :is(#contestModal, #hallAsk) .uf-btn { font-family: var(--f-title) !important; font-weight: 400; }
-:is(#contestModal, #hallAsk) .pick-err { color: #de5959; font-size: 14px; min-height: 20px; }
+:is(#contestModal, #hallAsk, #roomModal), #contestReady, #boardScreen { background: linear-gradient(180deg, rgba(108,79,163,.94), rgba(39,32,82,.98)) !important; color: #fff; font-family: var(--f-body); word-break: keep-all; }
+:is(#contestModal, #hallAsk, #roomModal) { position: fixed; inset: 0; z-index: 200; display: flex; align-items: center; justify-content: center; }
+:is(#contestModal, #hallAsk, #roomModal).hidden { display: none; }
+:is(#contestModal, #hallAsk, #roomModal) .uf-card { width: 400px; max-width: 94vw; font-family: var(--f-body); }
+:is(#contestModal, #hallAsk, #roomModal) .uf-label, :is(#contestModal, #hallAsk, #roomModal) .uf-btn { font-family: var(--f-title) !important; font-weight: 400; }
+:is(#contestModal, #hallAsk, #roomModal) .pick-err { color: #de5959; font-size: 14px; min-height: 20px; }
 #hallAsk { background: rgba(39,32,82,.82) !important; }
 #hallAsk .ask-name { width: 100%; padding: 10px; font-size: 18px; border-radius: 5px; border: none; margin-bottom: 8px; background: #fff; color: #333; font-family: var(--f-body); font-weight: 700; }
 .contest-rule { color: #6b4a33; font-size: 15px; line-height: 1.6; margin: 4px 0 14px; }
@@ -2066,6 +2066,58 @@ html body .btn::after, html body .q-btn::after, html body .btn-cert::after, html
 .cert-paper.is-teacher .cv5-sir { display: inline; }
 .btn-cert.on { background: #ffd84a !important; box-shadow: 0 7px 0 #c99a00 !important; }
 .hall-btn-wrap { position: relative; display: inline-block; }
+/* ── 대회 모드(방) — 기존 카드·버튼·순위표 모양 그대로 ── */
+#roomModal .ask-name { width: 100%; padding: 10px; font-size: 22px; letter-spacing: 6px; text-align: center; border-radius: 5px; border: none; margin-bottom: 8px; background: #fff; color: #333; font-family: var(--f-title); }
+#roomModal .room-or { text-align: center; color: #9a6a4a; font-weight: 700; margin: 10px 0; }
+/* 대회 맵: 시간에 따라 배경이 천천히 바뀜 (봄 → 가을 → 겨울 → 밤) */
+#gameWrap .map-layer { position: absolute; inset: 0; z-index: -1; background: center / cover no-repeat; opacity: 0; transition: opacity 2.5s ease; pointer-events: none; }
+#gameWrap .map-layer.on { opacity: 1; }
+.rh-tile .map-layer { position: absolute; inset: 0; background: center / cover no-repeat; opacity: 0; transition: opacity 2.5s ease; }
+.rh-tile .map-layer.on { opacity: 1; }
+#roomWait, #roomHost { background: linear-gradient(180deg, rgba(108,79,163,.94), rgba(39,32,82,.98)) !important; color: #fff; font-family: var(--f-body); word-break: keep-all; }
+#roomWait .pt-hint { font-size: 20px; }
+#roomHost { justify-content: flex-start !important; align-items: stretch !important; padding: 14px 18px !important; gap: 12px !important; overflow: hidden; }
+.rh-top { display: flex; align-items: center; gap: 18px; flex-wrap: wrap; }
+.rh-top .rank-title { font-size: 30px !important; margin: 0; }
+.rh-chip { font-family: var(--f-title); font-size: 22px; color: var(--q-ink); background: #fff; border-radius: 100px; padding: 6px 18px; box-shadow: 0 5px 0 var(--q-lav); white-space: nowrap; }
+.rh-chip b { font-weight: 400; color: var(--q-purple); }
+.rh-chip.time b { font-size: 30px; } .rh-chip.time.last b { color: #ff5a6e; }
+.rh-top .sp { flex: 1; }
+.rh-lobby { flex: 1; min-height: 0; display: grid; grid-template-columns: minmax(280px, 34vw) 1fr; gap: 20px; align-items: stretch; }
+.rh-qr { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; text-align: center; }
+.rh-qr #roomQr { width: min(30vw, 46vh); height: min(30vw, 46vh); background: #fff; border-radius: 16px; padding: 10px; }
+.rh-qr #roomQr svg { width: 100%; height: 100%; display: block; }
+.rh-code { font-family: var(--f-title); font-size: clamp(40px, 8vh, 84px); color: var(--q-purple); letter-spacing: 8px; line-height: 1; }
+.rh-url { font-weight: 700; color: #8a83b0; font-size: 16px; }
+.rh-people { display: flex; flex-direction: column; gap: 12px; min-height: 0; }
+.rh-names { flex: 1; min-height: 0; overflow-y: auto; display: flex; flex-wrap: wrap; align-content: flex-start; gap: 8px; }
+.rh-name { font-weight: 700; font-size: 18px; color: var(--q-ink); background: var(--q-soft); border-radius: 100px; padding: 6px 8px 6px 16px; display: inline-flex; align-items: center; gap: 6px; }
+.rh-name button { border: 0; background: #fff; color: #de5959; width: 26px; height: 26px; border-radius: 50%; font-weight: 700; cursor: pointer; }
+.rh-run { flex: 1; min-height: 0; display: grid; grid-template-columns: 1fr clamp(240px, 22vw, 340px); gap: 14px; }
+.rh-grid { position: relative; min-height: 0; display: grid; gap: 8px; grid-template-columns: repeat(var(--cols, 5), 1fr); grid-auto-rows: 1fr; }
+.rh-tile { position: relative; min-height: 0; border-radius: 12px; overflow: hidden; background: var(--pt-bg, #3a6) center / cover no-repeat, #2d5a3a; cursor: pointer; box-shadow: 0 4px 0 rgba(20,12,60,.4); }
+.rh-tile canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.rh-tile .tl { position: absolute; left: 0; right: 0; top: 0; display: flex; justify-content: space-between; gap: 6px; padding: 3px 8px; font-family: var(--f-title); font-size: clamp(11px, 1.5vh, 16px); color: #fff; background: rgba(39,32,82,.72); white-space: nowrap; }
+.rh-tile .tl b { font-weight: 400; color: #ffe27a; }
+.rh-tile .out { position: absolute; inset: 0; display: none; flex-direction: column; align-items: center; justify-content: center; gap: 2px; background: rgba(60,60,70,.78); color: #fff; font-family: var(--f-title); font-size: clamp(14px, 2.4vh, 26px); text-align: center; }
+.rh-tile.is-out .out { display: flex; } .rh-tile.is-out { filter: grayscale(1); }
+.rh-tile.is-lost .tl { background: rgba(160,60,60,.8); }
+.rh-tile.zoom { position: absolute; inset: 0; z-index: 30; filter: none; }
+.rh-tile.zoom .tl { font-size: 24px; padding: 8px 16px; }
+.rh-grid.focus .rh-tile.is-out:not(.zoom) { display: none; }
+.rh-rank { min-height: 0; display: flex; flex-direction: column; padding: 14px !important; }
+.rh-rank-list { position: relative; flex: 1; min-height: 0; overflow: hidden; }
+.rh-row { position: absolute; left: 0; right: 0; height: 38px; display: flex; align-items: center; gap: 8px; padding: 0 12px; border-radius: 100px; background: var(--q-soft); color: var(--q-ink); font-weight: 700; font-size: 15px; transition: top .5s cubic-bezier(.2,.8,.2,1), background .3s; white-space: nowrap; }
+.rh-row i { font-style: normal; font-family: var(--f-title); color: var(--q-purple); width: 26px; text-align: center; }
+.rh-row span { flex: 1; overflow: hidden; text-overflow: ellipsis; }
+.rh-row b { font-family: var(--f-title); font-weight: 400; }
+.rh-row.is-out { background: #e3e1ea; color: #9a97a8; } .rh-row.is-out b { font-size: 13px; }
+.rh-row.top1 { background: #fff1b8; }
+.rh-end { flex: 1; min-height: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 16px; }
+.rh-win { font-family: var(--f-title); font-size: clamp(40px, 9vh, 96px); color: #ffd84a; text-shadow: 0 6px 0 rgba(20,12,60,.5); text-align: center; }
+.rh-win small { display: block; font-size: .36em; color: #fff; }
+.rh-end .q-card { width: min(720px, 92vw); max-height: 46vh; overflow-y: auto; }
+@media (max-width: 900px) { .rh-lobby, .rh-run { grid-template-columns: 1fr; } .rh-rank { max-height: 30vh; } }
 .hall-btn-wrap .q-btn { box-shadow: 0 7px 0 #e0b23a, 0 0 22px 4px rgba(255,216,74,.55) !important; animation: hallGlow 2.4s ease-in-out infinite; }
 @keyframes hallGlow { 50% { box-shadow: 0 7px 0 #e0b23a, 0 0 34px 10px rgba(255,216,74,.85) !important; } }
 .hall-event { position: absolute; right: -22px; top: -30px; z-index: 3; font-family: var(--f-title); font-weight: 400; font-size: 17px; color: #fff; background: #ff5a6e; border: 3px solid #fff; border-radius: 100px; padding: 2px 12px; transform: rotate(8deg); box-shadow: 0 4px 0 #c93a4e; animation: hallEvent 1.2s ease-in-out infinite; pointer-events: none; }
@@ -2119,6 +2171,7 @@ html body .btn::after, html body .q-btn::after, html body .btn-cert::after, html
         <button class="q-btn q-big" id="challengeBtn" onclick="startGame('infinite')"><img src="/assets/icons/challenge.webp" alt="">도전하기</button>
         <button class="q-btn" onclick="showRankScreen()"><img src="/assets/icons/trophy.webp" alt="">순위표</button>
         <span class="hall-btn-wrap" id="hallBtnWrap" hidden><span class="hall-glows" aria-hidden="true"><span class="hall-core"></span></span><button class="q-btn" id="hallBtn" onclick="showHall()"><img src="/assets/icons/certificate.webp" alt="">명예의 전당</button><b class="hall-event">EVENT!</b><span class="hall-sps"><i class="hall-sp" style="top:1%;left:99%;width:18px;height:18px;animation-delay:0.5s"><svg viewBox="0 0 68 68" fill="none"><path fill="white" d="M26.5 25.5C19.0043 33.3697 0 34 0 34C0 34 19.1013 35.3684 26.5 43.5C33.234 50.901 34 68 34 68C34 68 36.9884 50.7065 44.5 43.5C51.6431 36.647 68 34 68 34C68 34 51.6947 32.0939 44.5 25.5C36.5605 18.2235 34 0 34 0C34 0 33.6591 17.9837 26.5 25.5Z"/></svg></i><i class="hall-sp" style="top:7%;left:1%;width:27px;height:27px;animation-delay:0.33s"><svg viewBox="0 0 68 68" fill="none"><path fill="white" d="M26.5 25.5C19.0043 33.3697 0 34 0 34C0 34 19.1013 35.3684 26.5 43.5C33.234 50.901 34 68 34 68C34 68 36.9884 50.7065 44.5 43.5C51.6431 36.647 68 34 68 34C68 34 51.6947 32.0939 44.5 25.5C36.5605 18.2235 34 0 34 0C34 0 33.6591 17.9837 26.5 25.5Z"/></svg></i><i class="hall-sp" style="top:93%;left:23%;width:21px;height:21px;animation-delay:0.6s"><svg viewBox="0 0 68 68" fill="none"><path fill="white" d="M26.5 25.5C19.0043 33.3697 0 34 0 34C0 34 19.1013 35.3684 26.5 43.5C33.234 50.901 34 68 34 68C34 68 36.9884 50.7065 44.5 43.5C51.6431 36.647 68 34 68 34C68 34 51.6947 32.0939 44.5 25.5C36.5605 18.2235 34 0 34 0C34 0 33.6591 17.9837 26.5 25.5Z"/></svg></i><i class="hall-sp" style="top:43%;left:15%;width:18px;height:18px;animation-delay:0.9s"><svg viewBox="0 0 68 68" fill="none"><path fill="white" d="M26.5 25.5C19.0043 33.3697 0 34 0 34C0 34 19.1013 35.3684 26.5 43.5C33.234 50.901 34 68 34 68C34 68 36.9884 50.7065 44.5 43.5C51.6431 36.647 68 34 68 34C68 34 51.6947 32.0939 44.5 25.5C36.5605 18.2235 34 0 34 0C34 0 33.6591 17.9837 26.5 25.5Z"/></svg></i><i class="hall-sp" style="top:93%;left:9%;width:27px;height:27px;animation-delay:1.2s"><svg viewBox="0 0 68 68" fill="none"><path fill="white" d="M26.5 25.5C19.0043 33.3697 0 34 0 34C0 34 19.1013 35.3684 26.5 43.5C33.234 50.901 34 68 34 68C34 68 36.9884 50.7065 44.5 43.5C51.6431 36.647 68 34 68 34C68 34 51.6947 32.0939 44.5 25.5C36.5605 18.2235 34 0 34 0C34 0 33.6591 17.9837 26.5 25.5Z"/></svg></i><i class="hall-sp" style="top:21%;left:88%;width:15px;height:15px;animation-delay:1.5s"><svg viewBox="0 0 68 68" fill="none"><path fill="white" d="M26.5 25.5C19.0043 33.3697 0 34 0 34C0 34 19.1013 35.3684 26.5 43.5C33.234 50.901 34 68 34 68C34 68 36.9884 50.7065 44.5 43.5C51.6431 36.647 68 34 68 34C68 34 51.6947 32.0939 44.5 25.5C36.5605 18.2235 34 0 34 0C34 0 33.6591 17.9837 26.5 25.5Z"/></svg></i><i class="hall-sp" style="top:99%;left:95%;width:18px;height:18px;animation-delay:1.8s"><svg viewBox="0 0 68 68" fill="none"><path fill="white" d="M26.5 25.5C19.0043 33.3697 0 34 0 34C0 34 19.1013 35.3684 26.5 43.5C33.234 50.901 34 68 34 68C34 68 36.9884 50.7065 44.5 43.5C51.6431 36.647 68 34 68 34C68 34 51.6947 32.0939 44.5 25.5C36.5605 18.2235 34 0 34 0C34 0 33.6591 17.9837 26.5 25.5Z"/></svg></i><i class="hall-sp" style="top:64%;left:99%;width:27px;height:27px;animation-delay:1.9s"><svg viewBox="0 0 68 68" fill="none"><path fill="white" d="M26.5 25.5C19.0043 33.3697 0 34 0 34C0 34 19.1013 35.3684 26.5 43.5C33.234 50.901 34 68 34 68C34 68 36.9884 50.7065 44.5 43.5C51.6431 36.647 68 34 68 34C68 34 51.6947 32.0939 44.5 25.5C36.5605 18.2235 34 0 34 0C34 0 33.6591 17.9837 26.5 25.5Z"/></svg></i><i class="hall-sp" style="top:14%;left:45%;width:18px;height:18px;animation-delay:1.4s"><svg viewBox="0 0 68 68" fill="none"><path fill="white" d="M26.5 25.5C19.0043 33.3697 0 34 0 34C0 34 19.1013 35.3684 26.5 43.5C33.234 50.901 34 68 34 68C34 68 36.9884 50.7065 44.5 43.5C51.6431 36.647 68 34 68 34C68 34 51.6947 32.0939 44.5 25.5C36.5605 18.2235 34 0 34 0C34 0 33.6591 17.9837 26.5 25.5Z"/></svg></i><i class="hall-sp" style="top:2%;left:48%;width:27px;height:27px;animation-delay:1.7s"><svg viewBox="0 0 68 68" fill="none"><path fill="white" d="M26.5 25.5C19.0043 33.3697 0 34 0 34C0 34 19.1013 35.3684 26.5 43.5C33.234 50.901 34 68 34 68C34 68 36.9884 50.7065 44.5 43.5C51.6431 36.647 68 34 68 34C68 34 51.6947 32.0939 44.5 25.5C36.5605 18.2235 34 0 34 0C34 0 33.6591 17.9837 26.5 25.5Z"/></svg></i></span></span>
+        <button class="q-btn" id="roomBtn" onclick="openRoomMenu()" hidden><img src="/assets/icons/gamepad.webp" alt="">대회 모드</button>
         <button class="q-btn" id="contestBtn" onclick="openContest()" hidden><img src="/assets/icons/medal.webp" alt="">타자대회</button>
         <button class="q-btn" id="boardBtn" onclick="showBoard()" hidden><img src="/assets/icons/star.webp" alt="">대회 순위</button>
       </div>
@@ -2244,6 +2297,61 @@ html body .btn::after, html body .q-btn::after, html body .btn-cert::after, html
     </div>
   </div>
 </div>
+<!-- ══ 대회 모드(방): QR 입장 → 동시 시작 → 마지막 한 명까지 (용타자 전용, 11-27) ══ -->
+<div id="roomModal" class="hidden">
+  <div class="uf-card">
+    <label class="uf-label"><img src="/assets/icons/gamepad.webp" alt="" style="width:22px;height:22px;vertical-align:-4px;margin-right:4px"><span id="roomModalTitle">대회 모드</span></label>
+    <div id="roomStepMenu">
+      <div class="contest-rule">선생님이 방을 만들면 QR이 나와요. 다 같이 시작해서 <b>마지막까지 살아남은 한 명</b>이 우승!</div>
+      <input class="ask-name" id="roomCodeIn" type="text" inputmode="numeric" maxlength="4" placeholder="방 번호" autocomplete="off">
+      <div class="pick-err" id="roomErr"></div>
+      <div><button class="uf-btn" onclick="roomEnterCode()">참가하기</button><button class="uf-btn orange" onclick="closeRoomModal()">닫기</button></div>
+      <div class="room-or">— 선생님 —</div>
+      <div class="pick-row"><select id="roomSec" aria-label="시간"><option value="180">3분</option><option value="300">5분</option><option value="600" selected>10분</option><option value="900">15분</option></select></div>
+      <div><button class="uf-btn" onclick="createRoom()">방 만들기</button></div>
+    </div>
+    <div id="roomStepJoin" hidden>
+      <div class="contest-rule" id="roomJoinRule"></div>
+      <div class="pick-row" id="roomPick"></div>
+      <div class="pick-err" id="roomJoinErr"></div>
+      <div><button class="uf-btn" id="roomJoinOk" onclick="joinRoom()">입장하기</button><button class="uf-btn orange" onclick="closeRoomModal()">그만두기</button></div>
+    </div>
+  </div>
+</div>
+<div class="screen hidden" id="roomWait">
+  <div class="pause-title" id="roomWaitTitle">곧 시작해요!</div>
+  <div class="pt-hint" id="roomWaitSub"></div>
+  <button class="btn red" onclick="leaveRoom()">나가기</button>
+</div>
+<div class="screen hidden" id="roomHost">
+  <div class="rh-top">
+    <div class="rank-title"><img src="/assets/icons/gamepad.webp" alt="" style="width:36px;height:36px;vertical-align:-6px;margin-right:8px">용타자 대회</div>
+    <span class="rh-chip">방 <b id="rhCode">----</b></span>
+    <span class="rh-chip" id="rhAliveChip" hidden>생존 <b id="rhAlive">0</b></span>
+    <span class="rh-chip time" id="rhTimeChip" hidden>남은 시간 <b id="rhTime">10:00</b></span>
+    <span class="sp"></span>
+    <button class="btn" onclick="toggleFullscreen()">전체화면</button>
+    <button class="btn red" onclick="closeRoomHost()">대회 끝내기</button>
+  </div>
+  <div class="rh-lobby" id="rhLobby">
+    <div class="q-card rh-qr"><div id="roomQr"></div><div class="rh-code" id="rhCodeBig">----</div><div class="rh-url" id="rhUrl"></div></div>
+    <div class="q-card rh-people">
+      <div class="q-card-title">참가자 <span id="rhCount">0</span>명</div>
+      <div class="rh-names" id="rhNames"></div>
+      <button class="q-btn q-big" id="rhStart" onclick="startRoom()" style="align-self:center;background:#ffd84a!important;box-shadow:0 7px 0 #c99a00!important">시작!</button>
+    </div>
+  </div>
+  <div class="rh-run" id="rhRun" hidden>
+    <div class="rh-grid" id="rhGrid"></div>
+    <div class="q-card rh-rank"><div class="q-card-title">실시간 순위</div><div class="rh-rank-list" id="rhRank"></div></div>
+  </div>
+  <div class="rh-end" id="rhEnd" hidden>
+    <div class="rh-win" id="rhWin"></div>
+    <div class="q-card"><table class="pt-rank" id="rhFinal"></table></div>
+    <div class="board-bar"><button class="btn gold" onclick="rehostRoom()">같은 방에서 한 번 더</button><button class="btn" onclick="closeRoomHost()">← 처음 화면</button></div>
+  </div>
+</div>
+
 <!-- 중급자 이상 인증서가 나오면 바로 묻고 → 명예의 전당에 자동 등록 (11-27) -->
 <div id="hallAsk" class="hidden">
   <div class="uf-card">
@@ -2404,6 +2512,7 @@ html body .btn::after, html body .q-btn::after, html body .btn-cert::after, html
   </div>
 </div>
 
+<script src="/assets/qrcode.js"></script>
 <script>
 // ══════════════════════════════════════════════════
 //  ANTI·GRAVITY — 한글 타이핑 서바이벌
@@ -3519,7 +3628,7 @@ function startGame(mode) {
   S = newState();
   _RL.reset();
   S.running = true;
-  S.contest = null;
+  S.contest = null; S.room = null; { const gw = document.getElementById('gameWrap'); if (gw._map) roomSetMap(gw, 0); }
   document.getElementById('hTimeBlock').hidden = true;
   document.getElementById('pauseBtn').hidden = false;
   S.mode = mode;
@@ -4269,6 +4378,7 @@ function showUpgradeScreen() {
 
   hideAllScreens();
   document.getElementById('upgradeScreen').classList.remove('hidden');
+  if (S.room) { clearTimeout(S._autoPick); S._autoPick = setTimeout(() => { if (S && S.running && S._upgPending) { const c = document.querySelector('.upg-card'); if (c) c.click(); } }, 8000); }   // 카드 화면에서 버티기 방지: 8초 뒤 첫 카드
 }
 
 // ── 피격 ─────────────────────────────────────────
@@ -4281,7 +4391,8 @@ function takeDamage(amt=1) {
   document.getElementById('dmgFlash').classList.add('on');
   setTimeout(()=>document.getElementById('dmgFlash').classList.remove('on'), 130);
   if (S.hp <= 0) {
-    if (S.contest) S._revive = true;   // 대회: 끝나지 않고 잠깐 쉬었다가 다시 (적 배열을 도는 중이라 update 끝에서 처리)
+    if (S.room) endGame(false);        // 대회 모드(방): 부활 없이 탈락
+    else if (S.contest) S._revive = true;   // 대회: 끝나지 않고 잠깐 쉬었다가 다시 (적 배열을 도는 중이라 update 끝에서 처리)
     else endGame(false);
   }
 }
@@ -4849,7 +4960,7 @@ function drawEnemyLabel(en) {
 
 // ── 일시정지 ──────────────────────────────────────
 function togglePause() {
-  if (!S||!S.running||S.contest) return;   // 대회는 멈출 수 없음
+  if (!S||!S.running||S.contest||S.room) return;   // 대회는 멈출 수 없음
   if (S.paused) resumeGame();
   else {
     S.paused=true;
@@ -4892,6 +5003,7 @@ function endGame(win) {
   if (!S) return;
   cleanupState();
   BGM.stop(); MUSIC.stop();
+  if (S.room) { endRoom(win); return; }
   if (S.contest) { endContest(); return; }
   if (!win) SFX.gameOver();
 
@@ -4952,6 +5064,8 @@ function goTitle() {
   buildTitleDots();
   pollContest();
   document.getElementById('hallView').classList.add('hidden');
+  if (ROOM && ROOM.phase !== 'wait') { clearInterval(ROOM.poll); clearInterval(ROOM.send); ROOM = null; }
+  for (const id of ['resAgainBtn', 'resRankBtn']) document.getElementById(id).style.display = '';
 }
 
 function hideAllScreens() {
@@ -5615,7 +5729,13 @@ async function showHall(focusId) {
   try {
     const res = await fetch(_HFB + '.json', { cache: 'no-store' });
     const data = res.ok ? (await res.json()) || {} : {};
-    HALL = Object.entries(data).map(([id, v]) => ({ id, ...v })).filter(r => TIER_NAME[r.tier]).sort((a, b) => {
+    // 같은 사람(학년·반·번호·이름, 선생님은 이름)이 여러 장 올렸으면 가장 높은 점수 한 장만 보인다 (낮은 기록은 지우지 않음)
+    const best = {};
+    Object.entries(data).map(([id, v]) => ({ id, ...v })).filter(r => TIER_NAME[r.tier]).forEach(r => {
+      const k = (r.t ? 'T' : `${r.g}-${r.c}-${r.n}`) + '|' + String(r.name).replace(/\s+/g, '');
+      if (!best[k] || r.score > best[k].score || (focusId && r.id === focusId)) { if (!(best[k] && focusId && best[k].id === focusId)) best[k] = r; }
+    });
+    HALL = Object.values(best).sort((a, b) => {
       const T = { master: 0, advanced: 1, intermediate: 2 };
       return T[a.tier] - T[b.tier] || (a.t ? 1 : 0) - (b.t ? 1 : 0) || a.g - b.g || a.c - b.c || a.n - b.n || String(a.name).localeCompare(String(b.name), 'ko') || (b.score - a.score);
     });
@@ -5836,7 +5956,380 @@ let _hallSx = null, _hallDragged = false;
   });
 })();
 
+// ══════════════════════════════════════════════════
+//  대회 모드(방) — 용타자 전용 (2026-11-27)
+//  yong-room/{번호}/meta·players·live·result. 게임은 각자 기기에서 돌고, 0.3초마다 상태(점수·몬스터 위치·단어)만 보낸다.
+//  선생님 화면은 그 상태로 작은 게임 화면을 다시 그린다(영상 아님). 중계가 끊겨도 게임·기록은 그대로.
+//  규칙: 실드가 다 떨어지면 탈락, 마지막 한 명이 남으면 끝(시간이 다 되면 살아남은 사람끼리 점수로).
+// ══════════════════════════════════════════════════
+const _RFB = _FB.replace('/yong-ranks', '/yong-room');
+let ROOM = null;        // 참가자: { code, pid, who, off, sec, startAt, poll }
+let HOST = null;        // 선생님: { code, sec, off, poll, tiles:{}, state }
+const _rj = async (path, method, body) => {
+  const r = await fetch(`${_RFB}/${path}.json`, { method: method || 'GET', cache: 'no-store', body: body === undefined ? undefined : JSON.stringify(body) });
+  if (!r.ok) throw new Error(r.status);
+  return r.json();
+};
+async function _roomClock(code) {   // 서버 시계와 이 기기 시계의 차이 (기기 시계가 틀려도 다 같이 출발하게)
+  const t0 = Date.now();
+  const sv = await _rj(`${code}/clock/${Math.random().toString(36).slice(2, 8)}`, 'PUT', { '.sv': 'timestamp' });
+  return sv - (t0 + Date.now()) / 2;
+}
+const _fmtMs = ms => { const s = Math.max(0, Math.floor(ms / 1000)); return `${Math.floor(s / 60)}분 ${String(s % 60).padStart(2, '0')}초`; };
+
+// ── 들어가기 ──
+function openRoomMenu(code) {
+  document.getElementById('roomModal').classList.remove('hidden');
+  document.getElementById('roomStepMenu').hidden = false; document.getElementById('roomStepJoin').hidden = true;
+  document.getElementById('roomErr').textContent = '';
+  document.getElementById('roomCodeIn').value = code || '';
+  if (code) roomEnterCode();
+}
+function closeRoomModal() { document.getElementById('roomModal').classList.add('hidden'); }
+let _roomCode = '';
+async function roomEnterCode() {
+  const code = document.getElementById('roomCodeIn').value.trim(), err = document.getElementById('roomErr');
+  if (!/^\d{4}$/.test(code)) { err.textContent = '방 번호 네 자리를 써 주세요!'; return; }
+  let meta = null; try { meta = await _rj(`${code}/meta`); } catch { err.textContent = '인터넷을 확인해 주세요.'; return; }
+  if (!meta) { err.textContent = '그런 방이 없어요. 번호를 다시 확인해요!'; return; }
+  if (meta.state !== 'lobby') { err.textContent = '이미 시작한 대회예요.'; return; }
+  _roomCode = code;
+  document.getElementById('roomStepMenu').hidden = true; document.getElementById('roomStepJoin').hidden = false;
+  document.getElementById('roomModalTitle').textContent = `대회 방 ${code}`;
+  document.getElementById('roomJoinRule').innerHTML = `${_minText(meta.sec)} 동안 겨뤄요. <b>실드가 다 떨어지면 탈락</b>, 마지막까지 살아남으면 우승! 중간에 멈출 수 없어요.`;
+  document.getElementById('roomJoinErr').textContent = ''; document.getElementById('roomJoinOk').disabled = false;
+  setupPick('roomPick');
+}
+async function joinRoom() {
+  const who = readPick('roomPick'), err = document.getElementById('roomJoinErr');
+  if (!who) { err.textContent = '빈칸 없이 모두 골라 주세요!'; return; }
+  document.getElementById('roomJoinOk').disabled = true;
+  const pid = 'p' + Date.now().toString(36).slice(-5) + Math.random().toString(36).slice(2, 6);
+  try {
+    const off = await _roomClock(_roomCode);
+    await _rj(`${_roomCode}/players/${pid}`, 'PUT', { name: who.name, g: who.g, c: who.c, t: who.t, at: { '.sv': 'timestamp' } });
+    ROOM = { code: _roomCode, pid, who, off, sec: 600, startAt: 0, phase: 'wait', chk: 0 };
+  } catch { err.textContent = '들어가지 못했어요. 다시 눌러 주세요.'; document.getElementById('roomJoinOk').disabled = false; return; }
+  closeRoomModal(); hideAllScreens();
+  document.getElementById('roomWait').classList.remove('hidden');
+  document.getElementById('roomWaitTitle').textContent = '곧 시작해요!';
+  document.getElementById('roomWaitSub').textContent = `방 ${ROOM.code} · ${who.name} · 선생님이 시작하면 다 같이 출발해요`;
+  clearInterval(ROOM.poll); ROOM.poll = setInterval(roomPoll, 700); roomPoll();
+}
+function leaveRoom() {
+  if (ROOM) { clearInterval(ROOM.poll); clearInterval(ROOM.send); _rj(`${ROOM.code}/players/${ROOM.pid}`, 'DELETE').catch(() => {}); }
+  ROOM = null; goTitle();
+}
+// 맵 = 전체 시간을 넷으로 나눠 순서대로. 0번은 원래 배경(봄 고원)
+const ROOM_MAPS = [null, '/assets/maps/autumn.webp', '/assets/maps/winter.webp', '/assets/maps/night.webp'];
+const ROOM_MAP_NAMES = ['봄 고원', '가을 고원', '겨울 고원', '밤 고원'];
+const roomMapAt = (elapsedMs, sec) => Math.max(0, Math.min(ROOM_MAPS.length - 1, Math.floor(elapsedMs / (sec * 1000 / ROOM_MAPS.length))));
+function roomSetMap(parent, i) {   // 새 배경을 위에 겹쳐 천천히 나타나게
+  if (parent._map === i) return; parent._map = i;
+  let layer = parent.querySelector(':scope > .map-layer');
+  if (!layer) { layer = document.createElement('div'); layer.className = 'map-layer'; parent.insertBefore(layer, parent.firstChild); }
+  if (ROOM_MAPS[i]) { layer.style.backgroundImage = `url('${ROOM_MAPS[i]}')`; void layer.offsetWidth; layer.classList.add('on'); }
+  else layer.classList.remove('on');
+}
+ROOM_MAPS.forEach(u => { if (u) new Image().src = u; });   // 미리 받아 두기
+const roomNow = () => Date.now() + (ROOM ? ROOM.off : HOST ? HOST.off : 0);
+let _roomPolling = false;
+async function roomPoll() {
+  if (!ROOM || _roomPolling) return;
+  _roomPolling = true;
+  try {
+    const R = ROOM, meta = await _rj(`${R.code}/meta`);
+    if (ROOM !== R) return;
+    if (!meta) { if (R.phase === 'wait') { clearInterval(R.poll); ROOM = null; goTitle(); } return; }
+    R.sec = meta.sec || 600;
+    if (R.phase === 'wait') {
+      if (meta.state === 'lobby') {   // 선생님이 내보냈는지
+        if (++R.chk % 4 === 0) { const me = await _rj(`${R.code}/players/${R.pid}`); if (!me && ROOM === R) { clearInterval(R.poll); ROOM = null; goTitle(); } }
+      } else if (meta.state === 'run' && meta.startAt) { R.startAt = meta.startAt; R.phase = 'count'; roomCountdown(); }
+      else if (meta.state === 'end') { clearInterval(R.poll); ROOM = null; goTitle(); }
+    } else if (meta.state === 'end') {
+      R.endAt = meta.endAt || roomNow();
+      if (R.phase === 'play' && S && S.running && S.room) endGame(true);   // 살아남은 채로 끝
+      else if (R.phase === 'out' || R.phase === 'done') { clearInterval(R.poll); roomFinalRank(); }
+    }
+  } catch { /* 끊겨도 게임은 계속 */ } finally { _roomPolling = false; }
+}
+function roomCountdown() {
+  const R = ROOM; R.chk = 0;
+  hideAllScreens(); document.getElementById('contestReady').classList.remove('hidden');
+  const el = document.getElementById('contestCount'); let last = -1;
+  const tick = () => {
+    if (ROOM !== R || R.phase !== 'count') return;
+    const left = R.startAt - roomNow(), n = Math.ceil(left / 1000);
+    if (left <= 0) { roomBegin(); return; }
+    if (n !== last) { last = n; el.textContent = n > 5 ? '준비!' : n; if (n <= 5) hallSfx('flip'); }
+    requestAnimationFrame(tick);
+  };
+  tick();
+}
+function roomBegin() {
+  const R = ROOM; R.phase = 'play';
+  startGame('infinite');
+  S.room = R;
+  document.getElementById('hTimeBlock').hidden = false; document.getElementById('pauseBtn').hidden = true;
+  R.seq = 0; R.hiddenAt = 0; roomSetMap(document.getElementById('gameWrap'), 0);
+  clearInterval(R.send); R.send = setInterval(roomSend, 300);
+}
+// 화면을 숨겨 두면 게임이 멈춰서 버틸 수 있으므로, 5초 넘게 자리를 비우면 탈락
+document.addEventListener('visibilitychange', () => {
+  if (!ROOM || ROOM.phase !== 'play' || !S || !S.running) return;
+  if (document.hidden) ROOM.hiddenAt = Date.now();
+  else if (ROOM.hiddenAt && Date.now() - ROOM.hiddenAt > 5000) { ROOM.awayOut = true; S.hp = 0; endGame(false); }
+});
+function _roomSnap(alive) {
+  const R = ROOM, cx = S.cx, cy = S.cy;
+  const e = S.enemies.slice(0, 40).map(en => {
+    if (!en._sid) en._sid = ++R.seqE || (R.seqE = 1);
+    const fl = (en.dying ? 1 : 0) | (en.frozen > 0 ? 2 : 0) | (en.phased ? 4 : 0) | (en.wordHidden ? 8 : 0);
+    return en.isBoss ? [en._sid, Math.round(en.x - cx), Math.round(en.y - cy), en.word, 1, en.bossType || 1, 0, en.type.size, en.hp, en.maxHp, fl]
+      : [en._sid, Math.round(en.x - cx), Math.round(en.y - cy), en.word, 0, en.mon ? en.mon.x : 0, en.mon ? en.mon.y : 0, en.type.size, en.hp, en.maxHp, fl];
+  });
+  const m = S.missiles.slice(0, 12).map(x => [Math.round(x.mx - cx), Math.round(x.my - cy)]);
+  return { n: ++R.seq, s: S.score, l: S.upgLevel + 1, hp: S.hp, mh: S.maxHp, c: S.combo, k: S.kills, a: alive ? 1 : 0, w: canvas.width, h: canvas.height,
+    ty: String(typeInp.value || '').slice(0, 12), tg: S.target && S.target._sid || 0, e, m };
+}
+let _roomSending = false;
+function roomSend() {
+  const R = ROOM;
+  if (!R || R.phase !== 'play' || !S || !S.running) return;
+  const left = R.startAt + R.sec * 1000 - roomNow(), el = document.getElementById('hTime');
+  el.textContent = _mmss(Math.max(0, Math.ceil(left / 1000))); el.classList.toggle('last', left <= 10000);
+  { const mi = roomMapAt(R.sec * 1000 - left, R.sec), gw = document.getElementById('gameWrap');
+    if (gw._map !== mi) { roomSetMap(gw, mi); if (mi > 0) S.waveFlash = { text: ROOM_MAP_NAMES[mi], sub: '맵이 바뀌었어요!', alpha: 1.6 }; } }
+  if (left <= 0) { endGame(true); return; }   // 시간이 다 됨 = 살아남음 (선생님 화면이 꺼져 있어도 끝나게)
+  if (_roomSending) return;   // 앞의 것이 아직 가는 중이면 건너뜀(느린 와이파이에서 쌓이지 않게)
+  _roomSending = true;
+  _rj(`${R.code}/live/${R.pid}`, 'PUT', _roomSnap(true)).catch(() => {}).finally(() => { _roomSending = false; });
+}
+// 게임 끝(탈락 또는 끝까지 생존)
+function endRoom(win) {
+  const R = S.room; clearInterval(R.send); clearTimeout(S._autoPick);
+  if (!win) SFX.gameOver(); else SFX.cert();
+  updateAccuracy();
+  const ms = Math.min(R.sec * 1000, Math.max(0, (R.endAt || roomNow()) - R.startAt));
+  R.phase = win ? 'done' : 'out'; R.ms = ms; R.win = win;
+  const snap = _roomSnap(win); snap.e = []; snap.m = []; if (!win) snap.dt = ms;
+  const res = { name: R.who.name, g: R.who.g, c: R.who.c, t: R.who.t, score: S.score, level: S.upgLevel + 1, kills: S.kills, acc: S.lastAcc, ms, out: !win, ok: _RL.ok(S.score), at: { '.sv': 'timestamp' } };
+  const push = (tries) => {   // 기록은 될 때까지 다시 보낸다
+    Promise.all([_rj(`${R.code}/live/${R.pid}`, 'PUT', snap), _rj(`${R.code}/result/${R.pid}`, 'PUT', res)])
+      .then(() => { R.saved = true; _roomNotice(); })
+      .catch(() => { if (tries < 60 && ROOM === R) setTimeout(() => push(tries + 1), 2000); });
+  };
+  push(0);
+  document.getElementById('gameWrap').classList.add('hidden'); hideAllScreens();
+  const put = (id, v) => { document.getElementById(id).textContent = v; };
+  put('resTitle', win ? '끝까지 살아남았어요!' : (R.awayOut ? '화면을 벗어나서 탈락!' : '탈락!'));
+  document.getElementById('resTitle').className = 'res-title ' + (win ? 'win' : 'dead');
+  put('rScore', S.score.toLocaleString()); put('rLv', S.upgLevel + 1); put('rKills', S.kills); put('rCombo', S.maxCombo); put('rAcc', S.lastAcc + '%'); put('rPower', S.powers.length);
+  for (const id of ['resCertBtn', 'resAgainBtn', 'resRankBtn']) document.getElementById(id).style.display = 'none';
+  document.getElementById('resSendBtn').hidden = true; document.getElementById('resBoardBtn').hidden = true;
+  document.getElementById('resultScreen').classList.remove('hidden');
+  _roomNotice();
+  if (win && R.endAt) { clearInterval(R.poll); roomFinalRank(); }
+  else _rj(`${R.code}/live`).then(live => {   // 탈락한 순간 몇 명 남았는지
+    const alive = Object.entries(live || {}).filter(([id, v]) => id !== R.pid && v && v.a === 1).length;
+    R.leftMsg = win ? '' : ` · 지금 ${alive}명이 남아 있어요`; _roomNotice();
+  }).catch(() => {});
+}
+function _roomNotice() {
+  const R = ROOM; if (!R) return;
+  document.getElementById('rankNotice').textContent = R.finalMsg || `${_fmtMs(R.ms)} 생존${R.leftMsg || ''}${R.saved ? '' : ' · 기록 보내는 중…'}`;
+}
+// 순위 = 살아남은 사람(점수 높은 순) → 탈락한 사람(오래 버틴 순)
+function roomRanking(players, live, result) {
+  return Object.entries(players || {}).map(([id, p]) => {
+    const l = (live || {})[id] || {}, r = (result || {})[id];
+    const out = r ? !!r.out : l.a === 0;
+    return { id, name: p.name, t: p.t, g: p.g, c: p.c, out, score: r ? r.score : (l.s || 0), ms: r ? r.ms : (l.dt || 0), level: r ? r.level : (l.l || 1) };
+  }).sort((a, b) => (a.out ? 1 : 0) - (b.out ? 1 : 0) || (a.out ? b.ms - a.ms : b.score - a.score) || b.score - a.score);
+}
+async function roomFinalRank() {
+  const R = ROOM; if (!R) return;
+  for (let i = 0; i < 4; i++) {
+    try {
+      const room = await _rj(R.code);
+      const rk = roomRanking(room.players, room.live, room.result), at = rk.findIndex(x => x.id === R.pid);
+      if (at >= 0) { R.finalMsg = `${rk.length}명 중 ${at + 1}등! (${R.win ? '끝까지 생존' : _fmtMs(R.ms) + ' 생존'})`; _roomNotice(); }
+    } catch {}
+    await new Promise(r => setTimeout(r, 1500));   // 늦게 도착하는 기록까지 반영
+  }
+}
+
+// ══ 선생님 화면 ══
+async function createRoom() {
+  const err = document.getElementById('roomErr'), sec = +document.getElementById('roomSec').value || 600;
+  try {
+    let code = '';
+    for (let i = 0; i < 8; i++) { code = String(1000 + Math.floor(Math.random() * 9000)); if (!(await _rj(`${code}/meta`))) break; }
+    const old = localStorage.getItem('yt_room_mine'); if (old && old !== code) _rj(old, 'DELETE').catch(() => {});   // 내가 전에 만든 방 치우기
+    await _rj(`${code}/meta`, 'PUT', { state: 'lobby', sec, at: { '.sv': 'timestamp' } });
+    localStorage.setItem('yt_room_mine', code);
+    HOST = { code, sec, off: await _roomClock(code), tiles: {}, state: 'lobby', room: {} };
+  } catch { err.textContent = '방을 만들지 못했어요. 인터넷을 확인해 주세요.'; return; }
+  closeRoomModal(); showRoomHost();
+}
+function showRoomHost() {
+  const H = HOST; hideAllScreens();
+  document.getElementById('roomHost').classList.remove('hidden');
+  document.getElementById('rhLobby').hidden = false; document.getElementById('rhRun').hidden = true; document.getElementById('rhEnd').hidden = true;
+  document.getElementById('rhAliveChip').hidden = true; document.getElementById('rhTimeChip').hidden = true;
+  document.getElementById('rhCode').textContent = document.getElementById('rhCodeBig').textContent = H.code;
+  const url = `${location.origin}/?room=${H.code}`;
+  document.getElementById('rhUrl').textContent = `${location.host} → 대회 모드 → 방 번호 ${H.code}`;
+  try { const q = qrcode(0, 'M'); q.addData(url); q.make(); document.getElementById('roomQr').innerHTML = q.createSvgTag({ cellSize: 8, margin: 2, scalable: true }); } catch (e) { document.getElementById('roomQr').textContent = url; }
+  document.getElementById('rhStart').disabled = false;
+  clearInterval(H.poll); H.poll = setInterval(hostPoll, 450); hostPoll();
+  cancelAnimationFrame(H.raf); const loop = () => { if (HOST !== H) return; hostDraw(); H.raf = requestAnimationFrame(loop); }; loop();
+}
+function closeRoomHost() {
+  const H = HOST; if (!H) { goTitle(); return; }
+  if (H.state !== 'end' && !confirm('대회를 끝내고 방을 닫을까요?')) return;
+  clearInterval(H.poll); cancelAnimationFrame(H.raf);
+  if (H.state !== 'end') _rj(`${H.code}/meta`, 'PATCH', { state: 'end', endAt: Date.now() + H.off }).catch(() => {});
+  HOST = null; goTitle();
+}
+async function rehostRoom() {   // 같은 번호로 다시 대기실 (아이들은 QR을 다시 찍어 들어온다)
+  const H = HOST; clearInterval(H.poll);
+  try { await _rj(H.code, 'PUT', { meta: { state: 'lobby', sec: H.sec, at: { '.sv': 'timestamp' } } }); } catch {}
+  H.state = 'lobby'; H.tiles = {}; H.room = {}; document.getElementById('rhGrid').innerHTML = ''; document.getElementById('rhRank').innerHTML = '';
+  showRoomHost();
+}
+async function startRoom() {
+  const H = HOST, n = Object.keys(H.room.players || {}).length;
+  if (!n) { alert('아직 들어온 참가자가 없어요.'); return; }
+  document.getElementById('rhStart').disabled = true;
+  try { H.off = await _roomClock(H.code); H.startAt = Date.now() + H.off + 6000; await _rj(`${H.code}/meta`, 'PATCH', { state: 'run', startAt: H.startAt }); }
+  catch { document.getElementById('rhStart').disabled = false; alert('시작하지 못했어요. 인터넷을 확인해 주세요.'); return; }
+  H.state = 'run';
+  document.getElementById('rhLobby').hidden = true; document.getElementById('rhRun').hidden = false;
+  document.getElementById('rhAliveChip').hidden = false; document.getElementById('rhTimeChip').hidden = false;
+}
+let _hostPolling = false;
+async function hostPoll() {
+  const H = HOST; if (!H || _hostPolling) return;
+  _hostPolling = true;
+  try {
+    const room = (await _rj(H.code)) || {}; if (HOST !== H) return;
+    H.room = room; const players = room.players || {}, live = room.live || {}, now = performance.now();
+    if (H.state === 'lobby') {
+      document.getElementById('rhCount').textContent = Object.keys(players).length;
+      const key = Object.keys(players).join(',');
+      if (key !== H.namesKey) {
+        H.namesKey = key;
+        document.getElementById('rhNames').innerHTML = Object.entries(players).sort((a, b) => (a[1].at || 0) - (b[1].at || 0))
+          .map(([id, p]) => `<span class="rh-name">${_escName(p.name)}<button title="내보내기" onclick="hostKick('${id}')">✕</button></span>`).join('') || '<span style="color:#8a83b0;font-weight:700">QR을 찍고 들어오면 여기에 이름이 나와요</span>';
+      }
+      return;
+    }
+    // 중계: 받은 상태를 칸마다 넘겨준다
+    for (const [id, p] of Object.entries(players)) {
+      const t = H.tiles[id] || (H.tiles[id] = hostTile(id, p)), l = live[id];
+      if (l && l.n !== t.n) { t.prev = t.cur; t.cur = l; t.n = l.n; t.iv = Math.min(1200, Math.max(250, now - (t.at || now - 450))); t.at = now; }
+      roomSetMap(t.el, H.state === 'run' ? roomMapAt(Date.now() + H.off - H.startAt, H.sec) : (t.el._map || 0));
+      t.out = !!(l && l.a === 0) || !!(room.result && room.result[id] && room.result[id].out);
+      t.lost = !t.out && H.state === 'run' && Date.now() + H.off > H.startAt + 4000 && now - (t.at || 0) > 8000;   // 8초 넘게 소식 없음
+    }
+    hostBoard();
+    if (H.state === 'run') {
+      const el = Date.now() + H.off - H.startAt, ids = Object.keys(H.tiles);
+      const alive = ids.filter(id => !H.tiles[id].out && !H.tiles[id].lost).length;
+      document.getElementById('rhAlive').textContent = el < 0 ? `${ids.length} / ${ids.length}` : `${alive} / ${ids.length}`;
+      const left = H.sec * 1000 - Math.max(0, el);
+      document.getElementById('rhTime').textContent = el < 0 ? `${Math.ceil(-el / 1000)}초 뒤 시작` : _mmss(Math.max(0, Math.ceil(left / 1000)));
+      document.getElementById('rhTimeChip').classList.toggle('last', el >= 0 && left <= 10000);
+      const done = left <= 0 || (el > 5000 && (ids.length >= 2 ? alive <= 1 : alive === 0));   // 마지막 한 명이 남으면 끝
+      if (done) { H.state = 'ending'; await _rj(`${H.code}/meta`, 'PATCH', { state: 'end', endAt: Date.now() + H.off }); setTimeout(() => hostFinish(), 3000); }
+    }
+  } catch { /* 다음 번에 다시 */ } finally { _hostPolling = false; }
+}
+function hostKick(id) { _rj(`${HOST.code}/players/${id}`, 'DELETE').catch(() => {}); }
+function hostTile(id, p) {
+  const el = document.createElement('div'); el.className = 'rh-tile';
+  el.innerHTML = `<canvas></canvas><div class="tl"><span>${_escName(p.name)}</span><b>0</b></div><div class="out"><span>탈락</span><small></small></div>`;
+  el.onclick = () => { const z = el.classList.contains('zoom'); document.querySelectorAll('.rh-tile.zoom').forEach(x => x.classList.remove('zoom')); if (!z) { el.classList.add('zoom'); hallSfx('card'); } else hallSfx('back'); };
+  document.getElementById('rhGrid').appendChild(el);
+  return { id, el, cv: el.querySelector('canvas'), sc: el.querySelector('.tl b'), outT: el.querySelector('.out small'), name: p.name };
+}
+function hostBoard() {
+  const H = HOST, room = H.room, rk = roomRanking(room.players, room.live, room.result), n = rk.length;
+  const grid = document.getElementById('rhGrid'), aliveN = rk.filter(x => !x.out).length;
+  const focus = n > 6 && aliveN <= 6 && aliveN > 0, shown = focus ? aliveN : n;   // 몇 명 안 남으면 살아 있는 칸만 크게
+  grid.classList.toggle('focus', focus);
+  const gw = grid.clientWidth || 1200, gh = grid.clientHeight || 700; let cols = 1, best = 0;
+  for (let c = 1; c <= 8; c++) { const rows = Math.ceil(shown / c), w = gw / c, hh = gh / rows, s = Math.min(w, hh * 1.6); if (s > best) { best = s; cols = c; } }
+  grid.style.setProperty('--cols', cols);
+  const list = document.getElementById('rhRank'), rowH = Math.max(26, Math.min(42, (list.clientHeight || 500) / Math.max(n, 1)));
+  rk.forEach((x, i) => {
+    const t = H.tiles[x.id]; if (!t) return;
+    t.sc.textContent = Number(x.score).toLocaleString();
+    t.el.classList.toggle('is-out', x.out); t.el.classList.toggle('is-lost', !!t.lost);
+    if (x.out) t.outT.textContent = _fmtMs(x.ms);
+    let row = t.row; if (!row) { row = t.row = document.createElement('div'); row.className = 'rh-row'; row.innerHTML = '<i></i><span></span><b></b>'; row.children[1].textContent = x.name; list.appendChild(row); }
+    row.style.top = i * rowH + 'px'; row.style.height = rowH - 4 + 'px';
+    row.className = 'rh-row' + (x.out ? ' is-out' : '') + (i === 0 && !x.out ? ' top1' : '');
+    row.children[0].textContent = i + 1;
+    row.children[2].textContent = x.out ? _fmtMs(x.ms) : Number(x.score).toLocaleString();
+  });
+}
+function hostFinish() {
+  const H = HOST; if (!H) return; H.state = 'end';
+  const rk = roomRanking(H.room.players, H.room.live, H.room.result), w = rk[0];
+  document.getElementById('rhRun').hidden = true; document.getElementById('rhEnd').hidden = false;
+  document.getElementById('rhAliveChip').hidden = true; document.getElementById('rhTimeChip').hidden = true;
+  document.getElementById('rhWin').innerHTML = w ? `<small>우승</small>${_escName(w.name)}<small>${Number(w.score).toLocaleString()}점 · ${w.out ? _fmtMs(w.ms) + ' 생존' : '끝까지 생존'}</small>` : '참가자가 없어요';
+  document.getElementById('rhFinal').innerHTML = rk.map((x, i) => `<tr><td class="rk-num">${i + 1}</td><td class="rk-name">${_escName(x.name)}</td><td class="rk-score">${x.out ? _fmtMs(x.ms) + ' · ' : ''}${Number(x.score).toLocaleString()}점</td></tr>`).join('');
+  SFX.cert();
+}
+// 작은 게임 화면 그리기 — 보낸 쪽 화면 가운데(주인공)를 기준으로 한 좌표를 칸 크기에 맞춰 줄여 그린다
+function hostDraw() {
+  const H = HOST; if (!H || H.state === 'lobby' || H.state === 'end') return;
+  const now = performance.now();
+  for (const t of Object.values(H.tiles)) {
+    const cv = t.cv, W = cv.clientWidth, Hh = cv.clientHeight; if (!W || !Hh) continue;
+    const dpr = Math.min(2, devicePixelRatio || 1);
+    if (cv.width !== Math.round(W * dpr) || cv.height !== Math.round(Hh * dpr)) { cv.width = Math.round(W * dpr); cv.height = Math.round(Hh * dpr); }
+    const g = cv.getContext('2d'); g.setTransform(1, 0, 0, 1, 0, 0); g.clearRect(0, 0, cv.width, cv.height);
+    const cur = t.cur; if (!cur || t.out) continue;
+    const k = Math.min(1, (now - t.at) / (t.iv || 450)), sc = Math.min(cv.width / (cur.w || 1280), cv.height / (cur.h || 720));
+    g.setTransform(sc, 0, 0, sc, cv.width / 2, cv.height / 2); g.imageSmoothingEnabled = false;
+    const pm = {}; if (t.prev && t.prev.e) for (const e of t.prev.e) pm[e[0]] = e;
+    const es = (cur.e || []).map(e => { const p = pm[e[0]]; return p ? [e[0], p[1] + (e[1] - p[1]) * k, p[2] + (e[2] - p[2]) * k, ...e.slice(3)] : e; });
+    for (const e of es) {   // 몸통
+      const [id, x, y, , kind, mx, my, size, , , fl] = e;
+      g.globalAlpha = fl & 1 ? 0.45 : fl & 4 ? 0.3 : 1;
+      if (kind === 1) { const b = bossMon(mx), f = Math.floor(now / 1000 * b.fps) % b.frames, h = size * 3.4, w = h * b.fw / b.fh; g.save(); g.translate(x, y); if (x < 0) g.scale(-1, 1); g.drawImage(BOSS_ATLAS, b.x + (f % b.cols) * b.fw, b.y + Math.floor(f / b.cols) * b.fh, b.fw, b.fh, -w / 2, -h / 2, w, h); g.restore(); }
+      else { const fr = MON_DATA.frame, row = Math.abs(x) > Math.abs(y) ? (x < 0 ? 2 : 1) : (y < 0 ? 0 : 3), step = fl & 2 ? 0 : Math.floor(now / 170 + id * 7) % 4, sz = Math.round(size * 3.4); g.drawImage(MON_ATLAS, mx + step * fr, my + row * fr, fr, fr, x - sz / 2, y - sz / 2, sz, sz); if (fl & 2) { g.globalAlpha = 0.35; g.fillStyle = '#9fd8ff'; g.beginPath(); g.arc(x, y, sz * 0.42, 0, Math.PI * 2); g.fill(); } }
+    }
+    g.globalAlpha = 1;
+    for (const m of cur.m || []) { g.fillStyle = '#ffe27a'; g.beginPath(); g.arc(m[0], m[1], 9, 0, Math.PI * 2); g.fill(); g.fillStyle = '#fff'; g.beginPath(); g.arc(m[0], m[1], 4, 0, Math.PI * 2); g.fill(); }
+    { const fr = SPRITE_FRAMES[Math.floor(Date.now() / 260) % SPRITE_FRAMES.length], dh = 83, dw = dh * fr.w / fr.h; g.drawImage(SPRITE_SHEET, fr.x, fr.y, fr.w, fr.h, -dw / 2, -dh / 2, dw, dh); }   // 주인공
+    g.font = WORD_FONT; g.textBaseline = 'middle'; g.textAlign = 'center';
+    for (const e of es) {   // 단어
+      const [id, x, y, word, , , , size, hp, mhp, fl] = e; if (fl & 1) continue;
+      const h = size * 3.4, tw = g.measureText(word).width, pw = tw + 26, ph = 32, py = y - h / 2 - ph - 8, tg = id === cur.tg;
+      g.globalAlpha = fl & 4 ? 0.35 : 1;
+      g.fillStyle = tg ? Q_PURPLE : Q_LAV; _hpill(g, x - pw / 2, py + 4, pw, ph); g.fill(); g.fillStyle = '#fff'; _hpill(g, x - pw / 2, py, pw, ph); g.fill();
+      g.fillStyle = Q_INK; g.fillText(fl & 8 && !tg ? '???' : word, x, py + ph / 2 + 1);
+      if (mhp > 1) { g.fillStyle = '#fff'; _hpill(g, x - 29, y + h / 2 + 2, 58, 12); g.fill(); g.fillStyle = hp / mhp > 0.5 ? '#5bd46a' : '#ff5a6a'; _hpill(g, x - 27, y + h / 2 + 4, Math.max(8, 54 * hp / mhp), 8); g.fill(); }
+    }
+    g.globalAlpha = 1;
+    if (cur.ty) { const tw = g.measureText(cur.ty).width, pw = tw + 30; g.fillStyle = Q_PURPLE; _hpill(g, -pw / 2, 52, pw, 34); g.fill(); g.fillStyle = '#fff'; g.fillText(cur.ty, 0, 70); }   // 치고 있는 글자
+    // 실드
+    g.setTransform(1, 0, 0, 1, 0, 0); const bw = cv.width * 0.3, bh = Math.max(4, cv.height * 0.025), bx = (cv.width - bw) / 2, by = cv.height - bh * 2.4;
+    g.fillStyle = 'rgba(39,32,82,.7)'; g.fillRect(bx - 2, by - 2, bw + 4, bh + 4); g.fillStyle = '#5bd46a'; g.fillRect(bx, by, bw * Math.max(0, cur.hp) / Math.max(1, cur.mh), bh);
+  }
+}
+function _hpill(g, x, y, w, h) { const r = h / 2; g.beginPath(); g.moveTo(x + r, y); g.lineTo(x + w - r, y); g.arc(x + w - r, y + r, r, -Math.PI / 2, Math.PI / 2); g.lineTo(x + r, y + h); g.arc(x + r, y + r, r, Math.PI / 2, Math.PI * 1.5); g.closePath(); }
+document.getElementById('roomCodeIn').addEventListener('keydown', e => { if (e.key === 'Enter') roomEnterCode(); });
+
 if (IS_YONG) {
+  document.getElementById('roomBtn').hidden = false;
+  { const q = new URLSearchParams(location.search), rc = q.get('room'); if (rc) { const go = () => setTimeout(() => openRoomMenu(rc), 300); document.readyState === 'complete' ? go() : window.addEventListener('load', go); } }
   document.getElementById('hallBtnWrap').hidden = false;
   { const q = new URLSearchParams(location.search); if (q.has('hall')) { const go = () => setTimeout(() => showHall(q.get('hall') || undefined), 300); document.readyState === 'complete' ? go() : window.addEventListener('load', go); } }
   pollContest();
