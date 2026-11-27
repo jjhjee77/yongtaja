@@ -1996,6 +1996,7 @@ html body .btn::after, html body .q-btn::after, html body .btn-cert::after, html
 .hall-stage { position: relative; width: 100%; flex: 1; min-height: 42vh; touch-action: pan-y; }
 .hall-fan { position: absolute; left: 50%; top: 50%; width: 0; height: 0; }
 .hall-slot { position: absolute; width: var(--cw); height: calc(var(--cw) * 1020 / 660); left: calc(var(--cw) / -2); top: calc(var(--cw) * -0.7727); transition: transform .6s cubic-bezier(.2,.8,.2,1), opacity .6s; cursor: pointer; }
+.hall-fan.flowing .hall-slot { transition: none; }
 .hall-slot .hc { position: absolute; left: 0; top: 0; width: 660px; height: 1020px; transform-origin: 0 0; transform: scale(var(--k)); filter: drop-shadow(0 18px 22px rgba(20,12,60,.4)); }
 .hall-slot .hc > div { position: absolute; inset: 0; }
 .hall-slot .hc .hb { opacity: 0; }
@@ -2006,7 +2007,7 @@ html body .btn::after, html body .q-btn::after, html body .btn-cert::after, html
 @keyframes hback { 0% { opacity: 1; } 50% { opacity: 0; } 100% { opacity: 0; } }
 .hall-slot.c0 .hc .hf::after { content: ""; position: absolute; inset: 0; border-radius: 44px; background: linear-gradient(115deg, transparent 35%, rgba(255,255,255,.6) 48%, rgba(190,240,255,.4) 52%, transparent 64%) -150% 0 / 250% 100% no-repeat; animation: hsheen 4s ease-in-out infinite; }
 @keyframes hsheen { 0%, 60% { background-position: -150% 0; } 100% { background-position: 250% 0; } }
-.hall-slot .hall-play { position: absolute; left: 50%; bottom: calc(var(--cw) * -0.11); transform: translateX(-50%); font-family: var(--f-title); font-size: clamp(16px, 2.6vh, 24px); color: #fff; background: #12b886; border: .45vh solid #6b4a3a; border-radius: 999px; padding: 1vh 3.6vh; white-space: nowrap; box-shadow: 0 .6vh 0 #6b4a3a; opacity: 0; transition: opacity .4s; z-index: 300; }
+.hall-slot .hall-play { position: absolute; left: 50%; top: calc(var(--cw) * -0.105); transform: translateX(-50%); font-family: var(--f-title); font-size: clamp(13px, 1.9vh, 17px); color: #fff; background: #12b886; border: .35vh solid #6b4a3a; border-radius: 999px; padding: .6vh 2.2vh; white-space: nowrap; box-shadow: 0 .45vh 0 #6b4a3a; opacity: 0; transition: opacity .4s; z-index: 300; }
 .hall-slot.c0 .hall-play { opacity: 1; animation: hbreathe 1.8s ease-in-out infinite; }
 @keyframes hbreathe { 50% { transform: translateX(-50%) scale(1.06); } }
 .pc-card { position: absolute; inset: 0; border-radius: 44px; background: #fffaf0; border: 7px solid #6b4a3a; overflow: hidden; font-family: 'Galmuri11', sans-serif; color: #5a3d30; word-break: keep-all; }
@@ -5484,7 +5485,7 @@ function renderBoard() {
 const _HFB = _FB.replace('/yong-ranks', '/yong-hall');
 const _HIFB = _FB.replace('/yong-ranks', '/yong-hall-img');
 const TIER_NAME = { intermediate: '중급자', advanced: '고수', master: '달인' };
-let HALL = [], hallCur = 0, hallTick = null, hallQuietUntil = 0, hallFound = [], hallFoundAt = -1;
+let HALL = [], hallCur = 0, hallTick = 0, hallQuietUntil = 0, hallFound = [], hallFoundAt = -1;
 const HALL_DONE = new Set(JSON.parse(localStorage.getItem('yt_hall_done') || '[]'));
 function setupHallBtn(good, st) {
   const btn = document.getElementById('certHallBtn'), tip = document.getElementById('certHallTip');
@@ -5568,12 +5569,39 @@ async function showHall(focusId) {
   hallFound = []; hallFoundAt = -1;
   hallCur = Math.max(0, HALL.findIndex(r => r.id === focusId));
   _hallBuild();
-  if (focusId) hallQuietUntil = Date.now() + 20000;
-  clearInterval(hallTick);
-  hallTick = setInterval(() => {
-    if (document.getElementById('hallScreen').classList.contains('hidden')) { clearInterval(hallTick); return; }
-    if (Date.now() > hallQuietUntil && HALL.length > 1) hallStep(1);
-  }, 3200);
+  hallQuietUntil = Date.now() + (focusId ? 20000 : 2600);   // 한 장씩 뒤집히며 나온 뒤 흐르기 시작
+  hallPos = hallCur;
+  cancelAnimationFrame(hallTick); let t0 = performance.now();
+  const tick = (t) => {
+    if (document.getElementById('hallScreen').classList.contains('hidden')) return;
+    const dt = Math.min(100, t - t0); t0 = t;
+    const viewOpen = !document.getElementById('hallView').classList.contains('hidden');
+    if (Date.now() > hallQuietUntil && HALL.length > 1 && !viewOpen) {
+      hallPos = (hallPos + dt / HALL_FLOW_MS) % HALL.length;   // 카드 한 장을 HALL_FLOW_MS 동안 옆으로 살살
+      _hallFlowRender();
+    }
+    hallTick = requestAnimationFrame(tick);
+  };
+  hallTick = requestAnimationFrame(tick);
+}
+const HALL_FLOW_MS = 4500;
+let hallPos = 0;
+// 흐르는 중 그리기: 소수 위치로 부채꼴을 계속 옮긴다 (가운데에 가까울수록 크게)
+function _hallFlowRender() {
+  const n = HALL.length, fan = document.getElementById('hallFan'), cw = fan._cw || 300;
+  fan.classList.add('flowing');
+  const cur = Math.round(hallPos) % n;
+  HALL.forEach((r, i) => {
+    let d = ((i - hallPos) % n + n) % n; if (d > n / 2) d -= n;
+    const a = Math.abs(d), c = r._el;
+    c.className = 'hall-slot' + (i === cur ? ' c0' : '');
+    c.style.transform = `translateX(${d * cw * 0.755}px) translateY(${a * cw * 0.089}px) rotate(${d * 8}deg) scale(${1.06 - Math.min(a, 1) * 0.22})`;
+    c.style.zIndex = 10 - Math.round(a);
+    c.style.opacity = Math.max(0, Math.min(1, 2.6 - a, (n / 2 - a) * 2 + (n > 5 ? 9 : 0)));   // 끝에서 반대쪽으로 넘어갈 땐 살짝 사라졌다 나타남
+    c.style.pointerEvents = a > 2 ? 'none' : '';
+    if (a <= 3) _hallLoadImg(r);
+  });
+  hallCur = cur;
 }
 function _pcBars(seed) {   // cardface.cjs bars() 그대로
   let s = seed * 9301 + 49297, out = '';
@@ -5628,6 +5656,7 @@ function _hallLoadImg(r) {
 }
 function _hallLayout(flipCenter) {
   const n = HALL.length, cw = document.getElementById('hallFan')._cw || 300;
+  document.getElementById('hallFan').classList.remove('flowing'); hallPos = hallCur;
   HALL.forEach((r, i) => {
     let d = i - hallCur; if (d > n / 2) d -= n; if (d < -n / 2) d += n;
     const a = Math.abs(d), c = r._el;
@@ -5640,7 +5669,7 @@ function _hallLayout(flipCenter) {
     if (a <= 3) _hallLoadImg(r);
     if (a > 3) { clearTimeout(c._ft); c.querySelector('.hc').classList.remove('back', 'flip'); }
   });
-  if (flipCenter && HALL[hallCur]) _hallFlip(HALL[hallCur]._el, 0);
+  if (flipCenter && HALL[hallCur]) { _hallFlip(HALL[hallCur]._el, 0); if (flipCenter !== 'quiet') hallSfx('card'); }   // 저절로 넘길 땐 소리 없이
 }
 // 크게 보기
 function openHallView() {
@@ -5651,20 +5680,54 @@ function openHallView() {
   const info = document.getElementById('hvInfo');
   info.style.setProperty('--tc', col.c); info.style.setProperty('--td', col.d);
   info.innerHTML = `<div class="hall-who"><span class="hall-tier">${TIER_NAME[r.tier]}</span>${r.t ? `${_escName(r.name)} 선생님` : `${r.g}학년 ${r.c}반 ${r.n}번 ${_escName(r.name)}`}</div><div class="hall-score" style="color:${col.c}">${Number(r.score).toLocaleString()}<small>점</small></div>`;
-  v.classList.remove('hidden'); playSfx('pick', 0.6);
+  if (v.classList.contains('hidden')) hallSfx('open');   // 처음 열 때만 띠리링, 안에서 넘길 땐 촥
+  v.classList.remove('hidden');
   hallQuietUntil = Infinity;   // 크게 보는 동안은 저절로 안 넘어감
 }
-function closeHallView() { document.getElementById('hallView').classList.add('hidden'); hallQuietUntil = Date.now() + 8000; }
+function closeHallView() { hallSfx('back'); document.getElementById('hallView').classList.add('hidden'); hallQuietUntil = Date.now() + 8000; }
 function hallViewStep(k) { hallStep(k, true); openHallView(); }
+// 소리 = 질문축제 전시관 sfx.js 그대로. 한 동작에 소리 하나(겹치면 깨지게 들림, 11-27)
+const hallSfx = (() => {
+  let noiseBuf = null, last = {};
+  const C = () => getAudioCtx(), OUT = () => getMasterGain();
+  function tone(freq, freq2, dur, vol, type = 'sine', at = 0) {
+    const ctx = C(), t = ctx.currentTime + at, o = ctx.createOscillator(), g = ctx.createGain();
+    o.type = type; o.frequency.setValueAtTime(freq, t); if (freq2) o.frequency.exponentialRampToValueAtTime(freq2, t + dur);
+    g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(vol, t + 0.01); g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+    o.connect(g); g.connect(OUT()); o.start(t); o.stop(t + dur + 0.03);
+  }
+  function swoosh(f1, f2, dur, vol, q = 1.2, at = 0) {
+    const ctx = C(), t = ctx.currentTime + at, s = ctx.createBufferSource(), f = ctx.createBiquadFilter(), g = ctx.createGain();
+    if (!noiseBuf) { noiseBuf = ctx.createBuffer(1, ctx.sampleRate * 0.6, ctx.sampleRate); const d = noiseBuf.getChannelData(0); for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1; }
+    s.buffer = noiseBuf; f.type = 'bandpass'; f.Q.value = q;
+    f.frequency.setValueAtTime(f1, t); f.frequency.exponentialRampToValueAtTime(f2, t + dur);
+    g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(vol, t + dur * 0.35); g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+    s.connect(f); f.connect(g); g.connect(OUT()); s.start(t); s.stop(t + dur + 0.02);
+  }
+  const bell = (f, at, vol, dur = 0.5) => { tone(f, 0, dur, vol, 'triangle', at); tone(f * 2, 0, dur * 0.6, vol * 0.35, 'sine', at); };
+  const S = {
+    card: () => { swoosh(2600, 900, 0.2, 0.6, 1.4); tone(1500, 1000, 0.06, 0.3, 'triangle', 0.02); },   // 촥
+    flip: () => { tone(2200, 1400, 0.05, 0.3, 'triangle'); },                                            // 틱
+    open: () => { bell(784, 0, 0.45); bell(988, 0.09, 0.45); bell(1318, 0.18, 0.45, 0.7); },              // 띠리링
+    back: () => { tone(760, 440, 0.14, 0.5, 'triangle'); },                                              // 뒤로
+  };
+  return (name) => {
+    try {
+      const ctx = C(); if (ctx.state !== 'running') ctx.resume();
+      const now = performance.now(); if (now - (last.any || 0) < 90) return;   // 거의 동시에 두 소리면 하나만
+      last.any = now; S[name] && S[name]();
+    } catch (e) {}
+  };
+})();
 // 뒤집기 = 전시관 flip(): 뒷면을 보였다가 가로로 접었다 펴며 앞면
-function _hallFlip(el, delay) {
+function _hallFlip(el, delay, sound) {
   const hc = el.querySelector('.hc');
   hc.classList.remove('flip'); hc.classList.add('back');
   clearTimeout(el._ft);
   const img = hc.querySelector('.pc-img');
   const go = (tries) => {
     if ((!img.src || !img.complete) && tries < 25) { el._ft = setTimeout(() => go(tries + 1), 120); return; }   // 앞면 그림을 받을 때까지 뒷면으로 기다림
-    hc.classList.remove('back'); void hc.offsetWidth; hc.classList.add('flip'); playSfx('pick', 0.5);
+    hc.classList.remove('back'); void hc.offsetWidth; hc.classList.add('flip'); if (sound) hallSfx(sound);
   };
   el._ft = setTimeout(() => go(0), delay);
 }
@@ -5673,13 +5736,13 @@ function _hallDeal() {
   const n = HALL.length;
   HALL.map((r, i) => { let d = i - hallCur; if (d > n / 2) d -= n; if (d < -n / 2) d += n; return [Math.abs(d), d, r]; })
     .filter(([a]) => a <= 3).sort((x, y) => x[0] - y[0] || x[1] - y[1])
-    .forEach(([, , r], k) => _hallFlip(r._el, 250 + k * 160));
+    .forEach(([, , r], k) => _hallFlip(r._el, 250 + k * 160, 'flip'));
 }
 function hallStep(k, byHand) {
   if (!HALL.length) return;
   hallCur = (hallCur + k + HALL.length) % HALL.length;
   if (byHand) hallQuietUntil = Date.now() + 15000;   // 손으로 넘기면 15초 동안 저절로 안 넘어감
-  _hallLayout(true);
+  _hallLayout(byHand ? true : 'quiet');
 }
 function findHall() {
   const g = document.getElementById('hallG').value, c = document.getElementById('hallC').value, n = document.getElementById('hallN').value;
@@ -5881,7 +5944,7 @@ function playSfx(name, vol = 1, rateJitter = 0.04) {
 }
 ['keydown', 'pointerdown'].forEach(ev => window.addEventListener(ev, () => { try { getAudioCtx().resume(); } catch (e) {} loadSfx(); }, { once: false, passive: true }));
 // 버튼 클릭음
-document.addEventListener('click', e => { if (e.target.closest('button')) playSfx('click'); }, true);
+document.addEventListener('click', e => { if (e.target.closest('button') && !e.target.closest('#hallScreen, #hallView')) playSfx('click'); }, true);
 
 const SFX = (() => {
   function tone(freq, type, dur, vol, freqEnd) {
