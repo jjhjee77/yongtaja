@@ -1980,6 +1980,36 @@ html body .btn::after, html body .q-btn::after, html body .btn-cert::after, html
 .board-cols table.pt-rank td.rk-name { min-width: 0; white-space: normal; }
 .board-cols td.rk-name small { display: block; font-size: 13px; font-weight: 400; color: #8a83b0; }
 .board-bar { display: flex; gap: 14px; align-items: center; flex-wrap: wrap; justify-content: center; }
+.hall-top { width: 100%; max-width: 1240px; display: flex; align-items: center; justify-content: space-between; gap: 14px; flex-wrap: wrap; }
+.hall-find { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; justify-content: center; }
+/* 검색창 = Uiverse.io by garerim (rare-moth-56) 그대로 — 아이들 화면이라 크기만 키움, 학년·반·번호 칸도 같은 알약 */
+.hall-find .container-input { position: relative; }
+.hall-find .input, .hall-find select { padding: 10px 0px 10px 40px; border-radius: 9999px; border: solid 1px #333; transition: all .2s ease-in-out; outline: none; opacity: 0.8; height: 46px; font-family: var(--f-body); font-weight: 700; font-size: 16px; color: #272052; background: #fff; }
+.hall-find .input { width: 150px; }
+.hall-find .input:focus { opacity: 1; width: 250px; }
+.hall-find select { padding: 0 14px; opacity: 1; }
+.hall-find .container-input svg { position: absolute; top: 50%; left: 14px; transform: translate(0, -50%); }
+.hall-find .btn { min-height: 46px; padding: 0 22px !important; font-size: 18px !important; }
+.hall-msg { min-height: 22px; font-weight: 700; color: #ffe27a; text-align: center; }
+.hall-stage { position: relative; width: 100%; flex: 1; min-height: 42vh; touch-action: pan-y; }
+.hall-fan { position: absolute; left: 50%; top: 50%; width: 0; height: 0; }
+.hall-slot { position: absolute; width: min(56vh, 46vw); left: calc(min(56vh, 46vw) / -2); top: calc(min(56vh, 46vw) * -0.36); transition: transform .6s cubic-bezier(.2,.8,.2,1), opacity .6s; cursor: pointer; }
+.hall-slot .hc { position: relative; width: 100%; aspect-ratio: 1.38; border-radius: 14px; background: #fff; overflow: hidden; box-shadow: 0 1.2vh 1.6vh rgba(20,12,60,.35); }
+.hall-slot .hc img { -webkit-user-drag: none; user-select: none; pointer-events: none; position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; display: block; }
+.hall-slot .hc.flip { animation: hflip .5s ease-in-out; }
+@keyframes hflip { 0% { transform: scaleX(1); } 50% { transform: scaleX(0); } 100% { transform: scaleX(1); } }
+.hall-slot.c0 .hc::after { content: ""; position: absolute; inset: 0; border-radius: inherit; background: linear-gradient(115deg, transparent 35%, rgba(255,255,255,.6) 48%, rgba(190,240,255,.4) 52%, transparent 64%) -150% 0 / 250% 100% no-repeat; animation: hsheen 4s ease-in-out infinite; }
+@keyframes hsheen { 0%, 60% { background-position: -150% 0; } 100% { background-position: 250% 0; } }
+.hall-arrow { position: absolute; top: 50%; transform: translateY(-50%); z-index: 20; width: 64px; min-height: 64px; padding: 0 !important; font-size: 34px !important; }
+.hall-arrow.l { left: 2vw; } .hall-arrow.r { right: 2vw; }
+.hall-info { min-width: min(620px, 92vw); text-align: center; padding: 14px 26px !important; }
+.hall-info b { display: block; font-family: var(--f-title); font-weight: 400; font-size: 30px; color: var(--q-ink); }
+.hall-info span { display: block; margin-top: 4px; font-weight: 700; font-size: 17px; color: #8a83b0; }
+#hallScreen { background: linear-gradient(180deg, rgba(108,79,163,.94), rgba(39,32,82,.98)) !important; color: #fff; font-family: var(--f-body); word-break: keep-all; justify-content: flex-start !important; padding: 18px 20px 22px !important; gap: 12px !important; overflow: hidden; }
+#hallScreen { background: linear-gradient(180deg, rgba(39,32,82,.25), rgba(39,32,82,.55)), url('/assets/hall_bg.webp') center / cover no-repeat, #272052 !important; }
+.hall-head { display: flex; align-items: center; gap: 12px; }
+.hall-logo { height: min(12vh, 92px); width: auto; filter: drop-shadow(0 8px 14px rgba(10,5,40,.5)); }
+.hall-count { font-family: var(--f-title); font-size: 20px; color: #fff; text-shadow: 0 3px 0 rgba(20,12,60,.45); }
 .board-bar select { height: 48px; border: 0; border-radius: 100px; padding: 0 18px; font-family: var(--f-body); font-weight: 700; font-size: 16px; color: var(--q-ink); background: #fff; }
 </style>
 </head>
@@ -2009,6 +2039,7 @@ html body .btn::after, html body .q-btn::after, html body .btn-cert::after, html
       <div class="pt-tiles">
         <button class="q-btn q-big" id="challengeBtn" onclick="startGame('infinite')"><img src="/assets/icons/challenge.webp" alt="">도전하기</button>
         <button class="q-btn" onclick="showRankScreen()"><img src="/assets/icons/trophy.webp" alt="">순위표</button>
+        <button class="q-btn" id="hallBtn" onclick="showHall()" hidden><img src="/assets/icons/certificate.webp" alt="">명예의 전당</button>
         <button class="q-btn" id="contestBtn" onclick="openContest()" hidden><img src="/assets/icons/medal.webp" alt="">타자대회</button>
         <button class="q-btn" id="boardBtn" onclick="showBoard()" hidden><img src="/assets/icons/star.webp" alt="">대회 순위</button>
       </div>
@@ -2148,6 +2179,29 @@ html body .btn::after, html body .q-btn::after, html body .btn-cert::after, html
   </div>
 </div>
 
+<!-- ══ 명예의 전당 = 중급자 이상 인증서 카드 (용타자 전용) ══ -->
+<div class="screen hidden" id="hallScreen">
+  <div class="hall-top">
+    <div class="hall-head"><img class="hall-logo" src="/assets/hall_logo.webp" alt="명예의 전당"><span class="hall-count" id="hallCount"></span></div>
+    <div class="hall-find">
+      <select id="hallG" aria-label="학년"></select><select id="hallC" aria-label="반"></select><select id="hallN" aria-label="번호"></select>
+      <div class="container-input">
+        <input id="hallName" type="text" placeholder="이름" name="text" class="input" maxlength="10" autocomplete="off">
+        <svg fill="#000000" width="20px" height="20px" viewBox="0 0 1920 1920" xmlns="http://www.w3.org/2000/svg"><path d="M790.588 1468.235c-373.722 0-677.647-303.924-677.647-677.647 0-373.722 303.925-677.647 677.647-677.647 373.723 0 677.647 303.925 677.647 677.647 0 373.723-303.924 677.647-677.647 677.647Zm596.781-160.715c120.396-138.692 193.807-319.285 193.807-516.932C1581.176 354.748 1226.428 0 790.588 0S0 354.748 0 790.588s354.748 790.588 790.588 790.588c197.647 0 378.24-73.411 516.932-193.807l516.028 516.142 79.963-79.963-516.142-516.028Z" fill-rule="evenodd"></path></svg>
+      </div>
+      <button class="btn gold" onclick="findHall()">찾기</button>
+    </div>
+  </div>
+  <div class="hall-msg" id="hallMsg"></div>
+  <div class="hall-stage" id="hallStage">
+    <div class="hall-fan" id="hallFan"></div>
+    <button class="btn hall-arrow l" onclick="hallStep(-1, true)" aria-label="이전">‹</button>
+    <button class="btn hall-arrow r" onclick="hallStep(1, true)" aria-label="다음">›</button>
+  </div>
+  <div class="q-card hall-info" id="hallInfo"><b>&nbsp;</b><span>&nbsp;</span></div>
+  <div class="board-bar"><button class="btn" onclick="toggleFullscreen()">전체화면</button><button class="btn" onclick="goTitle()">← 처음 화면</button></div>
+</div>
+
 <!-- ══ 순위 화면 ══ -->
 <div class="screen hidden" id="rankScreen">
   <div class="rank-title"><img src="/assets/icons/trophy.webp" alt="" style="width:44px;height:44px;vertical-align:-6px;margin-right:8px">명예의 전당 TOP 20</div>
@@ -2236,9 +2290,11 @@ html body .btn::after, html body .q-btn::after, html body .btn-cert::after, html
   </div>
 
   <!-- ── 액션 버튼 (Dashboard UI) ── -->
+  <div class="cert-post-tip" id="certHallTip" hidden></div>
   <div class="cert-post-tip" id="certSendTip" hidden></div>
   <div class="cert-post-tip" id="certPostTip" hidden>중급자부터는 <b>이미지로 저장</b>해서 <b>인증제 사이트</b>에 게시글을 올려 보세요!</div>
   <div class="cert-actions">
+    <button class="btn-cert primary" id="certHallBtn" onclick="registerHall()" hidden><img src="/assets/icons/certificate.webp" alt=""> <span>명예의 전당에 등록</span></button>
     <button class="btn-cert primary" id="certSendBtn" onclick="sendCertToYongoreum()" hidden><img src="/assets/icons/medal.webp" alt=""> <span>용오름에 올리기</span></button>
     <button class="btn-cert primary" onclick="saveCertificateImage()"><img src="/assets/icons/certificate.webp" alt=""> 이미지로 저장</button>
     <button class="btn-cert" onclick="showRankScreen()"><img src="/assets/icons/trophy.webp" alt=""> 순위표</button>
@@ -5108,6 +5164,7 @@ function setupCertSend(mode, st) {
   const btn = document.getElementById('certSendBtn'), tip = document.getElementById('certSendTip');
   const good = IS_YONG && ['intermediate', 'advanced', 'master'].includes(mode) && st && st.real && st.id;
   CERT_NOW = good ? { mode, st } : null;
+  setupHallBtn(good, st);
   if (!CERT_SEND || !good || CERT_SEND.id !== st.id) { CERT_SEND = null; btn.querySelector('span').textContent = '용오름에 올리기'; }
   const now = Date.now();
   btn.hidden = !good || now < CERT_FROM || now > CERT_TO;
@@ -5121,10 +5178,9 @@ async function sendCertToYongoreum() {
   const btn = document.getElementById('certSendBtn'), tip = document.getElementById('certSendTip'), label = btn.querySelector('span');
   // 그림이 이미 준비됐으면 바로 열기
   if (CERT_SEND && CERT_SEND.id === CERT_NOW.st.id && CERT_SEND.key === _certKey()) { window.open(CERT_SEND.url, '_blank'); return; }
-  const g = +document.getElementById('certGrade').value, c = +document.getElementById('certClass').value, n = +document.getElementById('certNum').value;
-  const name = document.getElementById('certName').value.trim();
-  if (!g || !c || !n || !name) { tip.hidden = false; tip.innerHTML = '인증서에 <b>학년·반·번호·이름</b>을 먼저 써 주세요!'; return; }
-  if (!/^[가-힣A-Za-z ]{2,10}$/.test(name) || _hasBadWord(name)) { tip.hidden = false; tip.innerHTML = '이름 칸에는 <b>진짜 이름</b>을 써 주세요!'; return; }
+  const f = _certFields();
+  if (f.err) { tip.hidden = false; tip.innerHTML = f.err; return; }
+  const { g, c, n } = f;
   btn.disabled = true; label.textContent = '준비 중…';
   const { st, mode } = CERT_NOW, key = _certKey();
   const dataUrl = await _captureCertPng(1.5);   // 새 탭을 먼저 열면 이 탭이 멈춰 그림을 못 만들므로 그림부터
@@ -5138,6 +5194,15 @@ async function sendCertToYongoreum() {
     label.textContent = '용오름 열기';
     tip.innerHTML = '준비됐어요! <b>용오름 열기</b>를 눌러 주세요.';
   }
+}
+// 인증서 아래 학년·반·번호·이름 칸 → {g,c,n,name} 또는 {err}
+function _certFields() {
+  const g = +document.getElementById('certGrade').value, c = +document.getElementById('certClass').value, n = +document.getElementById('certNum').value;
+  const name = document.getElementById('certName').value.trim();
+  if (!g || !c || !n || !name) return { err: '인증서에 <b>학년·반·번호·이름</b>을 먼저 써 주세요!' };
+  if (g > 6 || c > 5 || n > 30) return { err: '<b>학년·반·번호</b>를 다시 확인해 주세요!' };
+  if (!/^[가-힣A-Za-z ]{2,10}$/.test(name) || _hasBadWord(name)) return { err: '이름 칸에는 <b>진짜 이름</b>을 써 주세요!' };
+  return { g, c, n, name };
 }
 function _certKey() { return ['certGrade', 'certClass', 'certNum', 'certName'].map(i => document.getElementById(i).value.trim()).join('|'); }
 window.addEventListener('message', e => {
@@ -5302,7 +5367,172 @@ function renderBoard() {
   document.getElementById('boardTeacher').innerHTML = teachers.map((r, i) => `<tr>
     <td class="rk-num">${i + 1}</td><td class="rk-name">${_escName(r.name)}</td><td class="rk-score">${Number(r.score).toLocaleString()}</td></tr>`).join('') || empty;
 }
+// ══════════════════════════════════════════════════
+//  명예의 전당 (용타자 전용, 2026-11-27)
+//  중급자 이상 인증서를 '명예의 전당에 등록' → yong-hall/{id}(기록) + yong-hall-img/{id}(인증서 그림 JPEG)
+//  화면은 질문축제 전시관의 부채꼴 카드(가운데 크게·넘길 때 뒤집힘·빛 지나감)를 그대로 쓰고 저절로 넘어간다.
+// ══════════════════════════════════════════════════
+const _HFB = _FB.replace('/yong-ranks', '/yong-hall');
+const _HIFB = _FB.replace('/yong-ranks', '/yong-hall-img');
+const TIER_NAME = { intermediate: '중급자', advanced: '고수', master: '달인' };
+let HALL = [], hallCur = 0, hallTick = null, hallQuietUntil = 0, hallFound = [], hallFoundAt = -1;
+const HALL_DONE = new Set(JSON.parse(localStorage.getItem('yt_hall_done') || '[]'));
+function setupHallBtn(good, st) {
+  const btn = document.getElementById('certHallBtn'), tip = document.getElementById('certHallTip');
+  btn.hidden = !good; tip.hidden = !good; btn.disabled = false;
+  if (!good) return;
+  const done = HALL_DONE.has(st.id);
+  btn.querySelector('span').textContent = done ? '명예의 전당 보기' : '명예의 전당에 등록';
+  tip.innerHTML = done ? '명예의 전당에 <b>등록한 인증서</b>예요!' : '학년·반·번호·이름을 쓰고 <b>명예의 전당에 등록</b>하면 카드로 모여요!';
+}
+async function _certJpeg() {   // 인증서 그림 → 폭 900px JPEG (카드용, 약 100KB 안팎)
+  const png = await _captureCertPng(1);
+  if (!png) return null;
+  const img = new Image(); img.src = png; await img.decode();
+  const k = Math.min(1, 900 / img.width), cv = document.createElement('canvas');
+  cv.width = Math.round(img.width * k); cv.height = Math.round(img.height * k);
+  const x = cv.getContext('2d'); x.fillStyle = '#fff'; x.fillRect(0, 0, cv.width, cv.height); x.drawImage(img, 0, 0, cv.width, cv.height);
+  let q = 0.82, out = cv.toDataURL('image/jpeg', q);
+  while (out.length > 280000 && q > 0.4) { q -= 0.12; out = cv.toDataURL('image/jpeg', q); }
+  return out;
+}
+async function registerHall() {
+  if (!CERT_NOW) return;
+  const { st, mode } = CERT_NOW, btn = document.getElementById('certHallBtn'), tip = document.getElementById('certHallTip'), label = btn.querySelector('span');
+  if (HALL_DONE.has(st.id)) { showHall(st.id); return; }
+  const f = _certFields();
+  if (f.err) { tip.hidden = false; tip.innerHTML = f.err; return; }
+  btn.disabled = true; label.textContent = '등록하는 중…';
+  try {
+    const jpg = await _certJpeg();
+    if (!jpg) throw new Error('그림');
+    const rec = { g: f.g, c: f.c, n: f.n, name: f.name, score: st.score, tier: mode, level: st.level, kills: st.kills, combo: st.maxCombo, acc: st.acc, wpm: st.wpm,
+      date: document.getElementById('certDate').textContent, at: { '.sv': 'timestamp' } };
+    const r1 = await fetch(`${_HFB}/${st.id}.json`, { method: 'PUT', body: JSON.stringify(rec) });
+    if (!r1.ok) throw new Error(r1.status);
+    const r2 = await fetch(`${_HIFB}/${st.id}.json`, { method: 'PUT', body: JSON.stringify(jpg) });
+    if (!r2.ok) throw new Error(r2.status);
+    HALL_DONE.add(st.id); localStorage.setItem('yt_hall_done', JSON.stringify([...HALL_DONE]));
+    setupHallBtn(true, st);
+    tip.innerHTML = `<b>${_escName(f.name)}</b> 인증서를 명예의 전당에 등록했어요!`;
+  } catch (e) {
+    btn.disabled = false; label.textContent = '명예의 전당에 등록';
+    tip.innerHTML = '등록하지 못했어요. 인터넷을 확인하고 다시 눌러 주세요.';
+  }
+}
+function _hallPickInit() {
+  const g = document.getElementById('hallG'), c = document.getElementById('hallC'), n = document.getElementById('hallN');
+  if (g.options.length) return;
+  const o = (list, head) => `<option value="">${head}</option>` + list.map(v => `<option value="${v}">${v}</option>`).join('');
+  const range = m => Array.from({ length: m }, (_, i) => i + 1);
+  g.innerHTML = `<option value="">학년</option>` + range(6).map(v => `<option value="${v}">${v}학년</option>`).join('');
+  const fill = () => {
+    c.innerHTML = `<option value="">반</option>` + (g.value ? range(PICK_CLASS_COUNTS[g.value] ?? 4).map(v => `<option value="${v}">${v}반</option>`).join('') : '');
+    fillN();
+  };
+  const fillN = () => {
+    const m = g.value ? (PICK_CLASS_STUDENTS[`${g.value}-${c.value}`] ?? PICK_GRADE_COUNTS[g.value] ?? 25) : 30;
+    n.innerHTML = `<option value="">번호</option>` + range(m).map(v => `<option value="${v}">${v}번</option>`).join('');
+  };
+  g.onchange = fill; c.onchange = fillN; fill();
+  document.getElementById('hallName').addEventListener('keydown', e => { if (e.key === 'Enter' && !e.isComposing) findHall(); });
+}
+async function showHall(focusId) {
+  hideAllScreens();
+  document.getElementById('gameWrap').classList.add('hidden');
+  document.getElementById('hallScreen').classList.remove('hidden');
+  _hallPickInit();
+  document.getElementById('hallMsg').textContent = '불러오는 중…';
+  try {
+    const res = await fetch(_HFB + '.json', { cache: 'no-store' });
+    const data = res.ok ? (await res.json()) || {} : {};
+    HALL = Object.entries(data).map(([id, v]) => ({ id, ...v })).filter(r => TIER_NAME[r.tier]).sort((a, b) => (b.at || 0) - (a.at || 0));
+  } catch { HALL = []; }
+  document.getElementById('hallCount').textContent = HALL.length ? `· 인증서 ${HALL.length}장` : '';
+  document.getElementById('hallMsg').textContent = HALL.length ? '' : '아직 등록된 인증서가 없어요. 중급자 인증서를 받으면 등록해 보세요!';
+  hallFound = []; hallFoundAt = -1;
+  hallCur = Math.max(0, HALL.findIndex(r => r.id === focusId));
+  _hallBuild();
+  if (focusId) hallQuietUntil = Date.now() + 20000;
+  clearInterval(hallTick);
+  hallTick = setInterval(() => {
+    if (document.getElementById('hallScreen').classList.contains('hidden')) { clearInterval(hallTick); return; }
+    if (Date.now() > hallQuietUntil && HALL.length > 1) hallStep(1);
+  }, 3200);
+}
+function _hallBuild() {
+  const fan = document.getElementById('hallFan');
+  fan.innerHTML = '';
+  HALL.forEach((r, i) => {
+    const s = document.createElement('div');
+    s.className = 'hall-slot';
+    s.innerHTML = '<div class="hc"><img alt="" decoding="async" draggable="false"></div>';   // 그림 끌기가 밀어 넘기기를 가로채지 않게
+    s.onclick = () => { if (_hallDragged) return; if (i !== hallCur) { hallCur = i; _hallLayout(true); } hallQuietUntil = Date.now() + 15000; };
+    r._el = s; fan.appendChild(s);
+  });
+  _hallLayout(false);
+}
+const _hallImgs = {};
+function _hallLoadImg(r) {
+  const img = r._el.querySelector('img');
+  if (img.src) return;
+  if (_hallImgs[r.id]) { img.src = _hallImgs[r.id]; return; }
+  _hallImgs[r.id] = fetch(`${_HIFB}/${r.id}.json`).then(x => x.json()).then(u => { if (typeof u === 'string' && u.startsWith('data:image/')) { _hallImgs[r.id] = u; img.src = u; } }).catch(() => { delete _hallImgs[r.id]; });
+}
+function _hallLayout(flipCenter) {
+  const n = HALL.length;
+  HALL.forEach((r, i) => {
+    let d = i - hallCur; if (d > n / 2) d -= n; if (d < -n / 2) d += n;
+    const a = Math.abs(d), c = r._el;
+    c.className = 'hall-slot' + (d === 0 ? ' c0' : '');
+    c.style.transform = `translateX(${d * 23}vw) translateY(${a * 2}vh) rotate(${d * 6}deg) scale(${d === 0 ? 1 : 0.74})`;
+    c.style.zIndex = 10 - a;
+    c.style.opacity = a > 2 ? 0 : 1;
+    c.style.pointerEvents = a > 2 ? 'none' : '';
+    if (a <= 3) _hallLoadImg(r);
+  });
+  const r = HALL[hallCur], info = document.getElementById('hallInfo');
+  info.innerHTML = r ? `<b>${r.g}학년 ${r.c}반 ${r.n}번 ${_escName(r.name)}</b><span>${TIER_NAME[r.tier]} · ${Number(r.score).toLocaleString()}점 · ${_escName(r.date || '')} 인증</span>` : '<b>&nbsp;</b><span>&nbsp;</span>';
+  if (flipCenter && r) { const hc = r._el.querySelector('.hc'); hc.classList.remove('flip'); void hc.offsetWidth; hc.classList.add('flip'); }
+}
+function hallStep(k, byHand) {
+  if (!HALL.length) return;
+  hallCur = (hallCur + k + HALL.length) % HALL.length;
+  if (byHand) hallQuietUntil = Date.now() + 15000;   // 손으로 넘기면 15초 동안 저절로 안 넘어감
+  _hallLayout(true);
+}
+function findHall() {
+  const g = document.getElementById('hallG').value, c = document.getElementById('hallC').value, n = document.getElementById('hallN').value;
+  const name = document.getElementById('hallName').value.trim().replace(/\s+/g, '');
+  const msg = document.getElementById('hallMsg');
+  if (!g && !c && !n && !name) { msg.textContent = '학년·반·번호를 고르거나 이름을 써 주세요!'; return; }
+  const key = [g, c, n, name].join('|');
+  if (hallFound.key !== key) {
+    hallFound = HALL.map((r, i) => [r, i]).filter(([r]) => (!g || r.g == g) && (!c || r.c == c) && (!n || r.n == n) && (!name || String(r.name).replace(/\s+/g, '').includes(name))).map(([, i]) => i);
+    hallFound.key = key; hallFoundAt = -1;
+  }
+  if (!hallFound.length) { msg.textContent = '찾는 인증서가 없어요.'; return; }
+  hallFoundAt = (hallFoundAt + 1) % hallFound.length;
+  hallCur = hallFound[hallFoundAt];
+  hallQuietUntil = Date.now() + 30000;   // 찾은 카드는 30초 동안 가운데에 머문다
+  _hallLayout(true);
+  msg.textContent = hallFound.length > 1 ? `${hallFound.length}장 찾았어요 (${hallFoundAt + 1}/${hallFound.length}) · 찾기를 한 번 더 누르면 다음 카드` : '찾았어요!';
+}
+let _hallSx = null, _hallDragged = false;
+(() => {
+  const st = document.getElementById('hallStage');
+  st.addEventListener('pointerdown', e => { _hallSx = e.clientX; _hallDragged = false; });
+  st.addEventListener('pointermove', e => { if (_hallSx !== null && Math.abs(e.clientX - _hallSx) > 40) _hallDragged = true; });
+  st.addEventListener('pointerup', e => { if (_hallSx === null) return; const dx = e.clientX - _hallSx; _hallSx = null; if (Math.abs(dx) > 40) hallStep(dx < 0 ? 1 : -1, true); setTimeout(() => _hallDragged = false, 0); });
+  document.addEventListener('keydown', e => {
+    if (document.getElementById('hallScreen').classList.contains('hidden') || e.target.tagName === 'INPUT') return;
+    if (e.key === 'ArrowLeft') hallStep(-1, true); if (e.key === 'ArrowRight') hallStep(1, true);
+  });
+})();
+
 if (IS_YONG) {
+  document.getElementById('hallBtn').hidden = false;
+  { const q = new URLSearchParams(location.search); if (q.has('hall')) { const go = () => setTimeout(() => showHall(q.get('hall') || undefined), 300); document.readyState === 'complete' ? go() : window.addEventListener('load', go); } }
   pollContest();
   setInterval(() => { if (!document.hidden && !document.getElementById('titleScreen').classList.contains('hidden')) pollContest(); }, 30000);
   if (new URLSearchParams(location.search).has('board')) window.addEventListener('load', () => setTimeout(showBoard, 200));
