@@ -1953,24 +1953,26 @@ html body .btn::after, html body .q-btn::after, html body .btn-cert::after, html
 #hud .hud-ibtn img { pointer-events: none; }
 
 /* Uiverse Form(살구 카드) 모양 복구 — UI v4 때 빠져 이름창이 글자만 떠 있었음 (b647554 의 값 그대로) */
-#nameModal .uf-card, #contestModal .uf-card { background-color: #fcd0a1; border-radius: 10px; padding: 20px; color: #5b3a1e; }
-#nameModal .uf-label, #contestModal .uf-label { display: block; margin-bottom: 10px; font-size: 18px; color: #de5959; }
-#nameModal .uf-btn, #contestModal .uf-btn { background: #de5959; color: #fff; font-size: 18px; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; margin: 0 10px 0 0; }
-#nameModal .uf-btn:hover, #contestModal .uf-btn:hover { background: #b54141; }
-#nameModal .uf-btn.orange, #contestModal .uf-btn.orange { background: #fcb13e; }
-#nameModal .uf-btn.orange:hover, #contestModal .uf-btn.orange:hover { background: #c78d35; }
+#nameModal .uf-card, :is(#contestModal, #hallAsk) .uf-card { background-color: #fcd0a1; border-radius: 10px; padding: 20px; color: #5b3a1e; }
+#nameModal .uf-label, :is(#contestModal, #hallAsk) .uf-label { display: block; margin-bottom: 10px; font-size: 18px; color: #de5959; }
+#nameModal .uf-btn, :is(#contestModal, #hallAsk) .uf-btn { background: #de5959; color: #fff; font-size: 18px; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; margin: 0 10px 0 0; }
+#nameModal .uf-btn:hover, :is(#contestModal, #hallAsk) .uf-btn:hover { background: #b54141; }
+#nameModal .uf-btn.orange, :is(#contestModal, #hallAsk) .uf-btn.orange { background: #fcb13e; }
+#nameModal .uf-btn.orange:hover, :is(#contestModal, #hallAsk) .uf-btn.orange:hover { background: #c78d35; }
 #nameModal #nameInput { width: 100%; padding: 10px; font-size: 18px; border-radius: 5px; border: none; margin-bottom: 20px; background: #fff; color: #333; clip-path: none; letter-spacing: 1px; }
 
 /* 용타자 전용 (2026-11-24): 이름 고르기 · 타자대회 — 기존 카드·버튼 모양을 그대로 씀 */
 [hidden] { display: none !important; }
 .pick-row { display: flex; gap: 8px; margin-bottom: 16px; }
 .pick-row select { flex: 1; min-width: 0; height: 48px; padding: 0 8px; border: none; border-radius: 5px; background: #fff; color: #333; font-family: var(--f-body); font-weight: 700; font-size: 16px; }
-#contestModal, #contestReady, #boardScreen { background: linear-gradient(180deg, rgba(108,79,163,.94), rgba(39,32,82,.98)) !important; color: #fff; font-family: var(--f-body); word-break: keep-all; }
-#contestModal { position: fixed; inset: 0; z-index: 200; display: flex; align-items: center; justify-content: center; }
-#contestModal.hidden { display: none; }
-#contestModal .uf-card { width: 400px; max-width: 94vw; font-family: var(--f-body); }
-#contestModal .uf-label, #contestModal .uf-btn { font-family: var(--f-title) !important; font-weight: 400; }
-#contestModal .pick-err { color: #de5959; font-size: 14px; min-height: 20px; }
+:is(#contestModal, #hallAsk), #contestReady, #boardScreen { background: linear-gradient(180deg, rgba(108,79,163,.94), rgba(39,32,82,.98)) !important; color: #fff; font-family: var(--f-body); word-break: keep-all; }
+:is(#contestModal, #hallAsk) { position: fixed; inset: 0; z-index: 200; display: flex; align-items: center; justify-content: center; }
+:is(#contestModal, #hallAsk).hidden { display: none; }
+:is(#contestModal, #hallAsk) .uf-card { width: 400px; max-width: 94vw; font-family: var(--f-body); }
+:is(#contestModal, #hallAsk) .uf-label, :is(#contestModal, #hallAsk) .uf-btn { font-family: var(--f-title) !important; font-weight: 400; }
+:is(#contestModal, #hallAsk) .pick-err { color: #de5959; font-size: 14px; min-height: 20px; }
+#hallAsk { background: rgba(39,32,82,.82) !important; }
+#hallAsk .ask-name { width: 100%; padding: 10px; font-size: 18px; border-radius: 5px; border: none; margin-bottom: 8px; background: #fff; color: #333; font-family: var(--f-body); font-weight: 700; }
 .contest-rule { color: #6b4a33; font-size: 15px; line-height: 1.6; margin: 4px 0 14px; }
 #contestReady .pause-title { font-size: 120px !important; }
 #hTime.last { color: #ff5a6e !important; }
@@ -2239,6 +2241,20 @@ html body .btn::after, html body .q-btn::after, html body .btn-cert::after, html
     <div>
       <button class="uf-btn" onclick="startContest()">시작하기</button>
       <button class="uf-btn orange" onclick="closeContest()">그만두기</button>
+    </div>
+  </div>
+</div>
+<!-- 중급자 이상 인증서가 나오면 바로 묻고 → 명예의 전당에 자동 등록 (11-27) -->
+<div id="hallAsk" class="hidden">
+  <div class="uf-card">
+    <label class="uf-label"><img src="/assets/icons/certificate.webp" alt="" style="width:22px;height:22px;vertical-align:-4px;margin-right:4px"><span id="hallAskTitle">인증서 주인공은 누구인가요?</span></label>
+    <div class="contest-rule">학년·반·번호를 고르고 이름을 쓰면 인증서가 <b>명예의 전당</b>에 바로 올라가요!</div>
+    <div class="pick-row" id="hallAskPick"></div>
+    <input class="ask-name" id="hallAskName" type="text" placeholder="이름" maxlength="10" autocomplete="off" spellcheck="false">
+    <div class="pick-err" id="hallAskErr"></div>
+    <div>
+      <button class="uf-btn" id="hallAskOk" onclick="confirmHallAsk()">명예의 전당에 올리기</button>
+      <button class="uf-btn orange" onclick="skipHallAsk()">건너뛰기</button>
     </div>
   </div>
 </div>
@@ -2991,6 +3007,7 @@ function _showNameError(msg) {
 }
 
 function promptRankName(data) {
+  if (IS_YONG && typeof HALL_ASK_OPEN !== 'undefined' && HALL_ASK_OPEN) { HALL_ASK_RANK = data; return; }   // 명예의 전당 묻는 창이 떠 있으면 거기서 한 번에
   pendingRankData = data;
   document.getElementById('nameModalScore').textContent = data.score.toLocaleString() + ' 점';
   document.getElementById('nameInput').value = '';
@@ -5495,8 +5512,44 @@ function setupHallBtn(good, st) {
   if (!good) return;
   const done = HALL_DONE.has(st.id);
   btn.querySelector('span').textContent = done ? '명예의 전당 보기' : '명예의 전당에 등록';
+  if (!done && !st._asked) { st._asked = true; openHallAsk(); }   // 한 인증서에 한 번만 묻는다
   tip.innerHTML = done ? '명예의 전당에 <b>등록한 인증서</b>예요!' : '학년·반·번호·이름을 쓰고 <b>명예의 전당에 등록</b>하면 카드로 모여요!';
 }
+// 묻는 창 — 고른 값으로 인증서 칸을 채우고 바로 등록. TOP 20 이름도 같은 값으로 같이 올린다(창 두 번 안 뜨게).
+let HALL_ASK_OPEN = false, HALL_ASK_RANK = null;
+function openHallAsk() {
+  HALL_ASK_OPEN = true; HALL_ASK_RANK = null;
+  setupPick('hallAskPick');
+  document.getElementById('hallAskTitle').textContent = `${MODE_CERT_TITLE[CERT_NOW.mode]} 인증서 주인공은 누구인가요?`;
+  document.getElementById('hallAskName').value = ''; document.getElementById('hallAskErr').textContent = '';
+  document.getElementById('hallAskOk').disabled = false;
+  document.getElementById('hallAsk').classList.remove('hidden');
+}
+function _closeHallAsk() { HALL_ASK_OPEN = false; document.getElementById('hallAsk').classList.add('hidden'); }
+function skipHallAsk() {
+  _closeHallAsk();
+  const d = HALL_ASK_RANK; HALL_ASK_RANK = null;
+  if (d) promptRankName(d);   // TOP 20 이면 원래 이름 창으로
+}
+async function confirmHallAsk() {
+  const err = document.getElementById('hallAskErr');
+  const [g, c, n] = [...document.getElementById('hallAskPick').querySelectorAll('select')].map(e => e.value);
+  const who = readPick('hallAskPick');
+  const name = document.getElementById('hallAskName').value.trim();
+  if (!who) { err.textContent = '학년·반·번호를 모두 골라 주세요!'; return; }
+  if (!name) { err.textContent = '이름을 써 주세요!'; return; }
+  if (!/^[가-힣A-Za-z ]{2,10}$/.test(name)) { err.textContent = '이름은 한글로 또박또박 써 주세요!'; return; }
+  if (_hasBadWord(name)) { err.textContent = '부적절한 단어가 들어있어요!'; return; }
+  document.getElementById('hallAskOk').disabled = true;
+  toggleCertTeacher(who.t);
+  if (!who.t) { document.getElementById('certGrade').value = g; document.getElementById('certClass').value = c; document.getElementById('certNum').value = n; }
+  document.getElementById('certName').value = name;
+  _closeHallAsk();
+  const d = HALL_ASK_RANK; HALL_ASK_RANK = null;
+  if (d) addRankEntry(who.name, d).then(() => buildTitleRankPreview());   // 순위표에는 '3-2 26번' 꼴로
+  await registerHall();
+}
+document.getElementById('hallAskName').addEventListener('keydown', e => { if (e.key === 'Enter') { if (e.isComposing || e.keyCode === 229) setTimeout(confirmHallAsk, 30); else confirmHallAsk(); } });
 async function _certJpeg() {   // 인증서 그림 → 폭 900px JPEG (카드용, 약 100KB 안팎)
   const png = await _captureCertPng(1);
   if (!png) return null;
@@ -5562,14 +5615,17 @@ async function showHall(focusId) {
   try {
     const res = await fetch(_HFB + '.json', { cache: 'no-store' });
     const data = res.ok ? (await res.json()) || {} : {};
-    HALL = Object.entries(data).map(([id, v]) => ({ id, ...v })).filter(r => TIER_NAME[r.tier]).sort((a, b) => (b.at || 0) - (a.at || 0));
+    HALL = Object.entries(data).map(([id, v]) => ({ id, ...v })).filter(r => TIER_NAME[r.tier]).sort((a, b) => {
+      const T = { master: 0, advanced: 1, intermediate: 2 };
+      return T[a.tier] - T[b.tier] || (a.t ? 1 : 0) - (b.t ? 1 : 0) || a.g - b.g || a.c - b.c || a.n - b.n || String(a.name).localeCompare(String(b.name), 'ko') || (b.score - a.score);
+    });
   } catch { HALL = []; }
   document.getElementById('hallCount').textContent = HALL.length ? `· 인증서 ${HALL.length}장` : '';
   document.getElementById('hallMsg').textContent = HALL.length ? '' : '아직 등록된 인증서가 없어요. 중급자 인증서를 받으면 등록해 보세요!';
   hallFound = []; hallFoundAt = -1;
   hallCur = Math.max(0, HALL.findIndex(r => r.id === focusId));
   _hallBuild();
-  hallQuietUntil = Date.now() + (focusId ? 20000 : 2600);   // 한 장씩 뒤집히며 나온 뒤 흐르기 시작
+  hallQuietUntil = Date.now() + (focusId ? 8000 : 2600);   // 한 장씩 뒤집히며 나온 뒤 흐르기 시작
   hallPos = hallCur;
   cancelAnimationFrame(hallTick); let t0 = performance.now();
   const tick = (t) => {
@@ -5621,7 +5677,7 @@ function _hallBuild() {
     const r = HALL[i % n], s = document.createElement('div');
     s.className = 'hall-slot';
     s.innerHTML = `<div class="hc back"><div class="hf">${_pcFace(r, order.indexOf(r) + 1)}</div><div class="hb">${_PC_BACK}</div></div><div class="hall-play">▶ 크게 보기</div>`;
-    s.onclick = () => { if (_hallDragged) return; hallQuietUntil = Date.now() + 15000; if (i === hallCur) { _hallLayout(false); openHallView(); } else { hallCur = i; _hallLayout(true); } };
+    s.onclick = () => { if (_hallDragged) return; hallQuietUntil = Date.now() + 2000; if (i === hallCur) { _hallLayout(false); openHallView(); } else { hallCur = i; _hallLayout(true); } };
     HSL.push({ r, el: s }); fan.appendChild(s);
   }
   _hallSize();
@@ -5679,7 +5735,7 @@ function openHallView() {
   v.classList.remove('hidden');
   hallQuietUntil = Infinity;   // 크게 보는 동안은 저절로 안 넘어감
 }
-function closeHallView() { hallSfx('back'); document.getElementById('hallView').classList.add('hidden'); hallQuietUntil = Date.now() + 8000; }
+function closeHallView() { hallSfx('back'); document.getElementById('hallView').classList.add('hidden'); hallQuietUntil = Date.now() + 2000; }
 function hallViewStep(k) { hallStep(k, true); openHallView(); }
 // 소리 = 질문축제 전시관 sfx.js 그대로. 한 동작에 소리 하나(겹치면 깨지게 들림, 11-27)
 const hallSfx = (() => {
@@ -5736,7 +5792,7 @@ function _hallDeal() {
 function hallStep(k, byHand) {
   if (!HSL.length) return;
   hallCur = (hallCur + k + HSL.length) % HSL.length;
-  if (byHand) hallQuietUntil = Date.now() + 15000;   // 손으로 넘기면 15초 동안 저절로 안 넘어감
+  if (byHand) hallQuietUntil = Date.now() + 2000;   // 손으로 넘기면 2초 뒤 다시 흐름
   _hallLayout(!!byHand);
 }
 function findHall() {
@@ -5752,7 +5808,7 @@ function findHall() {
   if (!hallFound.length) { msg.textContent = '찾는 인증서가 없어요.'; return; }
   hallFoundAt = (hallFoundAt + 1) % hallFound.length;
   hallCur = hallFound[hallFoundAt];
-  hallQuietUntil = Date.now() + 30000;   // 찾은 카드는 30초 동안 가운데에 머문다
+  hallQuietUntil = Date.now() + 10000;   // 찾은 카드는 10초 동안 가운데에 머문다
   _hallLayout(true);
   msg.textContent = hallFound.length > 1 ? `${hallFound.length}장 찾았어요 (${hallFoundAt + 1}/${hallFound.length}) · 찾기를 한 번 더 누르면 다음 카드` : '찾았어요!';
 }
