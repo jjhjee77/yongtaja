@@ -5565,7 +5565,12 @@ function _hallFlip(el, delay) {
   const hc = el.querySelector('.hc');
   hc.classList.remove('flip'); hc.classList.add('back');
   clearTimeout(el._ft);
-  el._ft = setTimeout(() => { hc.classList.remove('back'); void hc.offsetWidth; hc.classList.add('flip'); playSfx('pick', 0.5); }, delay);
+  const img = hc.querySelector('.hf');
+  const go = (tries) => {
+    if ((!img.src || !img.complete) && tries < 25) { el._ft = setTimeout(() => go(tries + 1), 120); return; }   // 앞면 그림을 받을 때까지 뒷면으로 기다림
+    hc.classList.remove('back'); void hc.offsetWidth; hc.classList.add('flip'); playSfx('pick', 0.5);
+  };
+  el._ft = setTimeout(() => go(0), delay);
 }
 // 처음 열 때 가운데부터 한 장씩 뒷면에서 뒤집히며 등장 (전시관 deal())
 function _hallDeal() {
